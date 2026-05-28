@@ -1,0 +1,76 @@
+---
+
+x-common-settings:
+  &multi-bot-common-settings
+  image: freqtradeorg/freqtrade:stable
+  build:
+    context: .
+    dockerfile: "./docker/Dockerfile.custom"
+  restart: unless-stopped
+  volumes:
+    - "./user_data:/freqtrade/user_data"
+    - "./user_data/data:/freqtrade/user_data/data"
+    - "./configs:/freqtrade/configs"
+    - "./${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}.py:/freqtrade/${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}.py"
+  env_file:
+    - path: .env
+      required: false
+
+services:
+
+  nfi-major:
+    <<: *multi-bot-common-settings
+    container_name: nfi-major_binance_futures-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}
+    ports:
+      - "8081:8081"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+      start_interval: 5s
+    command: >
+      trade
+      --config /freqtrade/configs/recommended_config_major.json
+      --db-url sqlite:////freqtrade/user_data/nfi-major_binance_futures-tradesv3.sqlite
+      --log-file user_data/logs/nfi-major-binance-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}-futures.log
+      --strategy-path .
+
+  nfi-mid:
+    <<: *multi-bot-common-settings
+    container_name: nfi-mid_binance_futures-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}
+    ports:
+      - "8082:8082"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+      start_interval: 5s
+    command: >
+      trade
+      --config /freqtrade/configs/recommended_config_mid.json
+      --db-url sqlite:////freqtrade/user_data/nfi-mid_binance_futures-tradesv3.sqlite
+      --log-file user_data/logs/nfi-mid-binance-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}-futures.log
+      --strategy-path .
+
+  nfi-alt:
+    <<: *multi-bot-common-settings
+    container_name: nfi-alt_binance_futures-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}
+    ports:
+      - "8083:8083"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+      start_interval: 5s
+    command: >
+      trade
+      --config /freqtrade/configs/recommended_config_alt.json
+      --db-url sqlite:////freqtrade/user_data/nfi-alt_binance_futures-tradesv3.sqlite
+      --log-file user_data/logs/nfi-alt-binance-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}-futures.log
+      --strategy-path .

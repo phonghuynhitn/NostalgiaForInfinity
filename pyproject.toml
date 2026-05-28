@@ -1,10 +1,24 @@
 [project]
 name = "NostalgiaForInfinity"
+version = "0.1.0"
 description = "Trading strategy for the Freqtrade crypto bot"
-homepage = "https://github.com/iterativv/NostalgiaForInfinity"
 dependencies = ["freqtrade"]
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.11"
+
+[project.urls]
+Homepage = "https://github.com/iterativv/NostalgiaForInfinity"
+
+[tool.setuptools]
+py-modules = [
+  "NostalgiaForInfinityX",
+  "NostalgiaForInfinityX2",
+  "NostalgiaForInfinityX3",
+  "NostalgiaForInfinityX4",
+  "NostalgiaForInfinityX5",
+  "NostalgiaForInfinityX6",
+  "NostalgiaForInfinityX7",
+]
 
 
 [tool.black]

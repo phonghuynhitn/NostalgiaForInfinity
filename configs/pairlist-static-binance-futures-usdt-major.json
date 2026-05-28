@@ -1,0 +1,42 @@
+{
+  "exchange": {
+    "name": "binance",
+    "pair_whitelist": [
+      "BTC/USDT:USDT",
+      "ETH/USDT:USDT",
+      "SOL/USDT:USDT",
+      "XRP/USDT:USDT",
+      "DOGE/USDT:USDT",
+      "ADA/USDT:USDT",
+      "AVAX/USDT:USDT",
+      "LINK/USDT:USDT",
+      "DOT/USDT:USDT",
+      "TRX/USDT:USDT",
+      "LTC/USDT:USDT",
+      "BCH/USDT:USDT",
+      "NEAR/USDT:USDT",
+      "SUI/USDT:USDT",
+      "TON/USDT:USDT",
+      "HBAR/USDT:USDT",
+      "ICP/USDT:USDT",
+      "ETC/USDT:USDT",
+      "XLM/USDT:USDT",
+      "ATOM/USDT:USDT",
+      "UNI/USDT:USDT",
+      "FIL/USDT:USDT",
+      "AAVE/USDT:USDT"
+    ]
+  },
+  "pairlists": [
+    {
+      "method": "StaticPairList"
+    },
+    {
+      "method": "FullTradesFilter"
+    },
+    {
+      "method": "SpreadFilter",
+      "max_spread_ratio": 0.005
+    }
+  ]
+}

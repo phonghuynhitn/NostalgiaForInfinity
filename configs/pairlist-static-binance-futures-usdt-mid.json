@@ -1,0 +1,43 @@
+{
+  "exchange": {
+    "name": "binance",
+    "pair_whitelist": [
+      "OP/USDT:USDT",
+      "ARB/USDT:USDT",
+      "APT/USDT:USDT",
+      "INJ/USDT:USDT",
+      "RENDER/USDT:USDT",
+      "LDO/USDT:USDT",
+      "SEI/USDT:USDT",
+      "STX/USDT:USDT",
+      "WLD/USDT:USDT",
+      "WIF/USDT:USDT",
+      "PEPE/USDT:USDT",
+      "SHIB/USDT:USDT",
+      "GALA/USDT:USDT",
+      "GRT/USDT:USDT",
+      "FET/USDT:USDT",
+      "IMX/USDT:USDT",
+      "TIA/USDT:USDT",
+      "JUP/USDT:USDT",
+      "ONDO/USDT:USDT",
+      "TAO/USDT:USDT",
+      "VET/USDT:USDT",
+      "QNT/USDT:USDT",
+      "ALGO/USDT:USDT",
+      "XTZ/USDT:USDT"
+    ]
+  },
+  "pairlists": [
+    {
+      "method": "StaticPairList"
+    },
+    {
+      "method": "FullTradesFilter"
+    },
+    {
+      "method": "SpreadFilter",
+      "max_spread_ratio": 0.005
+    }
+  ]
+}
