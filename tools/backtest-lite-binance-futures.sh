@@ -12,6 +12,9 @@ BACKTEST_DIR="${BACKTEST_DIR:-user_data/backtest_results}"
 NOTES="${NOTES:-medium-binance-futures-${TIMERANGE}}"
 DOWNLOAD_DATA="${DOWNLOAD_DATA:-false}"
 TIMEFRAMES="${TIMEFRAMES:-5m 1m 15m 1h 4h 1d}"
+DRY_RUN_WALLET="${DRY_RUN_WALLET:-1000}"
+QUIET_OUTPUT="${QUIET_OUTPUT:-true}"
+RUN_LOG_FILE="${RUN_LOG_FILE:-${ROOT_DIR}/user_data/logs/backtest-${STRATEGY}-${TIMERANGE}.log}"
 
 STRATEGY_FILE="${ROOT_DIR}/${STRATEGY}.py"
 if [[ ! -f "${STRATEGY_FILE}" ]]; then
@@ -50,7 +53,8 @@ if [[ "${DOWNLOAD_DATA}" == "true" ]]; then
     -c "/freqtrade/${PAIRLIST_CONFIG}"
 fi
 
-docker run --rm -it \
+BACKTEST_CMD=(
+docker run --rm -i \
   -v "${ROOT_DIR}/user_data:/freqtrade/user_data" \
   -v "${ROOT_DIR}/configs:/freqtrade/configs" \
   -v "${STRATEGY_FILE}:/freqtrade/${STRATEGY}.py:ro" \
@@ -62,8 +66,28 @@ docker run --rm -it \
   -c "/freqtrade/${BASE_CONFIG}" \
   -c "/freqtrade/${PAIRLIST_CONFIG}" \
   --export signals \
+  --dry-run-wallet "${DRY_RUN_WALLET}" \
   --cache none \
   --breakdown day \
   --backtest-directory "/freqtrade/${BACKTEST_DIR}" \
-  --notes "${NOTES}" \
-  "$@"
+  --notes "${NOTES}"
+)
+
+if [[ "${QUIET_OUTPUT}" == "true" ]]; then
+  if ! "${BACKTEST_CMD[@]}" --no-color "$@" > "${RUN_LOG_FILE}" 2>&1; then
+    echo "Backtest failed. Full log: ${RUN_LOG_FILE}" >&2
+    exit 1
+  fi
+
+  awk '
+    /BACKTESTING REPORT|LEFT OPEN TRADES REPORT|ENTER TAG STATS|EXIT REASON STATS|SUMMARY METRICS/ {
+      show = 1
+    }
+    show {
+      print
+    }
+  ' "${RUN_LOG_FILE}"
+  echo "Full run log: ${RUN_LOG_FILE}" >&2
+else
+  "${BACKTEST_CMD[@]}" "$@"
+fi
