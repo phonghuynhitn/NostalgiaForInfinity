@@ -94,21 +94,21 @@ services:
       --log-file user_data/logs/nfi-defi-binance-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}-futures.log
       --strategy-path .
 
-  nfi-meme:
-    <<: *multi-bot-common-settings
-    container_name: nfi-meme_binance_futures-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}
-    ports:
-      - "8085:8080"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080"]
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-      start_interval: 5s
-    command: >
-      trade
-      --config /freqtrade/configs/recommended_config_meme.json
-      --db-url sqlite:////freqtrade/user_data/nfi-meme_binance_futures-tradesv3.sqlite
-      --log-file user_data/logs/nfi-meme-binance-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}-futures.log
-      --strategy-path .
+  # nfi-meme:
+  #   <<: *multi-bot-common-settings
+  #   container_name: nfi-meme_binance_futures-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}
+  #   ports:
+  #     - "8085:8080"
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://localhost:8080"]
+  #     interval: 1m30s
+  #     timeout: 10s
+  #     retries: 3
+  #     start_period: 40s
+  #     start_interval: 5s
+  #   command: >
+  #     trade
+  #     --config /freqtrade/configs/recommended_config_meme.json
+  #     --db-url sqlite:////freqtrade/user_data/nfi-meme_binance_futures-tradesv3.sqlite
+  #     --log-file user_data/logs/nfi-meme-binance-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}-futures.log
+  #     --strategy-path .
