@@ -1,0 +1,79 @@
+{
+  "stake_currency": "USDT",
+  "exchange": {
+    "name": "binance",
+    "pair_whitelist": [
+      "BTC/USDT",
+      "ETH/USDT",
+      "SOL/USDT",
+      "XRP/USDT",
+      "DOGE/USDT",
+      "ADA/USDT",
+      "AVAX/USDT",
+      "LINK/USDT",
+      "DOT/USDT",
+      "TRX/USDT",
+      "LTC/USDT",
+      "BCH/USDT",
+      "NEAR/USDT",
+      "SUI/USDT",
+      "TON/USDT",
+      "HBAR/USDT",
+      "ICP/USDT",
+      "ETC/USDT",
+      "XLM/USDT",
+      "ATOM/USDT",
+      "UNI/USDT",
+      "FIL/USDT",
+      "AAVE/USDT",
+      "OP/USDT",
+      "ARB/USDT",
+      "APT/USDT",
+      "INJ/USDT",
+      "RENDER/USDT",
+      "LDO/USDT",
+      "SEI/USDT",
+      "STX/USDT",
+      "WLD/USDT",
+      "WIF/USDT",
+      "PEPE/USDT",
+      "SHIB/USDT",
+      "BONK/USDT",
+      "GALA/USDT",
+      "GRT/USDT",
+      "FET/USDT",
+      "IMX/USDT",
+      "TIA/USDT",
+      "JUP/USDT",
+      "ONDO/USDT",
+      "TAO/USDT",
+      "VET/USDT",
+      "ALGO/USDT",
+      "XTZ/USDT",
+      "CRV/USDT",
+      "ENA/USDT",
+      "PENDLE/USDT",
+      "PYTH/USDT",
+      "STRK/USDT",
+      "SAND/USDT",
+      "RUNE/USDT"
+    ]
+  },
+  "pairlists": [
+    {
+      "method": "StaticPairList"
+    }
+  ],
+  "entry_pricing": {
+    "use_order_book": true,
+    "order_book_top": 1,
+    "check_depth_of_market": {
+      "enabled": false,
+      "bids_to_ask_delta": 1
+    }
+  },
+  "exit_pricing": {
+    "use_order_book": true,
+    "order_book_top": 1
+  }
+}

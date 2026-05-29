@@ -1,0 +1,39 @@
+{
+  "exchange": {
+    "name": "binance",
+    "pair_whitelist": [
+      "LINK/USDT:USDT",
+      "UNI/USDT:USDT",
+      "AAVE/USDT:USDT",
+      "INJ/USDT:USDT",
+      "LDO/USDT:USDT",
+      "GRT/USDT:USDT",
+      "FET/USDT:USDT",
+      "ORCA/USDT:USDT",
+      "ONDO/USDT:USDT",
+      "COMP/USDT:USDT",
+      "CRV/USDT:USDT",
+      "RAY/USDT:USDT",
+      "SUSHI/USDT:USDT",
+      "PENDLE/USDT:USDT",
+      "PYTH/USDT:USDT",
+      "STRK/USDT:USDT",
+      "DYDX/USDT:USDT",
+      "GMX/USDT:USDT",
+      "CAKE/USDT:USDT",
+      "CETUS/USDT:USDT"
+    ]
+  },
+  "pairlists": [
+    {
+      "method": "StaticPairList"
+    },
+    {
+      "method": "FullTradesFilter"
+    },
+    {
+      "method": "SpreadFilter",
+      "max_spread_ratio": 0.005
+    }
+  ]
+}

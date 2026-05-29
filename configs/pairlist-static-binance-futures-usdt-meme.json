@@ -1,0 +1,39 @@
+{
+  "exchange": {
+    "name": "binance",
+    "pair_whitelist": [
+      "WIF/USDT:USDT",
+      "PEPE/USDT:USDT",
+      "SHIB/USDT:USDT",
+      "GALA/USDT:USDT",
+      "TIA/USDT:USDT",
+      "BONK/USDT:USDT",
+      "ENA/USDT:USDT",
+      "PENGU/USDT:USDT",
+      "VIRTUAL/USDT:USDT",
+      "MEME/USDT:USDT",
+      "MEW/USDT:USDT",
+      "MOODENG/USDT:USDT",
+      "MYRO/USDT:USDT",
+      "NOT/USDT:USDT",
+      "PEOPLE/USDT:USDT",
+      "PNUT/USDT:USDT",
+      "PONKE/USDT:USDT",
+      "POPCAT/USDT:USDT",
+      "TURBO/USDT:USDT",
+      "SLERF/USDT:USDT"
+    ]
+  },
+  "pairlists": [
+    {
+      "method": "StaticPairList"
+    },
+    {
+      "method": "FullTradesFilter"
+    },
+    {
+      "method": "SpreadFilter",
+      "max_spread_ratio": 0.005
+    }
+  ]
+}
