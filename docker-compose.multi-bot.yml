@@ -22,9 +22,9 @@ services:
     <<: *multi-bot-common-settings
     container_name: nfi-major_binance_futures-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}
     ports:
-      - "8081:8081"
+      - "8081:8080"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
       interval: 1m30s
       timeout: 10s
       retries: 3
@@ -41,9 +41,9 @@ services:
     <<: *multi-bot-common-settings
     container_name: nfi-mid_binance_futures-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}
     ports:
-      - "8082:8082"
+      - "8082:8080"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8082"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
       interval: 1m30s
       timeout: 10s
       retries: 3
@@ -60,9 +60,9 @@ services:
     <<: *multi-bot-common-settings
     container_name: nfi-alt_binance_futures-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}
     ports:
-      - "8083:8083"
+      - "8083:8080"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8083"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
       interval: 1m30s
       timeout: 10s
       retries: 3
@@ -79,9 +79,9 @@ services:
     <<: *multi-bot-common-settings
     container_name: nfi-defi_binance_futures-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}
     ports:
-      - "8084:8084"
+      - "8084:8080"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8084"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
       interval: 1m30s
       timeout: 10s
       retries: 3
@@ -98,9 +98,9 @@ services:
     <<: *multi-bot-common-settings
     container_name: nfi-meme_binance_futures-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}
     ports:
-      - "8085:8085"
+      - "8085:8080"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8085"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
       interval: 1m30s
       timeout: 10s
       retries: 3
