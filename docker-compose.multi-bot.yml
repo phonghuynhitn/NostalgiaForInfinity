@@ -35,7 +35,7 @@ services:
     command: >
       trade
       --config /freqtrade/configs/recommended_config_major.json
-      --db-url sqlite:////freqtrade/user_data/nfi-major_binance_futures-tradesv3.sqlite
+      --db-url sqlite:////freqtrade/user_data/nfi-major_binance_futures-live-tradesv3.sqlite
       --log-file user_data/logs/nfi-major-binance-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}-futures.log
       --strategy-path .
 
@@ -59,7 +59,7 @@ services:
     command: >
       trade
       --config /freqtrade/configs/recommended_config_mid.json
-      --db-url sqlite:////freqtrade/user_data/nfi-mid_binance_futures-tradesv3.sqlite
+      --db-url sqlite:////freqtrade/user_data/nfi-mid_binance_futures-live-tradesv3.sqlite
       --log-file user_data/logs/nfi-mid-binance-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}-futures.log
       --strategy-path .
 
@@ -83,7 +83,7 @@ services:
     command: >
       trade
       --config /freqtrade/configs/recommended_config_alt.json
-      --db-url sqlite:////freqtrade/user_data/nfi-alt_binance_futures-tradesv3.sqlite
+      --db-url sqlite:////freqtrade/user_data/nfi-alt_binance_futures-live-tradesv3.sqlite
       --log-file user_data/logs/nfi-alt-binance-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}-futures.log
       --strategy-path .
 
@@ -107,7 +107,7 @@ services:
     command: >
       trade
       --config /freqtrade/configs/recommended_config_defi.json
-      --db-url sqlite:////freqtrade/user_data/nfi-defi_binance_futures-tradesv3.sqlite
+      --db-url sqlite:////freqtrade/user_data/nfi-defi_binance_futures-live-tradesv3.sqlite
       --log-file user_data/logs/nfi-defi-binance-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}-futures.log
       --strategy-path .
 
