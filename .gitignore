@@ -159,6 +159,10 @@ artifacts/
 # Don't commit configs
 config*.json
 
+# Don't commit local bot secrets
+secrets/*.env
+!secrets/*.env.example
+
 # Don't commit any sqlite file which contains your tradings
 
 *.sqlite

@@ -12,15 +12,17 @@ x-common-settings:
     - "./user_data/data:/freqtrade/user_data/data"
     - "./configs:/freqtrade/configs"
     - "./${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}.py:/freqtrade/${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}.py"
-  env_file:
-    - path: .env
-      required: false
 
 services:
 
   nfi-major:
     <<: *multi-bot-common-settings
     container_name: nfi-major_binance_futures-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}
+    env_file:
+      - path: .env
+        required: false
+      - path: ./secrets/nfi-major.env
+        required: false
     ports:
       - "8081:8080"
     healthcheck:
@@ -40,6 +42,11 @@ services:
   nfi-mid:
     <<: *multi-bot-common-settings
     container_name: nfi-mid_binance_futures-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}
+    env_file:
+      - path: .env
+        required: false
+      - path: ./secrets/nfi-mid.env
+        required: false
     ports:
       - "8082:8080"
     healthcheck:
@@ -59,6 +66,11 @@ services:
   nfi-alt:
     <<: *multi-bot-common-settings
     container_name: nfi-alt_binance_futures-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}
+    env_file:
+      - path: .env
+        required: false
+      - path: ./secrets/nfi-alt.env
+        required: false
     ports:
       - "8083:8080"
     healthcheck:
@@ -78,6 +90,11 @@ services:
   nfi-defi:
     <<: *multi-bot-common-settings
     container_name: nfi-defi_binance_futures-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}
+    env_file:
+      - path: .env
+        required: false
+      - path: ./secrets/nfi-defi.env
+        required: false
     ports:
       - "8084:8080"
     healthcheck:
@@ -97,6 +114,11 @@ services:
   # nfi-meme:
   #   <<: *multi-bot-common-settings
   #   container_name: nfi-meme_binance_futures-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}
+  #   env_file:
+  #     - path: .env
+  #       required: false
+  #     - path: ./secrets/nfi-meme.env
+  #       required: false
   #   ports:
   #     - "8085:8080"
   #   healthcheck:
