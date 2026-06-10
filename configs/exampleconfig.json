@@ -53,7 +53,7 @@
     "secret": "",
     "ccxt_config": {
       "enableRateLimit": true,
-      "rateLimit": 60,
+      "rateLimit": 300,
       "options": {
         "brokerId": null,
         // "broker": {
@@ -78,7 +78,7 @@
     },
     "ccxt_async_config": {
       "enableRateLimit": true,
-      "rateLimit": 60,
+      "rateLimit": 300,
       "options": {
         "brokerId": null,
         // "broker": {
