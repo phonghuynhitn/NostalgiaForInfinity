@@ -21,7 +21,16 @@
       "ETC/USDT:USDT",
       "XLM/USDT:USDT",
       "ATOM/USDT:USDT",
-      "GUA/USDT:USDT"
+      "HYPE/USDT:USDT",
+      "WLD/USDT:USDT",
+      "FIL/USDT:USDT",
+      "TAO/USDT:USDT",
+      "RENDER/USDT:USDT",
+      "ARB/USDT:USDT",
+      "APT/USDT:USDT",
+      "OP/USDT:USDT",
+      "SEI/USDT:USDT",
+      "PAXG/USDT:USDT"
     ]
   },
   "pairlists": [

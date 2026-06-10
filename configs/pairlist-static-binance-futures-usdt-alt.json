@@ -7,7 +7,6 @@
       "ACX/USDT:USDT",
       "AEVO/USDT:USDT",
       "AGLD/USDT:USDT",
-      "AI/USDT:USDT",
       "AKT/USDT:USDT",
       "ALICE/USDT:USDT",
       "ALT/USDT:USDT",
@@ -21,7 +20,17 @@
       "AUCTION/USDT:USDT",
       "AVA/USDT:USDT",
       "AXL/USDT:USDT",
-      "BAND/USDT:USDT"
+      "BAND/USDT:USDT",
+      "IP/USDT:USDT",
+      "BERA/USDT:USDT",
+      "W/USDT:USDT",
+      "ZK/USDT:USDT",
+      "KAS/USDT:USDT",
+      "SAGA/USDT:USDT",
+      "GMT/USDT:USDT",
+      "ENS/USDT:USDT",
+      "QTUM/USDT:USDT",
+      "EGLD/USDT:USDT"
     ]
   },
   "pairlists": [

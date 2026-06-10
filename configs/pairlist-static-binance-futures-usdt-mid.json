@@ -21,7 +21,17 @@
       "RUNE/USDT:USDT",
       "SAND/USDT:USDT",
       "MANA/USDT:USDT",
-      "AXS/USDT:USDT"
+      "AXS/USDT:USDT",
+      "XMR/USDT:USDT",
+      "STG/USDT:USDT",
+      "IO/USDT:USDT",
+      "BIO/USDT:USDT",
+      "LAYER/USDT:USDT",
+      "FIDA/USDT:USDT",
+      "KAVA/USDT:USDT",
+      "IOTA/USDT:USDT",
+      "THETA/USDT:USDT",
+      "MINA/USDT:USDT"
     ]
   },
   "pairlists": [

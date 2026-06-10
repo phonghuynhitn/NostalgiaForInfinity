@@ -13,7 +13,7 @@
       "ONDO/USDT:USDT",
       "COMP/USDT:USDT",
       "CRV/USDT:USDT",
-      "RAY/USDT:USDT",
+      "1INCH/USDT:USDT",
       "SUSHI/USDT:USDT",
       "PENDLE/USDT:USDT",
       "PYTH/USDT:USDT",
@@ -21,7 +21,17 @@
       "DYDX/USDT:USDT",
       "GMX/USDT:USDT",
       "CAKE/USDT:USDT",
-      "CETUS/USDT:USDT"
+      "CETUS/USDT:USDT",
+      "ENA/USDT:USDT",
+      "JUP/USDT:USDT",
+      "JTO/USDT:USDT",
+      "MORPHO/USDT:USDT",
+      "EIGEN/USDT:USDT",
+      "ETHFI/USDT:USDT",
+      "ZRO/USDT:USDT",
+      "AERO/USDT:USDT",
+      "HFT/USDT:USDT",
+      "YFI/USDT:USDT"
     ]
   },
   "pairlists": [
