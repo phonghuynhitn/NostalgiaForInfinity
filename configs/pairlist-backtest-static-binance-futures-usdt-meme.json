@@ -1,0 +1,45 @@
+{
+  "stake_currency": "USDT",
+  "exchange": {
+    "name": "binance",
+    "pair_whitelist": [
+      "1000PEPE/USDT:USDT",
+      "PUMP/USDT:USDT",
+      "PENGU/USDT:USDT",
+      "FARTCOIN/USDT:USDT",
+      "WIF/USDT:USDT",
+      "VIRTUAL/USDT:USDT",
+      "1000SHIB/USDT:USDT",
+      "1000BONK/USDT:USDT",
+      "BABY/USDT:USDT",
+      "1000RATS/USDT:USDT",
+      "MEME/USDT:USDT",
+      "NEIRO/USDT:USDT",
+      "BOME/USDT:USDT",
+      "TURBO/USDT:USDT",
+      "PNUT/USDT:USDT",
+      "DOGS/USDT:USDT",
+      "NOT/USDT:USDT",
+      "HMSTR/USDT:USDT",
+      "POPCAT/USDT:USDT",
+      "MOODENG/USDT:USDT"
+    ]
+  },
+  "pairlists": [
+    {
+      "method": "StaticPairList"
+    }
+  ],
+  "entry_pricing": {
+    "use_order_book": true,
+    "order_book_top": 1,
+    "check_depth_of_market": {
+      "enabled": false,
+      "bids_to_ask_delta": 1
+    }
+  },
+  "exit_pricing": {
+    "use_order_book": true,
+    "order_book_top": 1
+  }
+}

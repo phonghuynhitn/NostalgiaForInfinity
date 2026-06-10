@@ -1,0 +1,9 @@
+{
+  "strategy": "NostalgiaForInfinityX7",
+  "add_config_files": [
+    "../configs/trading_mode-futures.json",
+    "../configs/exampleconfig.json",
+    "../configs/exampleconfig_secret.json",
+    "../configs/instance-meme.json"
+  ]
+}
