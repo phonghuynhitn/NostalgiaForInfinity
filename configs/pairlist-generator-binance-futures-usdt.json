@@ -1,0 +1,121 @@
+{
+  "exchange": {
+    "name": "binance",
+    "quote": "USDT",
+    "settle": "USDT",
+    "market_type": "swap",
+    "contract_type": "PERPETUAL",
+    "ccxt_config": {
+      "enableRateLimit": true,
+      "options": {
+        "defaultType": "swap"
+      }
+    }
+  },
+  "blacklist_config": "blacklist-binance.json",
+  "output_dir": "generated",
+  "ready_file": ".ready",
+  "refresh_period": 1800,
+  "min_quote_volume": 0,
+  "buckets": [
+    {
+      "name": "defi",
+      "output": "pairs-nfi-defi.json",
+      "pinned_output": "pinned-pairs-nfi-defi.json",
+      "number_assets": 30,
+      "open_trade_db_paths": [
+        "../user_data/nfi-defi_binance_futures-live-tradesv3.sqlite"
+      ],
+      "include_bases": [
+        "LINK",
+        "UNI",
+        "AAVE",
+        "INJ",
+        "LDO",
+        "GRT",
+        "FET",
+        "ORCA",
+        "ONDO",
+        "COMP",
+        "CRV",
+        "1INCH",
+        "SUSHI",
+        "PENDLE",
+        "PYTH",
+        "STRK",
+        "DYDX",
+        "GMX",
+        "CAKE",
+        "CETUS",
+        "ENA",
+        "JUP",
+        "JTO",
+        "MORPHO",
+        "EIGEN",
+        "ETHFI",
+        "ZRO",
+        "AERO",
+        "HFT",
+        "YFI"
+      ]
+    },
+    {
+      "name": "meme",
+      "output": "pairs-nfi-meme.json",
+      "pinned_output": "pinned-pairs-nfi-meme.json",
+      "number_assets": 20,
+      "open_trade_db_paths": [
+        "../user_data/nfi-meme_binance_futures-tradesv3.sqlite"
+      ],
+      "include_bases": [
+        "WIF",
+        "PEPE",
+        "SHIB",
+        "GALA",
+        "TIA",
+        "BONK",
+        "ENA",
+        "PENGU",
+        "VIRTUAL",
+        "MEME",
+        "MEW",
+        "MOODENG",
+        "MYRO",
+        "NOT",
+        "PEOPLE",
+        "PNUT",
+        "PONKE",
+        "POPCAT",
+        "TURBO",
+        "SLERF"
+      ]
+    },
+    {
+      "name": "major",
+      "output": "pairs-nfi-major.json",
+      "pinned_output": "pinned-pairs-nfi-major.json",
+      "number_assets": 30,
+      "open_trade_db_paths": [
+        "../user_data/nfi-major_binance_futures-live-tradesv3.sqlite"
+      ]
+    },
+    {
+      "name": "mid",
+      "output": "pairs-nfi-mid.json",
+      "pinned_output": "pinned-pairs-nfi-mid.json",
+      "number_assets": 30,
+      "open_trade_db_paths": [
+        "../user_data/nfi-mid_binance_futures-live-tradesv3.sqlite"
+      ]
+    },
+    {
+      "name": "alt",
+      "output": "pairs-nfi-alt.json",
+      "pinned_output": "pinned-pairs-nfi-alt.json",
+      "number_assets": 30,
+      "open_trade_db_paths": [
+        "../user_data/nfi-alt_binance_futures-live-tradesv3.sqlite"
+      ]
+    }
+  ]
+}

@@ -11,13 +11,32 @@ x-common-settings:
     - "./user_data:/freqtrade/user_data"
     - "./user_data/data:/freqtrade/user_data/data"
     - "./configs:/freqtrade/configs"
+    - "./tools:/freqtrade/tools:ro"
     - "./${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}.py:/freqtrade/${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}.py"
 
 services:
 
+  pairlist-updater:
+    <<: *multi-bot-common-settings
+    container_name: nfi-pairlist-updater_binance_futures
+    entrypoint: ["python", "/freqtrade/tools/generate-pairlists.py"]
+    command: >
+      --config /freqtrade/configs/pairlist-generator-binance-futures-usdt.json
+      --loop
+    healthcheck:
+      test: ["CMD", "test", "-f", "/freqtrade/configs/generated/.ready"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+      start_interval: 5s
+
   nfi-major:
     <<: *multi-bot-common-settings
     container_name: nfi-major_binance_futures-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}
+    depends_on:
+      pairlist-updater:
+        condition: service_healthy
     env_file:
       - path: .env
         required: false
@@ -42,6 +61,9 @@ services:
   nfi-mid:
     <<: *multi-bot-common-settings
     container_name: nfi-mid_binance_futures-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}
+    depends_on:
+      pairlist-updater:
+        condition: service_healthy
     env_file:
       - path: .env
         required: false
@@ -66,6 +88,9 @@ services:
   nfi-alt:
     <<: *multi-bot-common-settings
     container_name: nfi-alt_binance_futures-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}
+    depends_on:
+      pairlist-updater:
+        condition: service_healthy
     env_file:
       - path: .env
         required: false
@@ -90,6 +115,9 @@ services:
   nfi-defi:
     <<: *multi-bot-common-settings
     container_name: nfi-defi_binance_futures-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}
+    depends_on:
+      pairlist-updater:
+        condition: service_healthy
     env_file:
       - path: .env
         required: false

@@ -1,0 +1,48 @@
+{
+  "exchange": {
+    "name": "binance"
+  },
+  "pairlists": [
+    {
+      "method": "RemotePairList",
+      "mode": "whitelist",
+      "pairlist_url": "file:///configs/generated/pairs-nfi-meme.json",
+      "refresh_period": 1800,
+      "keep_pairlist_on_failure": true
+    },
+    {
+      "method": "FullTradesFilter"
+    },
+    {
+      "method": "DelistFilter",
+      "max_days_from_now": 0
+    },
+    {
+      "method": "AgeFilter",
+      "min_days_listed": 60
+    },
+    {
+      "method": "PriceFilter",
+      "low_price_ratio": 0.003
+    },
+    {
+      "method": "SpreadFilter",
+      "max_spread_ratio": 0.005
+    },
+    {
+      "method": "RangeStabilityFilter",
+      "lookback_days": 3,
+      "min_rate_of_change": 0.03,
+      "max_rate_of_change": 2.0,
+      "refresh_period": 1800
+    },
+    {
+      "method": "RemotePairList",
+      "mode": "whitelist",
+      "processing_mode": "append",
+      "pairlist_url": "file:///configs/generated/pinned-pairs-nfi-meme.json",
+      "refresh_period": 1800,
+      "keep_pairlist_on_failure": true
+    }
+  ]
+}
