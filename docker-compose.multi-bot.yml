@@ -19,6 +19,7 @@ services:
   pairlist-updater:
     <<: *multi-bot-common-settings
     container_name: nfi-pairlist-updater_binance_futures
+    user: "0:0"
     entrypoint: ["python", "/freqtrade/tools/generate-pairlists.py"]
     command: >
       --config /freqtrade/configs/pairlist-generator-binance-futures-usdt.json
