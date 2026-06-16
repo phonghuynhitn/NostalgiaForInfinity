@@ -348,6 +348,8 @@ def select_bucket(
   bucket: dict[str, Any],
   candidates: list[Candidate],
   assigned: set[str],
+  reserved_pairs: set[str],
+  own_pinned_pairs: set[str],
 ) -> list[Candidate]:
   include_bases = set(bucket.get("include_bases", []))
   allow_overlap = bool(bucket.get("allow_overlap", False))
@@ -380,7 +382,8 @@ def select_bucket(
     ]
 
   if not allow_overlap:
-    pool = [candidate for candidate in pool if candidate.symbol not in assigned]
+    excluded_pairs = assigned | (reserved_pairs - own_pinned_pairs)
+    pool = [candidate for candidate in pool if candidate.symbol not in excluded_pairs]
 
   selected = pool[offset : offset + selection_count]
 
@@ -411,16 +414,44 @@ def candidate_metadata(candidate: Candidate) -> dict[str, Any]:
   }
 
 
+def collect_pinned_pairs(config_path: Path, buckets: list[dict[str, Any]]) -> dict[str, list[str]]:
+  return {bucket["name"]: pinned_pairs_for_bucket(config_path, bucket) for bucket in buckets}
+
+
+def pinned_pair_conflicts(pinned_pairs_by_bucket: dict[str, list[str]]) -> dict[str, list[str]]:
+  buckets_by_pair: dict[str, list[str]] = {}
+  for bucket_name, pinned_pairs in pinned_pairs_by_bucket.items():
+    for pair in pinned_pairs:
+      buckets_by_pair.setdefault(pair, []).append(bucket_name)
+
+  return {
+    pair: bucket_names
+    for pair, bucket_names in buckets_by_pair.items()
+    if len(bucket_names) > 1
+  }
+
+
 def write_outputs(config_path: Path, config: dict[str, Any], candidates: list[Candidate]) -> None:
   output_dir = resolve_path(config_path, config["output_dir"])
   refresh_period = int(config["refresh_period"])
   generated_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
+  buckets = config["buckets"]
+  pinned_pairs_by_bucket = collect_pinned_pairs(config_path, buckets)
+  reserved_pairs = {
+    pair
+    for pinned_pairs in pinned_pairs_by_bucket.values()
+    for pair in pinned_pairs
+  }
+  pinned_conflicts = pinned_pair_conflicts(pinned_pairs_by_bucket)
+  for pair, bucket_names in pinned_conflicts.items():
+    LOGGER.warning("Pinned pair %s is already open in multiple buckets: %s", pair, ", ".join(bucket_names))
+
   assigned: set[str] = set()
   summary: dict[str, dict[str, int]] = {}
 
-  for bucket in config["buckets"]:
-    selected = select_bucket(bucket, candidates, assigned)
-    pinned_pairs = pinned_pairs_for_bucket(config_path, bucket)
+  for bucket in buckets:
+    pinned_pairs = pinned_pairs_by_bucket[bucket["name"]]
+    selected = select_bucket(bucket, candidates, assigned, reserved_pairs, set(pinned_pairs))
     output_path = output_dir / bucket["output"]
     pinned_output_path = output_dir / bucket.get("pinned_output", f"pinned-{bucket['output']}")
     metadata_output_path = output_dir / bucket.get("metadata_output", f"{Path(bucket['output']).stem}.metadata.json")
@@ -448,6 +479,8 @@ def write_outputs(config_path: Path, config: dict[str, Any], candidates: list[Ca
         "min_quote_volume": parse_float(bucket.get("min_quote_volume")),
         "selection_multiplier": float(bucket.get("selection_multiplier", 1.0)),
         "selection_buffer": int(bucket.get("selection_buffer", 0)),
+        "pinned_pairs": pinned_pairs,
+        "reserved_pinned_pairs": sorted(reserved_pairs - set(pinned_pairs)),
         "pairs": [candidate_metadata(candidate) for candidate in selected],
       },
     )
@@ -467,6 +500,8 @@ def write_outputs(config_path: Path, config: dict[str, Any], candidates: list[Ca
         {
           "generated_at": generated_at,
           "candidate_count": len(candidates),
+          "reserved_pinned_count": len(reserved_pairs),
+          "pinned_conflicts": pinned_conflicts,
           "buckets": summary,
         },
         indent=2,
