@@ -74,17 +74,14 @@
       ]
     },
     {
-      "name": "meme",
-      "output": "pairs-nfi-meme.json",
-      "pinned_output": "pinned-pairs-nfi-meme.json",
-      "number_assets": 20,
-      "selection_multiplier": 1.3,
+      "name": "major",
+      "output": "pairs-nfi-major.json",
+      "pinned_output": "pinned-pairs-nfi-major.json",
+      "number_assets": 30,
+      "selection_multiplier": 1.2,
       "min_quote_volume": 5000000,
       "max_spread_ratio": 0.005,
-      "open_trade_db_paths": [
-        "../user_data/nfi-meme_binance_futures-tradesv3.sqlite"
-      ],
-      "include_bases": [
+      "exclude_bases": [
         "WIF",
         "PEPE",
         "SHIB",
@@ -105,16 +102,7 @@
         "POPCAT",
         "TURBO",
         "SLERF"
-      ]
-    },
-    {
-      "name": "major",
-      "output": "pairs-nfi-major.json",
-      "pinned_output": "pinned-pairs-nfi-major.json",
-      "number_assets": 30,
-      "selection_multiplier": 1.2,
-      "min_quote_volume": 5000000,
-      "max_spread_ratio": 0.005,
+      ],
       "open_trade_db_paths": [
         "../user_data/nfi-major_binance_futures-live-tradesv3.sqlite"
       ]
@@ -127,6 +115,28 @@
       "selection_multiplier": 1.2,
       "min_quote_volume": 5000000,
       "max_spread_ratio": 0.005,
+      "exclude_bases": [
+        "WIF",
+        "PEPE",
+        "SHIB",
+        "GALA",
+        "TIA",
+        "BONK",
+        "ENA",
+        "PENGU",
+        "VIRTUAL",
+        "MEME",
+        "MEW",
+        "MOODENG",
+        "MYRO",
+        "NOT",
+        "PEOPLE",
+        "PNUT",
+        "PONKE",
+        "POPCAT",
+        "TURBO",
+        "SLERF"
+      ],
       "open_trade_db_paths": [
         "../user_data/nfi-mid_binance_futures-live-tradesv3.sqlite"
       ]
@@ -139,6 +149,28 @@
       "selection_multiplier": 1.2,
       "min_quote_volume": 5000000,
       "max_spread_ratio": 0.005,
+      "priority_include_bases": [
+        "WIF",
+        "PEPE",
+        "SHIB",
+        "GALA",
+        "TIA",
+        "BONK",
+        "ENA",
+        "PENGU",
+        "VIRTUAL",
+        "MEME",
+        "MEW",
+        "MOODENG",
+        "MYRO",
+        "NOT",
+        "PEOPLE",
+        "PNUT",
+        "PONKE",
+        "POPCAT",
+        "TURBO",
+        "SLERF"
+      ],
       "open_trade_db_paths": [
         "../user_data/nfi-alt_binance_futures-live-tradesv3.sqlite"
       ]

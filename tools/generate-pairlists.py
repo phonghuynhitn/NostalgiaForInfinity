@@ -352,6 +352,8 @@ def select_bucket(
   own_pinned_pairs: set[str],
 ) -> list[Candidate]:
   include_bases = set(bucket.get("include_bases", []))
+  exclude_bases = set(bucket.get("exclude_bases", []))
+  priority_include_bases = set(bucket.get("priority_include_bases", []))
   allow_overlap = bool(bucket.get("allow_overlap", False))
   number_assets = int(bucket["number_assets"])
   offset = int(bucket.get("offset", 0))
@@ -367,6 +369,9 @@ def select_bucket(
   pool = candidates
   if include_bases:
     pool = [candidate for candidate in pool if candidate.base in include_bases]
+
+  if exclude_bases:
+    pool = [candidate for candidate in pool if candidate.base not in exclude_bases]
 
   if min_quote_volume > 0:
     pool = [candidate for candidate in pool if candidate.quote_volume >= min_quote_volume]
@@ -384,6 +389,11 @@ def select_bucket(
   if not allow_overlap:
     excluded_pairs = assigned | (reserved_pairs - own_pinned_pairs)
     pool = [candidate for candidate in pool if candidate.symbol not in excluded_pairs]
+
+  if priority_include_bases:
+    priority_pool = [candidate for candidate in pool if candidate.base in priority_include_bases]
+    regular_pool = [candidate for candidate in pool if candidate.base not in priority_include_bases]
+    pool = priority_pool + regular_pool
 
   selected = pool[offset : offset + selection_count]
 
@@ -479,6 +489,8 @@ def write_outputs(config_path: Path, config: dict[str, Any], candidates: list[Ca
         "min_quote_volume": parse_float(bucket.get("min_quote_volume")),
         "selection_multiplier": float(bucket.get("selection_multiplier", 1.0)),
         "selection_buffer": int(bucket.get("selection_buffer", 0)),
+        "priority_include_bases": sorted(bucket.get("priority_include_bases", [])),
+        "exclude_bases": sorted(bucket.get("exclude_bases", [])),
         "pinned_pairs": pinned_pairs,
         "reserved_pinned_pairs": sorted(reserved_pairs - set(pinned_pairs)),
         "pairs": [candidate_metadata(candidate) for candidate in selected],
