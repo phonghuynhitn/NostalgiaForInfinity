@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import math
 import os
 import re
 import sqlite3
@@ -25,6 +26,10 @@ class Candidate:
   symbol: str
   base: str
   quote_volume: float
+  spread_ratio: float | None
+  day_range_ratio: float | None
+  day_change_ratio: float | None
+  quality_score: float
 
 
 def strip_json_comments(raw: str) -> str:
@@ -118,6 +123,94 @@ def ticker_quote_volume(ticker: dict[str, Any]) -> float:
   return last * base_volume
 
 
+def clamp(value: float, lower: float, upper: float) -> float:
+  return max(lower, min(upper, value))
+
+
+def ticker_spread_ratio(ticker: dict[str, Any]) -> float | None:
+  bid = parse_float(ticker.get("bid"))
+  ask = parse_float(ticker.get("ask"))
+  if bid <= 0 or ask <= 0 or ask < bid:
+    return None
+
+  mid = (bid + ask) / 2
+  if mid <= 0:
+    return None
+
+  return (ask - bid) / mid
+
+
+def ticker_day_range_ratio(ticker: dict[str, Any]) -> float | None:
+  high = parse_float(ticker.get("high"))
+  low = parse_float(ticker.get("low"))
+  if high <= 0 or low <= 0 or high < low:
+    return None
+
+  mid = (high + low) / 2
+  if mid <= 0:
+    return None
+
+  return (high - low) / mid
+
+
+def ticker_day_change_ratio(ticker: dict[str, Any]) -> float | None:
+  percentage = ticker.get("percentage")
+  if percentage is not None:
+    return abs(parse_float(percentage)) / 100
+
+  open_rate = parse_float(ticker.get("open"))
+  change = parse_float(ticker.get("change"))
+  if open_rate <= 0:
+    return None
+
+  return abs(change) / open_rate
+
+
+def range_quality(value: float | None, minimum: float, maximum: float) -> float:
+  if value is None:
+    return 0.5
+  if value < minimum:
+    return clamp(value / minimum, 0.0, 1.0)
+  if value > maximum:
+    return clamp(maximum / value, 0.0, 1.0)
+  return 1.0
+
+
+def calculate_quality_score(
+  quote_volume: float,
+  spread_ratio: float | None,
+  day_range_ratio: float | None,
+  day_change_ratio: float | None,
+  config: dict[str, Any],
+) -> float:
+  quality_config = config.get("quality", {})
+  volume_weight = parse_float(quality_config.get("volume_weight", 1.0))
+  spread_weight = parse_float(quality_config.get("spread_weight", 2.0))
+  range_weight = parse_float(quality_config.get("range_weight", 0.5))
+  change_weight = parse_float(quality_config.get("change_weight", 0.5))
+  max_spread_ratio = parse_float(quality_config.get("max_spread_ratio", 0.005))
+  min_day_range_ratio = parse_float(quality_config.get("min_day_range_ratio", 0.01))
+  max_day_range_ratio = parse_float(quality_config.get("max_day_range_ratio", 0.75))
+  max_day_change_ratio = parse_float(quality_config.get("max_day_change_ratio", 0.35))
+
+  volume_component = math.log10(max(quote_volume, 1.0))
+  spread_component = 0.5
+  if spread_ratio is not None and max_spread_ratio > 0:
+    spread_component = clamp(1 - (spread_ratio / max_spread_ratio), 0.0, 1.0)
+
+  day_range_component = range_quality(day_range_ratio, min_day_range_ratio, max_day_range_ratio)
+  change_component = 0.5
+  if day_change_ratio is not None and max_day_change_ratio > 0:
+    change_component = clamp(1 - (day_change_ratio / max_day_change_ratio), 0.0, 1.0)
+
+  return (
+    volume_weight * volume_component
+    + spread_weight * spread_component
+    + range_weight * day_range_component
+    + change_weight * change_component
+  )
+
+
 def compile_blacklist(path: Path) -> list[re.Pattern[str]]:
   if not path.exists():
     raise FileNotFoundError(f"Blacklist config not found: {path}")
@@ -205,10 +298,16 @@ def fetch_candidates(config: dict[str, Any], blacklist: list[re.Pattern[str]]) -
   markets = exchange.load_markets()
   tickers = exchange.fetch_tickers()
   min_quote_volume = parse_float(config.get("min_quote_volume"))
+  base_pattern_value = config.get("base_pattern")
+  base_pattern = re.compile(base_pattern_value) if base_pattern_value else None
 
   candidates: list[Candidate] = []
   for symbol, market in markets.items():
     if not market_matches(market, exchange_config):
+      continue
+
+    base = market["base"]
+    if base_pattern and not base_pattern.fullmatch(base):
       continue
 
     if is_blacklisted(symbol, blacklist):
@@ -219,9 +318,29 @@ def fetch_candidates(config: dict[str, Any], blacklist: list[re.Pattern[str]]) -
     if quote_volume < min_quote_volume:
       continue
 
-    candidates.append(Candidate(symbol=symbol, base=market["base"], quote_volume=quote_volume))
+    spread_ratio = ticker_spread_ratio(ticker)
+    day_range_ratio = ticker_day_range_ratio(ticker)
+    day_change_ratio = ticker_day_change_ratio(ticker)
+    quality_score = calculate_quality_score(
+      quote_volume=quote_volume,
+      spread_ratio=spread_ratio,
+      day_range_ratio=day_range_ratio,
+      day_change_ratio=day_change_ratio,
+      config=config,
+    )
+    candidates.append(
+      Candidate(
+        symbol=symbol,
+        base=base,
+        quote_volume=quote_volume,
+        spread_ratio=spread_ratio,
+        day_range_ratio=day_range_ratio,
+        day_change_ratio=day_change_ratio,
+        quality_score=quality_score,
+      )
+    )
 
-  candidates.sort(key=lambda candidate: (-candidate.quote_volume, candidate.symbol))
+  candidates.sort(key=lambda candidate: (-candidate.quality_score, -candidate.quote_volume, candidate.symbol))
   return candidates
 
 
@@ -234,15 +353,36 @@ def select_bucket(
   allow_overlap = bool(bucket.get("allow_overlap", False))
   number_assets = int(bucket["number_assets"])
   offset = int(bucket.get("offset", 0))
+  selection_multiplier = float(bucket.get("selection_multiplier", 1.0))
+  selection_buffer = int(bucket.get("selection_buffer", 0))
+  selection_count = int(bucket.get("selection_count", math.ceil(number_assets * selection_multiplier) + selection_buffer))
+  selection_count = max(number_assets, selection_count)
+  min_quote_volume = parse_float(bucket.get("min_quote_volume"))
+  min_quality_score = parse_float(bucket.get("min_quality_score"))
+  max_spread_ratio = bucket.get("max_spread_ratio")
+  max_spread_ratio = parse_float(max_spread_ratio) if max_spread_ratio is not None else None
 
   pool = candidates
   if include_bases:
     pool = [candidate for candidate in pool if candidate.base in include_bases]
 
+  if min_quote_volume > 0:
+    pool = [candidate for candidate in pool if candidate.quote_volume >= min_quote_volume]
+
+  if min_quality_score > 0:
+    pool = [candidate for candidate in pool if candidate.quality_score >= min_quality_score]
+
+  if max_spread_ratio is not None:
+    pool = [
+      candidate
+      for candidate in pool
+      if candidate.spread_ratio is None or candidate.spread_ratio <= max_spread_ratio
+    ]
+
   if not allow_overlap:
     pool = [candidate for candidate in pool if candidate.symbol not in assigned]
 
-  selected = pool[offset : offset + number_assets]
+  selected = pool[offset : offset + selection_count]
 
   if not allow_overlap:
     assigned.update(candidate.symbol for candidate in selected)
@@ -259,18 +399,31 @@ def atomic_write_json(path: Path, data: dict[str, Any]) -> None:
   os.replace(tmp_path, path)
 
 
+def candidate_metadata(candidate: Candidate) -> dict[str, Any]:
+  return {
+    "pair": candidate.symbol,
+    "base": candidate.base,
+    "quote_volume": round(candidate.quote_volume, 2),
+    "spread_ratio": None if candidate.spread_ratio is None else round(candidate.spread_ratio, 8),
+    "day_range_ratio": None if candidate.day_range_ratio is None else round(candidate.day_range_ratio, 8),
+    "day_change_ratio": None if candidate.day_change_ratio is None else round(candidate.day_change_ratio, 8),
+    "quality_score": round(candidate.quality_score, 6),
+  }
+
+
 def write_outputs(config_path: Path, config: dict[str, Any], candidates: list[Candidate]) -> None:
   output_dir = resolve_path(config_path, config["output_dir"])
   refresh_period = int(config["refresh_period"])
   generated_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
   assigned: set[str] = set()
-  summary: dict[str, int] = {}
+  summary: dict[str, dict[str, int]] = {}
 
   for bucket in config["buckets"]:
     selected = select_bucket(bucket, candidates, assigned)
     pinned_pairs = pinned_pairs_for_bucket(config_path, bucket)
     output_path = output_dir / bucket["output"]
     pinned_output_path = output_dir / bucket.get("pinned_output", f"pinned-{bucket['output']}")
+    metadata_output_path = output_dir / bucket.get("metadata_output", f"{Path(bucket['output']).stem}.metadata.json")
     atomic_write_json(
       output_path,
       {
@@ -285,7 +438,21 @@ def write_outputs(config_path: Path, config: dict[str, Any], candidates: list[Ca
         "refresh_period": refresh_period,
       },
     )
+    atomic_write_json(
+      metadata_output_path,
+      {
+        "generated_at": generated_at,
+        "bucket": bucket["name"],
+        "target_assets": int(bucket["number_assets"]),
+        "selected_assets": len(selected),
+        "min_quote_volume": parse_float(bucket.get("min_quote_volume")),
+        "selection_multiplier": float(bucket.get("selection_multiplier", 1.0)),
+        "selection_buffer": int(bucket.get("selection_buffer", 0)),
+        "pairs": [candidate_metadata(candidate) for candidate in selected],
+      },
+    )
     summary[bucket["name"]] = {
+      "target": int(bucket["number_assets"]),
       "selected": len(selected),
       "pinned": len(pinned_pairs),
     }

@@ -27,7 +27,11 @@ services:
       --config /freqtrade/configs/pairlist-generator-binance-futures-usdt.json
       --loop
     healthcheck:
-      test: ["CMD", "test", "-f", "/freqtrade/configs/generated/.ready"]
+      test:
+        [
+          "CMD-SHELL",
+          "python -c 'import json; from datetime import datetime, timezone; ready=\"/freqtrade/configs/generated/.ready\"; data=json.load(open(ready, encoding=\"utf-8\")); generated_at=datetime.fromisoformat(data[\"generated_at\"].replace(\"Z\", \"+00:00\")); age=(datetime.now(timezone.utc)-generated_at).total_seconds(); raise SystemExit(0 if age <= 3900 else 1)'"
+        ]
       interval: 30s
       timeout: 5s
       retries: 5
