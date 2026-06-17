@@ -6,6 +6,7 @@
     "../configs/exampleconfig_secret.json",
     "../configs/pairlist-remote-binance-futures-usdt-major.json",
     "../configs/blacklist-binance.json",
+    "../configs/multi-bot-common.json",
     "../configs/instance-major.json"
   ]
 }
