@@ -92,32 +92,32 @@ services:
       --log-file user_data/logs/nfi-mid-binance-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}-futures.log
       --strategy-path .
 
-  nfi-alt:
-    <<: *multi-bot-common-settings
-    container_name: nfi-alt_binance_futures-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}
-    depends_on:
-      pairlist-updater:
-        condition: service_healthy
-    env_file:
-      - path: .env
-        required: false
-      - path: ./secrets/nfi-alt.env
-        required: false
-    ports:
-      - "8083:8080"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080"]
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-      start_interval: 5s
-    command: >
-      trade
-      --config /freqtrade/configs/recommended_config_alt.json
-      --db-url sqlite:////freqtrade/user_data/nfi-alt_binance_futures-live-tradesv3.sqlite
-      --log-file user_data/logs/nfi-alt-binance-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}-futures.log
-      --strategy-path .
+  # nfi-alt:
+  #   <<: *multi-bot-common-settings
+  #   container_name: nfi-alt_binance_futures-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}
+  #   depends_on:
+  #     pairlist-updater:
+  #       condition: service_healthy
+  #   env_file:
+  #     - path: .env
+  #       required: false
+  #     - path: ./secrets/nfi-alt.env
+  #       required: false
+  #   ports:
+  #     - "8083:8080"
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://localhost:8080"]
+  #     interval: 1m30s
+  #     timeout: 10s
+  #     retries: 3
+  #     start_period: 40s
+  #     start_interval: 5s
+  #   command: >
+  #     trade
+  #     --config /freqtrade/configs/recommended_config_alt.json
+  #     --db-url sqlite:////freqtrade/user_data/nfi-alt_binance_futures-live-tradesv3.sqlite
+  #     --log-file user_data/logs/nfi-alt-binance-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}-futures.log
+  #     --strategy-path .
 
   nfi-defi:
     <<: *multi-bot-common-settings
@@ -131,7 +131,7 @@ services:
       - path: ./secrets/nfi-defi.env
         required: false
     ports:
-      - "8084:8080"
+      - "8083:8080"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080"]
       interval: 1m30s

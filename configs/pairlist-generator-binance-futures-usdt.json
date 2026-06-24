@@ -33,7 +33,7 @@
       "name": "defi",
       "output": "pairs-nfi-defi.json",
       "pinned_output": "pinned-pairs-nfi-defi.json",
-      "number_assets": 30,
+      "number_assets": 50,
       "selection_multiplier": 1.3,
       "min_quote_volume": 5000000,
       "max_spread_ratio": 0.005,
@@ -70,7 +70,26 @@
         "ZRO",
         "AERO",
         "HFT",
-        "YFI"
+        "YFI",
+        "WIF",
+        "PEPE",
+        "SHIB",
+        "GALA",
+        "TIA",
+        "BONK",
+        "PENGU",
+        "VIRTUAL",
+        "MEME",
+        "MEW",
+        "MOODENG",
+        "MYRO",
+        "NOT",
+        "PEOPLE",
+        "PNUT",
+        "PONKE",
+        "POPCAT",
+        "TURBO",
+        "SLERF"
       ]
     },
     {
@@ -139,40 +158,6 @@
       ],
       "open_trade_db_paths": [
         "../user_data/nfi-mid_binance_futures-live-tradesv3.sqlite"
-      ]
-    },
-    {
-      "name": "alt",
-      "output": "pairs-nfi-alt.json",
-      "pinned_output": "pinned-pairs-nfi-alt.json",
-      "number_assets": 30,
-      "selection_multiplier": 1.2,
-      "min_quote_volume": 5000000,
-      "max_spread_ratio": 0.005,
-      "priority_include_bases": [
-        "WIF",
-        "PEPE",
-        "SHIB",
-        "GALA",
-        "TIA",
-        "BONK",
-        "ENA",
-        "PENGU",
-        "VIRTUAL",
-        "MEME",
-        "MEW",
-        "MOODENG",
-        "MYRO",
-        "NOT",
-        "PEOPLE",
-        "PNUT",
-        "PONKE",
-        "POPCAT",
-        "TURBO",
-        "SLERF"
-      ],
-      "open_trade_db_paths": [
-        "../user_data/nfi-alt_binance_futures-live-tradesv3.sqlite"
       ]
     }
   ]
