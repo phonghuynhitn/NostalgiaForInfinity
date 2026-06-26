@@ -70,7 +70,7 @@ class NostalgiaForInfinityX7(IStrategy):
   INTERFACE_VERSION = 3
 
   def version(self) -> str:
-    return "v17.4.277"
+    return "v17.4.283"
 
   stoploss = -0.99
 
@@ -127,7 +127,7 @@ class NostalgiaForInfinityX7(IStrategy):
   # Long Quick mode tags
   long_quick_mode_tags = ["41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53"]
   # Long rebuy mode tags
-  long_rebuy_mode_tags = ["61", "62", "63"]
+  long_rebuy_mode_tags = ["61", "62", "63", "65"]
   # Long high profit mode tags
   long_high_profit_mode_tags = ["81", "82"]
   # Long rapid mode tags
@@ -189,7 +189,7 @@ class NostalgiaForInfinityX7(IStrategy):
   # Short Quick mode tags
   short_quick_mode_tags = ["541", "542", "543", "544", "545", "546", "547", "548", "549", "550"]
   # Short rebuy mode tags
-  short_rebuy_mode_tags = ["561"]
+  short_rebuy_mode_tags = ["561", "562", "563"]
   # Short mode tags
   short_high_profit_mode_tags = ["581", "582"]
   # Short rapid mode tags
@@ -882,6 +882,7 @@ class NostalgiaForInfinityX7(IStrategy):
     "long_entry_condition_61_enable": True,
     "long_entry_condition_62_enable": True,
     "long_entry_condition_63_enable": True,
+    "long_entry_condition_65_enable": False,
     "long_entry_condition_101_enable": True,
     "long_entry_condition_102_enable": True,
     "long_entry_condition_103_enable": True,
@@ -908,6 +909,8 @@ class NostalgiaForInfinityX7(IStrategy):
     # "short_entry_condition_541_enable": True,
     "short_entry_condition_542_enable": True,
     # "short_entry_condition_543_enable": True,
+    "short_entry_condition_562_enable": False,
+    "short_entry_condition_563_enable": False,
     # "short_entry_condition_603_enable": True,
     # "short_entry_condition_641_enable": True,
     # "short_entry_condition_642_enable": True,
@@ -1944,7 +1947,7 @@ class NostalgiaForInfinityX7(IStrategy):
         total_profit += exit_stake
       current_stake = total_amount * exit_rate * fee_close_multiplier
       total_profit += current_stake
-    if is_futures_mode:
+    if is_futures_mode and trade.funding_fees is not None:
       total_profit += trade.funding_fees
     total_profit_ratio = total_profit / total_stake
     current_profit_ratio = total_profit / current_stake
@@ -3050,6 +3053,9 @@ class NostalgiaForInfinityX7(IStrategy):
       the related fields are omitted.
     - If `stake_currency` is provided, it will be appended to amounts.
     """
+    # Skip in backtesting / hyperopt
+    if self.is_backtest_mode():
+      return ""
 
     # Headers for different message types
     header_labels = {
@@ -3248,6 +3254,11 @@ class NostalgiaForInfinityX7(IStrategy):
     stochrsi_k_func = self.stochrsi_k
     chaikin_money_flow = self.chaikin_money_flow
     validate_indicators = self.validate_indicators
+    ta_rsi = ta.RSI
+    ta_aroon = ta.AROON
+    ta_roc = ta.ROC
+    ta_min = ta.MIN
+    ta_max = ta.MAX
 
     assert dp, "DataProvider is required for multiple timeframes."
 
@@ -3262,7 +3273,6 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # BASE DATA
     # =========================================================================
-
     close_np = informative_1d["close"].to_numpy(copy=False)
     high_np = informative_1d["high"].to_numpy(copy=False)
     low_np = informative_1d["low"].to_numpy(copy=False)
@@ -3272,26 +3282,19 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # CORE INDICATORS
     # =========================================================================
-    rsi_3 = ta.RSI(close_np, timeperiod=3)
-    rsi_14 = ta.RSI(close_np, timeperiod=14)
-    # bb_upper, bb_middle, bb_lower = ta.BBANDS(close_np, timeperiod=20, nbdevup=2.0, nbdevdn=2.0, matype=0)
-    # bb_middle_safe = np.where(bb_middle == 0, np.nan, bb_middle)
-    aroon_down, aroon_up = ta.AROON(high_np, low_np, timeperiod=14)
+    rsi_3 = ta_rsi(close_np, timeperiod=3)
+    rsi_14 = ta_rsi(close_np, timeperiod=14)
+    aroon_down, aroon_up = ta_aroon(high_np, low_np, timeperiod=14)
 
     # =========================================================================
     # STOCH
     # =========================================================================
     stoch_k = stoch_k_func(high_np, low_np, close_np)
-
-    # =========================================================================
-    # STOCH RSI
-    # =========================================================================
     stochrsi_k = stochrsi_k_func(rsi_14)
 
     # =========================================================================
     # MONEY FLOW
     # =========================================================================
-
     mfi_14 = ta.MFI(high_np, low_np, close_np, volume_np, timeperiod=14)
     cmf_20 = chaikin_money_flow(high_np, low_np, close_np, volume_np, timeperiod=20)
 
@@ -3299,14 +3302,13 @@ class NostalgiaForInfinityX7(IStrategy):
     # MOMENTUM
     # =========================================================================
     willr_14 = ta.WILLR(high_np, low_np, close_np, timeperiod=14)
-    roc_2 = ta.ROC(close_np, timeperiod=2)
-    roc_9 = ta.ROC(close_np, timeperiod=9)
+    roc_2 = ta_roc(close_np, timeperiod=2)
+    roc_9 = ta_roc(close_np, timeperiod=9)
 
     # =========================================================================
     # RSI CHANGE %
     # =========================================================================
     rsi3_change = fast_pct_change(rsi_3)
-    # rsi14_change = self.fast_pct_change(rsi_14)
 
     # =========================================================================
     # CANDLE %
@@ -3327,48 +3329,35 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # HIGH / LOW ROLLING
     # =========================================================================
-    high_max_6 = ta.MAX(high_np, timeperiod=6)
-    high_max_12 = ta.MAX(high_np, timeperiod=12)
-    high_max_20 = ta.MAX(high_np, timeperiod=20)
-    high_max_30 = ta.MAX(high_np, timeperiod=30)
-    low_min_6 = ta.MIN(low_np, timeperiod=6)
-    low_min_12 = ta.MIN(low_np, timeperiod=12)
-    low_min_20 = ta.MIN(low_np, timeperiod=20)
-    low_min_30 = ta.MIN(low_np, timeperiod=30)
+    high_max_6 = ta_max(high_np, timeperiod=6)
+    high_max_12 = ta_max(high_np, timeperiod=12)
+    high_max_20 = ta_max(high_np, timeperiod=20)
+    high_max_30 = ta_max(high_np, timeperiod=30)
+    low_min_6 = ta_min(low_np, timeperiod=6)
+    low_min_12 = ta_min(low_np, timeperiod=12)
+    low_min_20 = ta_min(low_np, timeperiod=20)
+    low_min_30 = ta_min(low_np, timeperiod=30)
 
     # =========================================================================
     # ASSIGN DATAFRAME
     # =========================================================================
     new_cols = pd.DataFrame(
       {
-        # Core indicators
         "RSI_3": rsi_3,
         "RSI_14": rsi_14,
-        # "BBL_20_2.0": bb_lower,
-        # "BBU_20_2.0": bb_upper,
-        # "BBB_20_2.0": ((bb_upper - bb_lower) / bb_middle_safe) * 100.0,
-        # Stoch
         "STOCHk_14_3_3": stoch_k,
-        # Stoch RSI
         "STOCHRSIk_14_14_3_3": stochrsi_k,
-        # Money Flow
         "MFI_14": mfi_14,
         "CMF_20": cmf_20,
-        # Momentum
         "WILLR_14": willr_14,
         "AROONU_14": aroon_up,
         "AROOND_14": aroon_down,
         "ROC_2": roc_2,
         "ROC_9": roc_9,
-        # Change %
         "RSI_3_change_pct": rsi3_change,
-        # "RSI_14_change_pct": rsi14_change,
-        # Candle %
         "change_pct": change_pct,
-        # Wick %
         "top_wick_pct": top_wick_pct,
         "bot_wick_pct": bot_wick_pct,
-        # Rolling
         "high_max_6": high_max_6,
         "high_max_12": high_max_12,
         "high_max_20": high_max_20,
@@ -3380,41 +3369,27 @@ class NostalgiaForInfinityX7(IStrategy):
       },
       index=informative_1d.index,
     )
-
     informative_1d = pd.concat([informative_1d, new_cols], axis=1, copy=False)
 
     # Enable ONLY during debugging
     debug = False
     if debug:
       debug_cols = [
-        # Core indicators
         "RSI_3",
         "RSI_14",
-        # "BBL_20_2.0",
-        # "BBU_20_2.0",
-        # "BBB_20_2.0",
-        # Stoch
         "STOCHk_14_3_3",
-        # Stoch RSI
         "STOCHRSIk_14_14_3_3",
-        # Money Flow
         "MFI_14",
         "CMF_20",
-        # Momentum
         "WILLR_14",
         "AROONU_14",
         "AROOND_14",
         "ROC_2",
         "ROC_9",
-        # Change %
         "RSI_3_change_pct",
-        # "RSI_14_change_pct",
-        # Candle %
         "change_pct",
-        # Wick %
         "top_wick_pct",
         "bot_wick_pct",
-        # Rolling
         "high_max_6",
         "high_max_12",
         "high_max_20",
@@ -3430,9 +3405,7 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # LOGGING
     # =========================================================================
-
     tok = time.perf_counter()
-
     log.debug("[%s] informative_1d_indicators took: %.4f seconds.", metadata_pair, tok - tik)
 
     return informative_1d
@@ -3447,6 +3420,13 @@ class NostalgiaForInfinityX7(IStrategy):
     stochrsi_k_func = self.stochrsi_k
     chaikin_money_flow = self.chaikin_money_flow
     validate_indicators = self.validate_indicators
+    ta_rsi = ta.RSI
+    ta_aroon = ta.AROON
+    ta_sma = ta.SMA
+    ta_roc = ta.ROC
+    ta_ema = ta.EMA
+    ta_max = ta.MAX
+    ta_min = ta.MIN
 
     assert dp, "DataProvider is required for multiple timeframes."
 
@@ -3461,7 +3441,6 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # BASE DATA
     # =========================================================================
-
     close_np = informative_4h["close"].to_numpy(copy=False)
     high_np = informative_4h["high"].to_numpy(copy=False)
     low_np = informative_4h["low"].to_numpy(copy=False)
@@ -3471,31 +3450,25 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # CORE INDICATORS
     # =========================================================================
-    rsi_3 = ta.RSI(close_np, timeperiod=3)
-    rsi_14 = ta.RSI(close_np, timeperiod=14)
-    # bb_upper, bb_middle, bb_lower = ta.BBANDS(close_np, timeperiod=20, nbdevup=2.0, nbdevdn=2.0, matype=0)
-    # bb_middle_safe = np.where(bb_middle == 0, np.nan, bb_middle)
-    aroon_down, aroon_up = ta.AROON(high_np, low_np, timeperiod=14)
+    rsi_3 = ta_rsi(close_np, timeperiod=3)
+    rsi_14 = ta_rsi(close_np, timeperiod=14)
+    aroon_down, aroon_up = ta_aroon(high_np, low_np, timeperiod=14)
 
     # =========================================================================
     # STOCH
     # =========================================================================
     stoch_k = stoch_k_func(high_np, low_np, close_np)
-
-    # =========================================================================
-    # STOCH RSI
-    # =========================================================================
     stochrsi_k = stochrsi_k_func(rsi_14)
 
     # =========================================================================
     # KST
     # =========================================================================
-    kst1 = ta.SMA(ta.ROC(close_np, 10), 10)
-    kst2 = ta.SMA(ta.ROC(close_np, 15), 10)
-    kst3 = ta.SMA(ta.ROC(close_np, 20), 10)
-    kst4 = ta.SMA(ta.ROC(close_np, 30), 15)
+    kst1 = ta_sma(ta_roc(close_np, 10), 10)
+    kst2 = ta_sma(ta_roc(close_np, 15), 10)
+    kst3 = ta_sma(ta_roc(close_np, 20), 10)
+    kst4 = ta_sma(ta_roc(close_np, 30), 15)
     kst_main = kst1 + (2.0 * kst2) + (3.0 * kst3) + (4.0 * kst4)
-    kst_signal = ta.SMA(kst_main, 9)
+    kst_signal = ta_sma(kst_main, 9)
 
     # =========================================================================
     # MONEY FLOW
@@ -3506,15 +3479,15 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # MOMENTUM
     # =========================================================================
-    ema_12 = ta.EMA(close_np, timeperiod=12)
-    ema_50 = ta.EMA(close_np, timeperiod=50)
-    ema_100 = ta.EMA(close_np, timeperiod=100)
-    ema_200 = ta.EMA(close_np, timeperiod=200)
+    ema_12 = ta_ema(close_np, timeperiod=12)
+    ema_50 = ta_ema(close_np, timeperiod=50)
+    ema_100 = ta_ema(close_np, timeperiod=100)
+    ema_200 = ta_ema(close_np, timeperiod=200)
     willr_14 = ta.WILLR(high_np, low_np, close_np, timeperiod=14)
     uo = ta.ULTOSC(high_np, low_np, close_np)
     obv = ta.OBV(close_np, volume_np)
-    roc_2 = ta.ROC(close_np, timeperiod=2)
-    roc_9 = ta.ROC(close_np, timeperiod=9)
+    roc_2 = ta_roc(close_np, timeperiod=2)
+    roc_9 = ta_roc(close_np, timeperiod=9)
     cci_20 = ta.CCI(high_np, low_np, close_np, timeperiod=20)
 
     # =========================================================================
@@ -3523,7 +3496,6 @@ class NostalgiaForInfinityX7(IStrategy):
     rsi_3_change = fast_pct_change(rsi_3)
     rsi_14_change = fast_pct_change(rsi_14)
     stochrsi_change = fast_pct_change(stochrsi_k)
-    # uo_change = self.fast_pct_change(uo)
     obv_change = fast_pct_change(obv)
     cci_change = fast_pct_change(cci_20)
 
@@ -3537,82 +3509,52 @@ class NostalgiaForInfinityX7(IStrategy):
     # WICK %
     # =========================================================================
     max_oc = np.maximum(open_np, close_np)
-    # min_oc = np.minimum(open_np, close_np)
     max_oc_calc = np.where(max_oc == 0, np.nan, max_oc)
-    # min_oc_calc = np.where(min_oc == 0, np.nan, min_oc)
     top_wick_pct = ((high_np - max_oc) / max_oc_calc) * 100.0
-    # bot_wick_pct = np.abs(((low_np - min_oc) / min_oc_calc) * 100.0)
 
     # =========================================================================
     # ROLLING
     # =========================================================================
-
-    high_max_6 = ta.MAX(high_np, timeperiod=6)
-    high_max_12 = ta.MAX(high_np, timeperiod=12)
-    high_max_24 = ta.MAX(high_np, timeperiod=24)
-    # low_min_6 = ta.MIN(low_np, timeperiod=6)
-    low_min_12 = ta.MIN(low_np, timeperiod=12)
-    low_min_24 = ta.MIN(low_np, timeperiod=24)
-    # change_pct_min_3 = ta.MIN(change_pct, timeperiod=3)
-    # change_pct_min_6 = ta.MIN(change_pct, timeperiod=6)
-    # change_pct_max_3 = ta.MAX(change_pct, timeperiod=3)
-    # change_pct_max_6 = ta.MAX(change_pct, timeperiod=6)
+    high_max_6 = ta_max(high_np, timeperiod=6)
+    high_max_12 = ta_max(high_np, timeperiod=12)
+    high_max_24 = ta_max(high_np, timeperiod=24)
+    low_min_12 = ta_min(low_np, timeperiod=12)
+    low_min_24 = ta_min(low_np, timeperiod=24)
 
     # =========================================================================
     # ASSIGN DATAFRAME
     # =========================================================================
     new_cols = pd.DataFrame(
       {
-        # Core indicators
         "RSI_3": rsi_3,
         "RSI_14": rsi_14,
-        # "BBL_20_2.0": bb_lower,
-        # "BBU_20_2.0": bb_upper,
-        # "BBB_20_2.0": ((bb_upper - bb_lower) / bb_middle_safe) * 100.0,
         "AROONU_14": aroon_up,
         "AROOND_14": aroon_down,
-        # Stoch
         "STOCHk_14_3_3": stoch_k,
-        # Stoch RSI
         "STOCHRSIk_14_14_3_3": stochrsi_k,
-        # KST
         "KST_10_15_20_30_10_10_10_15": kst_main,
         "KSTs_9": kst_signal,
-        # Money Flow
         "MFI_14": mfi_14,
         "CMF_20": cmf_20,
-        # Momentum
         "EMA_12": ema_12,
         "EMA_50": ema_50,
         "EMA_100": ema_100,
         "EMA_200": ema_200,
         "WILLR_14": willr_14,
         "UO_7_14_28": uo,
-        # "OBV": obv,
         "ROC_2": roc_2,
         "ROC_9": roc_9,
         "CCI_20": cci_20,
-        # Change %
         "STOCHRSIk_14_14_3_3_change_pct": stochrsi_change,
         "CCI_20_change_pct": cci_change,
         "RSI_3_change_pct": rsi_3_change,
         "RSI_14_change_pct": rsi_14_change,
-        # "UO_7_14_28_change_pct": uo_change,
         "OBV_change_pct": obv_change,
-        # Candle %
         "change_pct": change_pct,
-        # "change_pct_min_3": change_pct_min_3,
-        # "change_pct_min_6": change_pct_min_6,
-        # "change_pct_max_3": change_pct_max_3,
-        # "change_pct_max_6": change_pct_max_6,
-        #  Wicks %
         "top_wick_pct": top_wick_pct,
-        # "bot_wick_pct": bot_wick_pct,
-        # Rolling
         "high_max_6": high_max_6,
         "high_max_12": high_max_12,
         "high_max_24": high_max_24,
-        # "low_min_6": low_min_6,
         "low_min_12": low_min_12,
         "low_min_24": low_min_24,
       },
@@ -3625,56 +3567,34 @@ class NostalgiaForInfinityX7(IStrategy):
     debug = False
     if debug:
       debug_cols = [
-        # Core indicators
         "RSI_3",
         "RSI_14",
-        # "BBL_20_2.0",
-        # "BBU_20_2.0",
-        # "BBB_20_2.0",
         "AROONU_14",
         "AROOND_14",
-        # Stoch
         "STOCHk_14_3_3",
-        # Stoch RSI
         "STOCHRSIk_14_14_3_3",
-        # KST
         "KST_10_15_20_30_10_10_10_15",
         "KSTs_9",
-        # Money Flow
         "MFI_14",
         "CMF_20",
-        # Momentum
         "EMA_12",
         "EMA_50",
         "EMA_100",
         "EMA_200",
         "WILLR_14",
         "UO_7_14_28",
-        # "OBV",
         "ROC_2",
         "ROC_9",
         "CCI_20",
-        # Change %
         "STOCHRSIk_14_14_3_3_change_pct",
         "CCI_20_change_pct",
         "RSI_3_change_pct",
         "RSI_14_change_pct",
-        # "UO_7_14_28_change_pct",
         "OBV_change_pct",
-        # Candle %
         "change_pct",
-        # "change_pct_min_3",
-        # "change_pct_min_6",
-        # "change_pct_max_3",
-        # "change_pct_max_6",
-        # Wicks %
-        # "top_wick_pct",
-        # "bot_wick_pct",
-        # Rolling
         "high_max_6",
         "high_max_12",
         "high_max_24",
-        # "low_min_6",
         "low_min_12",
         "low_min_24",
       ]
@@ -3683,9 +3603,7 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # LOGGING
     # =========================================================================
-
     tok = time.perf_counter()
-
     log.debug("[%s] informative_4h_indicators took: %.4f seconds.", metadata_pair, tok - tik)
 
     return informative_4h
@@ -3700,6 +3618,15 @@ class NostalgiaForInfinityX7(IStrategy):
     stochrsi_k_func = self.stochrsi_k
     chaikin_money_flow = self.chaikin_money_flow
     validate_indicators = self.validate_indicators
+    ta_rsi = ta.RSI
+    ta_bbands = ta.BBANDS
+    ta_aroon = ta.AROON
+    ta_sma = ta.SMA
+    ta_roc = ta.ROC
+    ta_ema = ta.EMA
+    ta_willr = ta.WILLR
+    ta_max = ta.MAX
+    ta_min = ta.MIN
 
     assert dp, "DataProvider is required for multiple timeframes."
 
@@ -3717,7 +3644,6 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # BASE DATA
     # =========================================================================
-
     close_np = informative_1h["close"].to_numpy(copy=False)
     high_np = informative_1h["high"].to_numpy(copy=False)
     low_np = informative_1h["low"].to_numpy(copy=False)
@@ -3727,31 +3653,27 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # CORE INDICATORS
     # =========================================================================
-    rsi_3 = ta.RSI(close_np, timeperiod=3)
-    rsi_14 = ta.RSI(close_np, timeperiod=14)
-    bb_upper, bb_middle, bb_lower = ta.BBANDS(close_np, timeperiod=20, nbdevup=2.0, nbdevdn=2.0, matype=0)
+    rsi_3 = ta_rsi(close_np, timeperiod=3)
+    rsi_14 = ta_rsi(close_np, timeperiod=14)
+    bb_upper, bb_middle, bb_lower = ta_bbands(close_np, timeperiod=20, nbdevup=2.0, nbdevdn=2.0, matype=0)
     bb_middle_safe = np.where(bb_middle == 0, np.nan, bb_middle)
-    aroon_down, aroon_up = ta.AROON(high_np, low_np, timeperiod=14)
+    aroon_down, aroon_up = ta_aroon(high_np, low_np, timeperiod=14)
 
     # =========================================================================
     # STOCH
     # =========================================================================
     stoch_k = stoch_k_func(high_np, low_np, close_np)
-
-    # =========================================================================
-    # STOCH RSI
-    # =========================================================================
     stochrsi_k = stochrsi_k_func(rsi_14)
 
     # =========================================================================
     # KST
     # =========================================================================
-    kst1 = ta.SMA(ta.ROC(close_np, 10), 10)
-    kst2 = ta.SMA(ta.ROC(close_np, 15), 10)
-    kst3 = ta.SMA(ta.ROC(close_np, 20), 10)
-    kst4 = ta.SMA(ta.ROC(close_np, 30), 15)
+    kst1 = ta_sma(ta_roc(close_np, 10), 10)
+    kst2 = ta_sma(ta_roc(close_np, 15), 10)
+    kst3 = ta_sma(ta_roc(close_np, 20), 10)
+    kst4 = ta_sma(ta_roc(close_np, 30), 15)
     kst_main = kst1 + (2.0 * kst2) + (3.0 * kst3) + (4.0 * kst4)
-    kst_signal = ta.SMA(kst_main, 9)
+    kst_signal = ta_sma(kst_main, 9)
 
     # =========================================================================
     # MONEY FLOW
@@ -3762,15 +3684,14 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # MOMENTUM
     # =========================================================================
-    ema_12 = ta.EMA(close_np, timeperiod=12)
-    ema_200 = ta.EMA(close_np, timeperiod=200)
-    sma_16 = ta.SMA(close_np, timeperiod=16)
-    willr_14 = ta.WILLR(high_np, low_np, close_np, timeperiod=14)
-    willr_84 = ta.WILLR(high_np, low_np, close_np, timeperiod=84)
+    ema_12 = ta_ema(close_np, timeperiod=12)
+    ema_200 = ta_ema(close_np, timeperiod=200)
+    sma_16 = ta_sma(close_np, timeperiod=16)
+    willr_14 = ta_willr(high_np, low_np, close_np, timeperiod=14)
+    willr_84 = ta_willr(high_np, low_np, close_np, timeperiod=84)
     uo = ta.ULTOSC(high_np, low_np, close_np)
-    # obv = ta.OBV(close_np, volume_np)
-    roc_2 = ta.ROC(close_np, timeperiod=2)
-    roc_9 = ta.ROC(close_np, timeperiod=9)
+    roc_2 = ta_roc(close_np, timeperiod=2)
+    roc_9 = ta_roc(close_np, timeperiod=9)
     cci_20 = ta.CCI(high_np, low_np, close_np, timeperiod=20)
 
     # =========================================================================
@@ -3778,9 +3699,6 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     rsi_3_change = fast_pct_change(rsi_3)
     rsi_14_change = fast_pct_change(rsi_14)
-    # stochrsi_change = self.fast_pct_change(stochrsi_k)
-    # uo_change = self.fast_pct_change(uo)
-    # obv_change = self.fast_pct_change(obv)
     cci_change = fast_pct_change(cci_20)
 
     # =========================================================================
@@ -3790,24 +3708,14 @@ class NostalgiaForInfinityX7(IStrategy):
     change_pct = ((close_np - open_np) / open_safe) * 100.0
 
     # =========================================================================
-    # WICK %
-    # =========================================================================
-    # max_oc = np.maximum(open_np, close_np)
-    # min_oc = np.minimum(open_np, close_np)
-    # max_oc_calc = np.where(max_oc == 0, np.nan, max_oc)
-    # min_oc_calc = np.where(min_oc == 0, np.nan, min_oc)
-    # top_wick_pct = ((high_np - max_oc) / max_oc_calc) * 100.0
-    # bot_wick_pct = np.abs(((low_np - min_oc) / min_oc_calc) * 100.0)
-
-    # =========================================================================
     # ROLLING
     # =========================================================================
-    high_max_6 = ta.MAX(high_np, timeperiod=6)
-    high_max_12 = ta.MAX(high_np, timeperiod=12)
-    high_max_24 = ta.MAX(high_np, timeperiod=24)
-    low_min_6 = ta.MIN(low_np, timeperiod=6)
-    low_min_12 = ta.MIN(low_np, timeperiod=12)
-    low_min_24 = ta.MIN(low_np, timeperiod=24)
+    high_max_6 = ta_max(high_np, timeperiod=6)
+    high_max_12 = ta_max(high_np, timeperiod=12)
+    high_max_24 = ta_max(high_np, timeperiod=24)
+    low_min_6 = ta_min(low_np, timeperiod=6)
+    low_min_12 = ta_min(low_np, timeperiod=12)
+    low_min_24 = ta_min(low_np, timeperiod=24)
 
     new_cols = pd.DataFrame(
       {
@@ -3829,20 +3737,14 @@ class NostalgiaForInfinityX7(IStrategy):
         "AROOND_14": aroon_down,
         "STOCHk_14_3_3": stoch_k,
         "STOCHRSIk_14_14_3_3": stochrsi_k,
-        # "STOCHRSIk_14_14_3_3_change_pct": stochrsi_change,
         "KST_10_15_20_30_10_10_10_15": kst_main,
         "KSTs_9": kst_signal,
         "UO_7_14_28": uo,
-        # "UO_7_14_28_change_pct": uo_change,
-        # "OBV": obv,
-        # "OBV_change_pct": obv_change,
         "ROC_2": roc_2,
         "ROC_9": roc_9,
         "CCI_20": cci_20,
         "CCI_20_change_pct": cci_change,
         "change_pct": change_pct,
-        # "top_wick_pct": top_wick_pct,
-        # "bot_wick_pct": bot_wick_pct,
         "high_max_6": high_max_6,
         "high_max_12": high_max_12,
         "high_max_24": high_max_24,
@@ -3877,20 +3779,14 @@ class NostalgiaForInfinityX7(IStrategy):
         "AROOND_14",
         "STOCHk_14_3_3",
         "STOCHRSIk_14_14_3_3",
-        # "STOCHRSIk_14_14_3_3_change_pct",
         "KST_10_15_20_30_10_10_10_15",
         "KSTs_9",
         "UO_7_14_28",
-        # "UO_7_14_28_change_pct",
-        # "OBV",
-        # "OBV_change_pct",
         "ROC_2",
         "ROC_9",
         "CCI_20",
         "CCI_20_change_pct",
         "change_pct",
-        # "top_wick_pct",
-        # "bot_wick_pct",
         "high_max_6",
         "high_max_12",
         "high_max_24",
@@ -3904,9 +3800,7 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # LOGGING
     # =========================================================================
-
     tok = time.perf_counter()
-
     log.debug("[%s] informative_1h_indicators took: %.4f seconds.", metadata_pair, tok - tik)
 
     return informative_1h
@@ -3921,6 +3815,9 @@ class NostalgiaForInfinityX7(IStrategy):
     stochrsi_k_func = self.stochrsi_k
     chaikin_money_flow = self.chaikin_money_flow
     validate_indicators = self.validate_indicators
+    ta_rsi = ta.RSI
+    ta_aroon = ta.AROON
+    ta_ema = ta.EMA
 
     assert dp, "DataProvider is required for multiple timeframes."
 
@@ -3938,7 +3835,6 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # BASE DATA
     # =========================================================================
-
     close_np = informative_15m["close"].to_numpy(copy=False)
     high_np = informative_15m["high"].to_numpy(copy=False)
     low_np = informative_15m["low"].to_numpy(copy=False)
@@ -3948,18 +3844,14 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # CORE INDICATORS
     # =========================================================================
-    rsi_3 = ta.RSI(close_np, timeperiod=3)
-    rsi_14 = ta.RSI(close_np, timeperiod=14)
-    aroon_down, aroon_up = ta.AROON(high_np, low_np, timeperiod=14)
+    rsi_3 = ta_rsi(close_np, timeperiod=3)
+    rsi_14 = ta_rsi(close_np, timeperiod=14)
+    aroon_down, aroon_up = ta_aroon(high_np, low_np, timeperiod=14)
 
     # =========================================================================
     # STOCH
     # =========================================================================
     stoch_k = stoch_k_func(high_np, low_np, close_np)
-
-    # =========================================================================
-    # STOCH RSI
-    # =========================================================================
     stochrsi_k = stochrsi_k_func(rsi_14)
 
     # =========================================================================
@@ -3971,9 +3863,9 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # MOMENTUM
     # =========================================================================
-    ema_12 = ta.EMA(close_np, timeperiod=12)
-    ema_20 = ta.EMA(close_np, timeperiod=20)
-    ema_26 = ta.EMA(close_np, timeperiod=26)
+    ema_12 = ta_ema(close_np, timeperiod=12)
+    ema_20 = ta_ema(close_np, timeperiod=20)
+    ema_26 = ta_ema(close_np, timeperiod=26)
     willr_14 = ta.WILLR(high_np, low_np, close_np, timeperiod=14)
     uo = ta.ULTOSC(high_np, low_np, close_np)
     obv = ta.OBV(close_np, volume_np)
@@ -3985,7 +3877,6 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     rsi_3_change = fast_pct_change(rsi_3)
     rsi_14_change = fast_pct_change(rsi_14)
-    # stochrsi_change = self.fast_pct_change(stochrsi_k)
     uo_change = fast_pct_change(uo)
     obv_change = fast_pct_change(obv)
     cci_change = fast_pct_change(cci_20)
@@ -3995,16 +3886,6 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     open_safe = np.where(open_np == 0, np.nan, open_np)
     change_pct = ((close_np - open_np) / open_safe) * 100.0
-
-    # =========================================================================
-    # WICK %
-    # =========================================================================
-    # max_oc = np.maximum(open_np, close_np)
-    # min_oc = np.minimum(open_np, close_np)
-    # max_oc_calc = np.where(max_oc == 0, np.nan, max_oc)
-    # min_oc_calc = np.where(min_oc == 0, np.nan, min_oc)
-    # top_wick_pct = ((high_np - max_oc) / max_oc_calc) * 100.0
-    # bot_wick_pct = np.abs(((low_np - min_oc) / min_oc_calc) * 100.0)
 
     new_cols = pd.DataFrame(
       {
@@ -4022,17 +3903,13 @@ class NostalgiaForInfinityX7(IStrategy):
         "AROOND_14": aroon_down,
         "STOCHk_14_3_3": stoch_k,
         "STOCHRSIk_14_14_3_3": stochrsi_k,
-        # "STOCHRSIk_14_14_3_3_change_pct": stochrsi_change,
         "UO_7_14_28": uo,
         "UO_7_14_28_change_pct": uo_change,
-        # "OBV": obv,
         "OBV_change_pct": obv_change,
         "ROC_9": roc_9,
         "CCI_20": cci_20,
         "CCI_20_change_pct": cci_change,
         "change_pct": change_pct,
-        # "top_wick_pct": top_wick_pct,
-        # "bot_wick_pct": bot_wick_pct,
       },
       index=informative_15m.index,
     )
@@ -4057,17 +3934,13 @@ class NostalgiaForInfinityX7(IStrategy):
         "AROOND_14",
         "STOCHk_14_3_3",
         "STOCHRSIk_14_14_3_3",
-        # "STOCHRSIk_14_14_3_3_change_pct",
         "UO_7_14_28",
         "UO_7_14_28_change_pct",
-        # "OBV",
         "OBV_change_pct",
         "ROC_9",
         "CCI_20",
         "CCI_20_change_pct",
         "change_pct",
-        # "top_wick_pct",
-        # "bot_wick_pct",
       ]
 
       validate_indicators(df=informative_15m, columns=debug_cols, pair=metadata_pair, timeframe=info_timeframe)
@@ -4075,9 +3948,7 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # LOGGING
     # =========================================================================
-
     tok = time.perf_counter()
-
     log.debug("[%s] informative_15m_indicators took: %.4f seconds.", metadata_pair, tok - tik)
 
     return informative_15m
@@ -4091,6 +3962,15 @@ class NostalgiaForInfinityX7(IStrategy):
     stochrsi_k_func = self.stochrsi_k
     chaikin_money_flow = self.chaikin_money_flow
     validate_indicators = self.validate_indicators
+    ta_rsi = ta.RSI
+    ta_bbands = ta.BBANDS
+    ta_aroon = ta.AROON
+    ta_sma = ta.SMA
+    ta_roc = ta.ROC
+    ta_willr = ta.WILLR
+    ta_ema = ta.EMA
+    ta_max = ta.MAX
+    ta_min = ta.MIN
 
     # =========================================================================
     # BASE DATA
@@ -4104,16 +3984,14 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # CORE INDICATORS
     # =========================================================================
-    rsi_3 = ta.RSI(close_np, timeperiod=3)
-    rsi_4 = ta.RSI(close_np, timeperiod=4)
-    rsi_14 = ta.RSI(close_np, timeperiod=14)
-    rsi_20 = ta.RSI(close_np, timeperiod=20)
-    bb_upper_20, bb_middle_20, bb_lower_20 = ta.BBANDS(close_np, timeperiod=20, nbdevup=2.0, nbdevdn=2.0, matype=0)
+    rsi_3 = ta_rsi(close_np, timeperiod=3)
+    rsi_4 = ta_rsi(close_np, timeperiod=4)
+    rsi_14 = ta_rsi(close_np, timeperiod=14)
+    rsi_20 = ta_rsi(close_np, timeperiod=20)
+    bb_upper_20, bb_middle_20, bb_lower_20 = ta_bbands(close_np, timeperiod=20, nbdevup=2.0, nbdevdn=2.0, matype=0)
     bb_middle_20_safe = np.where(bb_middle_20 == 0, np.nan, bb_middle_20)
-    bb_upper_40, bb_middle_40, bb_lower_40 = ta.BBANDS(close_np, timeperiod=40, nbdevup=2.0, nbdevdn=2.0, matype=0)
-    # bb_middle_40_safe = np.where(bb_middle_40 == 0, np.nan, bb_middle_40)
-    # bb_range_40 = np.where((bb_upper_40 - bb_lower_40) == 0, np.nan, (bb_upper_40 - bb_lower_40))
-    aroon_down, aroon_up = ta.AROON(high_np, low_np, timeperiod=14)
+    bb_upper_40, bb_middle_40, bb_lower_40 = ta_bbands(close_np, timeperiod=40, nbdevup=2.0, nbdevdn=2.0, matype=0)
+    aroon_down, aroon_up = ta_aroon(high_np, low_np, timeperiod=14)
 
     # =========================================================================
     # STOCH RSI
@@ -4123,12 +4001,12 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # KST
     # =========================================================================
-    kst1 = ta.SMA(ta.ROC(close_np, 10), 10)
-    kst2 = ta.SMA(ta.ROC(close_np, 15), 10)
-    kst3 = ta.SMA(ta.ROC(close_np, 20), 10)
-    kst4 = ta.SMA(ta.ROC(close_np, 30), 15)
+    kst1 = ta_sma(ta_roc(close_np, 10), 10)
+    kst2 = ta_sma(ta_roc(close_np, 15), 10)
+    kst3 = ta_sma(ta_roc(close_np, 20), 10)
+    kst4 = ta_sma(ta_roc(close_np, 30), 15)
     kst_main = kst1 + (2.0 * kst2) + (3.0 * kst3) + (4.0 * kst4)
-    kst_signal = ta.SMA(kst_main, 9)
+    kst_signal = ta_sma(kst_main, 9)
 
     # =========================================================================
     # MONEY FLOW
@@ -4139,46 +4017,38 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # MOMENTUM
     # =========================================================================
-    # ema_3 = ta.EMA(close_np, timeperiod=3)
-    ema_9 = ta.EMA(close_np, timeperiod=9)
-    ema_12 = ta.EMA(close_np, timeperiod=12)
-    ema_16 = ta.EMA(close_np, timeperiod=16)
-    ema_20 = ta.EMA(close_np, timeperiod=20)
-    ema_26 = ta.EMA(close_np, timeperiod=26)
-    ema_50 = ta.EMA(close_np, timeperiod=50)
-    ema_100 = ta.EMA(close_np, timeperiod=100)
-    ema_200 = ta.EMA(close_np, timeperiod=200)
-    sma_9 = ta.SMA(close_np, timeperiod=9)
-    sma_16 = ta.SMA(close_np, timeperiod=16)
-    sma_21 = ta.SMA(close_np, timeperiod=21)
-    sma_30 = ta.SMA(close_np, timeperiod=30)
-    sma_200 = ta.SMA(close_np, timeperiod=200)
-    willr_14 = ta.WILLR(high_np, low_np, close_np, timeperiod=14)
-    willr_480 = ta.WILLR(high_np, low_np, close_np, timeperiod=480)
-    # obv = ta.OBV(close_np, volume_np)
-    roc_2 = ta.ROC(close_np, timeperiod=2)
-    roc_9 = ta.ROC(close_np, timeperiod=9)
+    ema_9 = ta_ema(close_np, timeperiod=9)
+    ema_12 = ta_ema(close_np, timeperiod=12)
+    ema_16 = ta_ema(close_np, timeperiod=16)
+    ema_20 = ta_ema(close_np, timeperiod=20)
+    ema_26 = ta_ema(close_np, timeperiod=26)
+    ema_50 = ta_ema(close_np, timeperiod=50)
+    ema_100 = ta_ema(close_np, timeperiod=100)
+    ema_200 = ta_ema(close_np, timeperiod=200)
+    sma_9 = ta_sma(close_np, timeperiod=9)
+    sma_16 = ta_sma(close_np, timeperiod=16)
+    sma_21 = ta_sma(close_np, timeperiod=21)
+    sma_30 = ta_sma(close_np, timeperiod=30)
+    sma_200 = ta_sma(close_np, timeperiod=200)
+    willr_14 = ta_willr(high_np, low_np, close_np, timeperiod=14)
+    willr_480 = ta_willr(high_np, low_np, close_np, timeperiod=480)
+    roc_2 = ta_roc(close_np, timeperiod=2)
+    roc_9 = ta_roc(close_np, timeperiod=9)
 
     # =========================================================================
     # CHANGE %
     # =========================================================================
-
-    # rsi_3_change = self.fast_pct_change(rsi_3)
     rsi_14_change = fast_pct_change(rsi_14)
-    # obv_change = self.fast_pct_change(obv)
 
     # =========================================================================
     # CANDLE %
     # =========================================================================
-
     open_safe = np.where(open_np == 0, np.nan, open_np)
     change_pct = ((close_np - open_np) / open_safe) * 100.0
 
     # =========================================================================
     # Close delta
     # =========================================================================
-
-    # close_delta = (close - close.shift()).abs().to_numpy()
     close_delta = np.empty_like(close_np)
     close_delta[0] = np.nan
     close_delta[1:] = np.abs(close_np[1:] - close_np[:-1])
@@ -4186,13 +4056,12 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # Rolling values
     # =========================================================================
-
-    close_max_6 = ta.MAX(close_np, timeperiod=6)
-    close_max_12 = ta.MAX(close_np, timeperiod=12)
-    close_max_48 = ta.MAX(close_np, timeperiod=48)
-    close_min_6 = ta.MIN(close_np, timeperiod=6)
-    close_min_12 = ta.MIN(close_np, timeperiod=12)
-    close_min_48 = ta.MIN(close_np, timeperiod=48)
+    close_max_6 = ta_max(close_np, timeperiod=6)
+    close_max_12 = ta_max(close_np, timeperiod=12)
+    close_max_48 = ta_max(close_np, timeperiod=48)
+    close_min_6 = ta_min(close_np, timeperiod=6)
+    close_min_12 = ta_min(close_np, timeperiod=12)
+    close_min_48 = ta_min(close_np, timeperiod=48)
     num_empty_288 = ta.SUM((volume_np <= 0).astype(np.float64), timeperiod=288)
 
     new_cols = pd.DataFrame(
@@ -4201,9 +4070,7 @@ class NostalgiaForInfinityX7(IStrategy):
         "RSI_4": rsi_4,
         "RSI_14": rsi_14,
         "RSI_20": rsi_20,
-        # "RSI_3_change_pct": rsi_3_change,
         "RSI_14_change_pct": rsi_14_change,
-        # "EMA_3": ema_3,
         "EMA_9": ema_9,
         "EMA_12": ema_12,
         "EMA_16": ema_16,
@@ -4221,10 +4088,6 @@ class NostalgiaForInfinityX7(IStrategy):
         "BBU_20_2.0": bb_upper_20,
         "BBB_20_2.0": ((bb_upper_20 - bb_lower_20) / bb_middle_20_safe) * 100.0,
         "BBL_40_2.0": bb_lower_40,
-        # "BBM_40_2.0": bb_middle_40,
-        # "BBU_40_2.0": bb_upper_40,
-        # "BBB_40_2.0": ((bb_upper_40 - bb_lower_40) / bb_middle_40_safe) * 100.0,
-        # "BBP_40_2.0": (close_np - bb_lower_40) / bb_range_40,
         "BBD_40_2.0": np.abs(bb_middle_40 - bb_lower_40),
         "BBT_40_2.0": np.abs(close_np - bb_lower_40),
         "MFI_14": mfi_14,
@@ -4236,8 +4099,6 @@ class NostalgiaForInfinityX7(IStrategy):
         "STOCHRSIk_14_14_3_3": stochrsi_k,
         "KST_10_15_20_30_10_10_10_15": kst_main,
         "KSTs_9": kst_signal,
-        # "OBV": obv,
-        # "OBV_change_pct": obv_change,
         "ROC_2": roc_2,
         "ROC_9": roc_9,
         "change_pct": change_pct,
@@ -4263,9 +4124,7 @@ class NostalgiaForInfinityX7(IStrategy):
         "RSI_4",
         "RSI_14",
         "RSI_20",
-        # "RSI_3_change_pct",
         "RSI_14_change_pct",
-        # "EMA_3",
         "EMA_9",
         "EMA_12",
         "EMA_16",
@@ -4283,10 +4142,6 @@ class NostalgiaForInfinityX7(IStrategy):
         "BBU_20_2.0",
         "BBB_20_2.0",
         "BBL_40_2.0",
-        # "BBM_40_2.0",
-        # "BBU_40_2.0",
-        # "BBB_40_2.0",
-        # "BBP_40_2.0",
         "BBD_40_2.0",
         "BBT_40_2.0",
         "MFI_14",
@@ -4298,8 +4153,6 @@ class NostalgiaForInfinityX7(IStrategy):
         "STOCHRSIk_14_14_3_3",
         "KST_10_15_20_30_10_10_10_15",
         "KSTs_9",
-        # "OBV",
-        # "OBV_change_pct",
         "ROC_2",
         "ROC_9",
         "change_pct",
@@ -4318,19 +4171,16 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # GLOBAL PROTECTIONS
     # =========================================================================
-
     if not self.config["runmode"].value in ("live", "dry_run"):
       df["bt_agefilter_ok"] = False
       df.loc[df.index > (12 * 24 * self.bt_min_age_days), "bt_agefilter_ok"] = True
     else:
-      df["live_data_ok"] = ta.MIN(volume_np, timeperiod=72) > 0
+      df["live_data_ok"] = ta_min(volume_np, timeperiod=72) > 0
 
     # =========================================================================
     # LOGGING
     # =========================================================================
-
     tok = time.perf_counter()
-
     log.debug("[%s] base_tf_5m_indicators took: %.4f seconds.", metadata_pair, tok - tik)
 
     return df
@@ -4356,7 +4206,6 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # BASE DATA
     # =========================================================================
-
     close_np = btc_informative_1d["close"].to_numpy(copy=False)
     # high_np = btc_informative_1d["high"].to_numpy(copy=False)
     # low_np = btc_informative_1d["low"].to_numpy(copy=False)
@@ -4380,9 +4229,7 @@ class NostalgiaForInfinityX7(IStrategy):
     debug = False
     if debug:
       debug_cols = [
-        "BTC_RSI_14",
         "BTC_EMA_200",
-        "BTC_ROC_3",
       ]
 
       validate_indicators(df=btc_informative_1d, columns=debug_cols, pair=btc_pair, timeframe=btc_info_timeframe)
@@ -4390,9 +4237,7 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # LOGGING
     # =========================================================================
-
     tok = time.perf_counter()
-
     log.debug("[%s] btc_informative_1d_indicators took: %.4f seconds.", btc_pair, tok - tik)
 
     return btc_informative_1d
@@ -4418,7 +4263,6 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # BASE DATA
     # =========================================================================
-
     close_np = btc_informative_4h["close"].to_numpy(copy=False)
     # high_np = btc_informative_4h["high"].to_numpy(copy=False)
     # low_np = btc_informative_4h["low"].to_numpy(copy=False)
@@ -4451,9 +4295,7 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # LOGGING
     # =========================================================================
-
     tok = time.perf_counter()
-
     log.debug("[%s] btc_informative_4h_indicators took: %.4f seconds.", btc_pair, tok - tik)
 
     return btc_informative_4h
@@ -4479,7 +4321,6 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # BASE DATA
     # =========================================================================
-
     close_np = btc_informative_1h["close"].to_numpy(copy=False)
     # high_np = btc_informative_1h["high"].to_numpy(copy=False)
     # low_np = btc_informative_1h["low"].to_numpy(copy=False)
@@ -4522,9 +4363,7 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # LOGGING
     # =========================================================================
-
     tok = time.perf_counter()
-
     log.debug("[%s] btc_informative_1h_indicators took: %.4f seconds.", btc_pair, tok - tik)
 
     return btc_informative_1h
@@ -4550,7 +4389,6 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # BASE DATA
     # =========================================================================
-
     close_np = btc_informative_15m["close"].to_numpy(copy=False)
     # high_np = btc_informative_15m["high"].to_numpy(copy=False)
     # low_np = btc_informative_15m["low"].to_numpy(copy=False)
@@ -4593,9 +4431,7 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # LOGGING
     # =========================================================================
-
     tok = time.perf_counter()
-
     log.debug("[%s] btc_informative_15m_indicators took: %.4f seconds.", btc_pair, tok - tik)
 
     return btc_informative_15m
@@ -4621,7 +4457,6 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # BASE DATA
     # =========================================================================
-
     close_np = btc_informative_5m["close"].to_numpy(copy=False)
     # high_np = btc_informative_5m["high"].to_numpy(copy=False)
     # low_np = btc_informative_5m["low"].to_numpy(copy=False)
@@ -4664,9 +4499,7 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # LOGGING
     # =========================================================================
-
     tok = time.perf_counter()
-
     log.debug("[%s] btc_informative_5m_indicators took: %.4f seconds.", btc_pair, tok - tik)
 
     return btc_informative_5m
@@ -4708,166 +4541,94 @@ class NostalgiaForInfinityX7(IStrategy):
     prepare_informative_merge = self.prepare_informative_merge
     base_timeframe = self.timeframe
     metadata_pair = metadata["pair"]
-
-    # =========================================================================
-    # CONFIG
-    # =========================================================================
-
     debug = False
 
-    # =========================================================================
-    # BTC INFORMATIVE PAIR
-    # =========================================================================
-
+    # ============================================================
+    # BTC INFORMATIVE (BATCH PREPARATION)
+    # ============================================================
     btc_info_pair = self.btc_informative_pair()
-
-    # =========================================================================
-    # BTC INFORMATIVE LOOP
-    # =========================================================================
-
+    btc_frames = {}
     for btc_tf in self.btc_info_timeframes:
-      btc_informative = self.btc_info_switcher(btc_info_pair, btc_tf)
-
-      # ---------------------------------------------------------------------
-      # EMPTY CHECK
-      # ---------------------------------------------------------------------
-
-      if btc_informative.empty:
-        log.warning(f"[{metadata_pair}] BTC informative {btc_tf} EMPTY!")
-
+      btc_df = self.btc_info_switcher(btc_info_pair, btc_tf)
+      if btc_df.empty:
         continue
 
-      # ---------------------------------------------------------------------
-      # DEBUG
-      # ---------------------------------------------------------------------
+      btc_df = prepare_informative_merge(btc_df)
+      btc_frames[btc_tf] = btc_df
 
-      if debug:
-        if not btc_informative.index.is_monotonic_increasing:
-          log.warning(f"[{metadata_pair}] BTC {btc_tf} index NOT monotonic!")
-
-        if btc_informative.index.has_duplicates:
-          log.warning(f"[{metadata_pair}] BTC {btc_tf} index has DUPLICATES!")
-
-      # ---------------------------------------------------------------------
-      # REMOVE UNUSED OHLCV BEFORE MERGE
-      # ---------------------------------------------------------------------
-
-      btc_informative = prepare_informative_merge(btc_informative)
-
-      # ---------------------------------------------------------------------
-      # MERGE
-      # ---------------------------------------------------------------------
-
-      df = merge_informative_pair(df, btc_informative, base_timeframe, btc_tf, ffill=False)
-      # rsi_col = f"BTC_RSI_14_{btc_tf}"
-      # if rsi_col in df.columns:
-      # log.warning("MERGE CHECK | %s=%s", rsi_col, df[rsi_col].iloc[-1])
-
-      # ---------------------------------------------------------------------
-      # CLEANUP
-      # ---------------------------------------------------------------------
-
-      merge_date_col = f"date_{btc_tf}"
-      if merge_date_col in df.columns:
-        df.drop(columns=merge_date_col, inplace=True)
-
-    # =========================================================================
-    # INFORMATIVE TF LOOP
-    # =========================================================================
-
+    # ============================================================
+    # INFO TF (BATCH PREPARATION)
+    # ============================================================
+    info_frames = {}
     for info_tf in self.info_timeframes:
-      info_indicators = self.info_switcher(metadata, info_tf)
-
-      # ---------------------------------------------------------------------
-      # EMPTY CHECK
-      # ---------------------------------------------------------------------
-
-      if info_indicators.empty:
-        if debug:
-          log.warning(f"[{metadata_pair}] {info_tf} informative EMPTY!")
-
+      info_df = self.info_switcher(metadata, info_tf)
+      if info_df.empty:
         continue
 
-      # ---------------------------------------------------------------------
-      # DEBUG
-      # ---------------------------------------------------------------------
+      keep_ohlcv = {"open", "close"} if info_tf == "15m" else set()
+      info_df = prepare_informative_merge(info_df, keep_ohlcv)
+      info_frames[info_tf] = info_df
 
-      if debug:
-        if not info_indicators.index.is_monotonic_increasing:
-          log.warning(f"[{metadata_pair}] {info_tf} index NOT monotonic!")
+    # ============================================================
+    # SINGLE MERGE LOOP (BTC + INFO UNIFIED)
+    # ============================================================
+    for frames in (btc_frames, info_frames):
+      for tf, frame in frames.items():
+        df = merge_informative_pair(df, frame, base_timeframe, tf, ffill=False)
+        col = f"date_{tf}"
+        if col in df.columns:
+          df.drop(columns=col, inplace=True)
 
-        if info_indicators.index.has_duplicates:
-          log.warning(f"[{metadata_pair}] {info_tf} index has DUPLICATES!")
-
-        nan_cols = info_indicators.columns[info_indicators.isna().all()].tolist()
-        if nan_cols:
-          log.warning(f"[{metadata_pair}] {info_tf} FULL NaN cols: {nan_cols}")
-
-      # ---------------------------------------------------------------------
-      # KEEP ONLY REQUIRED OHLCV
-      # ---------------------------------------------------------------------
-
-      if info_tf == "15m":
-        keep_ohlcv = {"open", "close"}
-      else:
-        keep_ohlcv = set()
-
-      info_indicators = prepare_informative_merge(info_indicators, keep_ohlcv)
-
-      # ---------------------------------------------------------------------
-      # MERGE
-      # ---------------------------------------------------------------------
-
-      df = merge_informative_pair(df, info_indicators, base_timeframe, info_tf, ffill=False)
-
-      # ---------------------------------------------------------------------
-      # CLEANUP
-      # ---------------------------------------------------------------------
-
-      merge_date_col = f"date_{info_tf}"
-      if merge_date_col in df.columns:
-        df.drop(columns=merge_date_col, inplace=True)
-
-    # =========================================================================
-    # FINAL FORWARD FILL (ONCE)
-    # =========================================================================
+    # ============================================================
+    # FINAL FILL
+    # ============================================================
     df.ffill(inplace=True)
-    # log.warning("FINAL BTC_RSI_14_4h=%s", df["BTC_RSI_14_4h"].iloc[-1])
 
-    # =========================================================================
-    # FINAL DEBUG VALIDATION
-    # =========================================================================
+    # ============================================================
+    # POST-FFILL VALIDATION
+    # ============================================================
     if debug:
-      if not df.index.is_monotonic_increasing:
-        log.warning(f"[{metadata_pair}] FINAL DF index NOT monotonic!")
+      groups = {
+        "INFO": self.info_timeframes,
+        "BTC": self.btc_info_timeframes,
+      }
 
-      if df.index.has_duplicates:
-        log.warning(f"[{metadata_pair}] FINAL DF index has DUPLICATES!")
+      for source, tfs in groups.items():
+        for tf in tfs:
+          if source == "BTC":
+            tf_cols = [c for c in df.columns if c.startswith("BTC_") and c.endswith(f"_{tf}")]
+          else:
+            tf_cols = [c for c in df.columns if not c.startswith("BTC_") and c.endswith(f"_{tf}")]
 
-      # ---------------------------------------------------------------------
-      # FULL NaN COLUMNS
-      # ---------------------------------------------------------------------
-      full_nan_cols = df.columns[df.isna().all()].tolist()
-      if full_nan_cols:
-        log.warning(f"[{metadata_pair}] FINAL DF FULL NaN cols: {full_nan_cols}")
+          if not tf_cols:
+            continue
 
-      # ---------------------------------------------------------------------
-      # RECENT NaN CHECK
-      # ---------------------------------------------------------------------
-      recent_df = df.tail(50)
+          recent = df[tf_cols].tail(500)
+          total_nans = recent.isna().sum().sum()
 
-      recent_nan_cols = [col for col in recent_df.columns if recent_df[col].isna().any()]
+          if total_nans > 0:
+            log.warning("[%s] %s %s recent500 contains %s NaNs", metadata_pair, source, tf, total_nans)
+          else:
+            log.info("[%s] %s %s merge OK", metadata_pair, source, tf)
 
-      if recent_nan_cols:
-        log.warning(f"[{metadata_pair}] FINAL DF recent NaNs: {recent_nan_cols}")
-
-    # =========================================================================
-    # BASE TF INDICATORS LAST
-    # =========================================================================
-    # Base TF indicators may depend on informative columns.
-    # Therefore this MUST happen AFTER informative merges.
-
+    # ============================================================
+    # BASE TF (LAST)
+    # ============================================================
     df = self.base_tf_5m_indicators(metadata, df)
+
+    # ============================================================
+    # FINAL INDICATOR VALIDATION
+    # ============================================================
+    if debug:
+      recent = df.tail(500)
+      final_nan = recent.isna().sum()
+      final_nan = final_nan[final_nan > 0]
+      if not final_nan.empty:
+        log.warning(
+          "[%s] Unexpected indicator NaNs in recent candles:\n%s",
+          metadata_pair,
+          final_nan.sort_values(ascending=False).to_string(),
+        )
 
     # df["zlma_50_1h"] = df["zlma_50_1h"].astype(np.float64).replace(to_replace=[np.nan, None], value=(0.0))
     # df["CTI_20_1d"] = df["CTI_20_1d"].astype(np.float64).replace(to_replace=[np.nan, None], value=(0.0))
@@ -4913,10 +4674,13 @@ class NostalgiaForInfinityX7(IStrategy):
     protection_stochk_14_3_3_1h = df["STOCHk_14_3_3_1h"].to_numpy(copy=False)
     protection_stochk_14_3_3_4h = df["STOCHk_14_3_3_4h"].to_numpy(copy=False)
     protection_cci_20_change_pct_4h = df["CCI_20_change_pct_4h"].to_numpy(copy=False)
-    protection_change_pct_4h = df["change_pct_4h"]
+    protection_change_pct_4h = df["change_pct_4h"].to_numpy(copy=False)
+    protection_change_pct_4h_shift = df["change_pct_4h"]
     protection_top_wick_pct_4h = df["top_wick_pct_4h"].to_numpy(copy=False)
-    protection_change_pct_1d = df["change_pct_1d"]
-    protection_top_wick_pct_1d = df["top_wick_pct_1d"]
+    protection_change_pct_1d = df["change_pct_1d"].to_numpy(copy=False)
+    protection_change_pct_1d_shift = df["change_pct_1d"]
+    protection_top_wick_pct_1d = df["top_wick_pct_1d"].to_numpy(copy=False)
+    protection_top_wick_pct_1d_shift = df["top_wick_pct_1d"]
     protection_high_max_6_1d = df["high_max_6_1d"].to_numpy(copy=False)
     protection_low_min_6_1d = df["low_min_6_1d"].to_numpy(copy=False)
     protection_close = df["close"].to_numpy(copy=False)
@@ -11087,7 +10851,7 @@ class NostalgiaForInfinityX7(IStrategy):
       # 4h P&D, 15m & 1h & 4h down move, 15m still not low enough, 1h & 4h still high, 1h & 4h high
       & (
         (protection_change_pct_4h > -5.0)
-        | (protection_change_pct_4h.shift(48) < 5.0)
+        | (protection_change_pct_4h_shift.shift(48) < 5.0)
         | (rsi_3_15m_gt_40)
         | rsi_3_1h_gt_40
         | rsi_3_4h_gt_50
@@ -11160,7 +10924,7 @@ class NostalgiaForInfinityX7(IStrategy):
       # 1d P&D, 15m & 4h down move, 15m & 4h still high
       & (
         (change_pct_1d_gt_neg_20)
-        | (protection_change_pct_1d.shift(288) < 20.0)
+        | (protection_change_pct_1d_shift.shift(288) < 20.0)
         | rsi_3_15m_gt_20
         | rsi_3_4h_gt_25
         | stochrsi_k_15m_lt_40
@@ -11202,7 +10966,7 @@ class NostalgiaForInfinityX7(IStrategy):
       # 1d P&D, 15m & 1h & 4h down move, 15m & 1h & 4h still high, 15m & 4h still high
       & (
         (protection_change_pct_1d > -15.0)
-        | (protection_change_pct_1d.shift(288) < 15.0)
+        | (protection_change_pct_1d_shift.shift(288) < 15.0)
         | (protection_rsi_3_15m > 50.0)
         | rsi_3_1h_gt_50
         | rsi_3_4h_gt_50
@@ -11215,7 +10979,7 @@ class NostalgiaForInfinityX7(IStrategy):
       # 1d P&D, 15m & 1h & 4h & 1d down move, 4h still not low enough
       & (
         (change_pct_1d_gt_neg_10)
-        | (protection_change_pct_1d.shift(288) < 10.0)
+        | (protection_change_pct_1d_shift.shift(288) < 10.0)
         | rsi_3_15m_gt_10
         | rsi_3_1h_gt_25
         | (rsi_3_4h_gt_10)
@@ -11225,7 +10989,7 @@ class NostalgiaForInfinityX7(IStrategy):
       # 1d P&D, 15m & 1h down move, 1h still not low enough, 4h still high, 15m downtrend, 1h still high
       & (
         (change_pct_1d_gt_neg_10)
-        | (protection_change_pct_1d.shift(288) < 10.0)
+        | (protection_change_pct_1d_shift.shift(288) < 10.0)
         | rsi_3_15m_gt_15
         | rsi_3_1h_gt_20
         | rsi_14_1h_lt_30
@@ -11236,15 +11000,15 @@ class NostalgiaForInfinityX7(IStrategy):
       # 1d P&D, 15m down move, 1h high
       & (
         (change_pct_1d_gt_neg_10)
-        | (protection_change_pct_1d.shift(288) < 20.0)
-        | (protection_top_wick_pct_1d.shift(288) < 20.0)
+        | (protection_change_pct_1d_shift.shift(288) < 20.0)
+        | (protection_top_wick_pct_1d_shift.shift(288) < 20.0)
         | (rsi_3_15m_gt_35)
         | aroonu_14_1h_lt_70
       )
       # 1d P&D, 15m & 1h & 4h down move, 15m & 1h still not low enough, 4h still high, 1d overbought
       & (
         (change_pct_1d_gt_neg_10)
-        | (protection_change_pct_1d.shift(288) < 20.0)
+        | (protection_change_pct_1d_shift.shift(288) < 20.0)
         | rsi_3_15m_gt_20
         | rsi_3_1h_gt_20
         | rsi_3_4h_gt_50
@@ -11256,7 +11020,7 @@ class NostalgiaForInfinityX7(IStrategy):
       # 1d P&D, 15m & 1h & 4h down move, 15m & 1h still not low enough, 4h still high, 1h & 4h downtrend, 1d overbought
       & (
         (change_pct_1d_gt_neg_10)
-        | (protection_change_pct_1d.shift(288) < 50.0)
+        | (protection_change_pct_1d_shift.shift(288) < 50.0)
         | rsi_3_15m_gt_20
         | rsi_3_1h_gt_40
         | rsi_3_4h_gt_40
@@ -11280,7 +11044,7 @@ class NostalgiaForInfinityX7(IStrategy):
       # 1d P&D, 15m & 1h down move, 15m still not low enough, 1h & 4h still high, 1d overbought
       & (
         (protection_change_pct_1d > -5.0)
-        | (protection_change_pct_1d.shift(288) < 10.0)
+        | (protection_change_pct_1d_shift.shift(288) < 10.0)
         | rsi_3_15m_gt_20
         | rsi_3_1h_gt_45
         | rsi_14_15m_lt_30
@@ -11291,7 +11055,7 @@ class NostalgiaForInfinityX7(IStrategy):
       # 1d P&D, 15m & 1h & 4h down move, 1h & 4h still not low enough, 1h & 4h downtrend, 1d overbought
       & (
         (protection_change_pct_1d > -5.0)
-        | (protection_change_pct_1d.shift(288) < 10.0)
+        | (protection_change_pct_1d_shift.shift(288) < 10.0)
         | rsi_3_15m_gt_25
         | rsi_3_1h_gt_30
         | rsi_3_4h_gt_30
@@ -13000,101 +12764,108 @@ class NostalgiaForInfinityX7(IStrategy):
     entry_tags = np.full(len(df), "", dtype=object)
     df.loc[:, "enter_long"] = 0
     df.loc[:, "enter_short"] = 0
-    rsi_3_1h = df["RSI_3_1h"].to_numpy(copy=False)
-    rsi_3_15m = df["RSI_3_15m"].to_numpy(copy=False)
-    rsi_3_4h = df["RSI_3_4h"].to_numpy(copy=False)
-    roc_9_1d = df["ROC_9_1d"].to_numpy(copy=False)
-    aroonu_14_4h = df["AROONU_14_4h"].to_numpy(copy=False)
+    np_view = lambda c: df[c].to_numpy(copy=False)
+    rsi_3_1h = np_view("RSI_3_1h")
+    rsi_3_15m = np_view("RSI_3_15m")
+    rsi_3_4h = np_view("RSI_3_4h")
+    roc_9_1d = np_view("ROC_9_1d")
+    aroonu_14_4h = np_view("AROONU_14_4h")
     aroonu_14_4h_shift = df["AROONU_14_4h"]
-    roc_9_4h = df["ROC_9_4h"].to_numpy(copy=False)
+    roc_9_4h = np_view("ROC_9_4h")
     roc_9_4h_shift = df["ROC_9_4h"]
-    aroonu_14_1h = df["AROONU_14_1h"].to_numpy(copy=False)
-    stochrsi_k_4h = df["STOCHRSIk_14_14_3_3_4h"].to_numpy(copy=False)
-    stochrsi_k_1h = df["STOCHRSIk_14_14_3_3_1h"].to_numpy(copy=False)
-    aroonu_14_1d = df["AROONU_14_1d"].to_numpy(copy=False)
-    rsi_3_1d = df["RSI_3_1d"].to_numpy(copy=False)
-    aroonu_14_15m = df["AROONU_14_15m"].to_numpy(copy=False)
-    roc_9_1h = df["ROC_9_1h"].to_numpy(copy=False)
-    stochrsi_k_15m = df["STOCHRSIk_14_14_3_3_15m"].to_numpy(copy=False)
-    stochrsi_k_1d = df["STOCHRSIk_14_14_3_3_1d"].to_numpy(copy=False)
-    rsi_3 = df["RSI_3"].to_numpy(copy=False)
+    aroonu_14_1h = np_view("AROONU_14_1h")
+    stochrsi_k_4h = np_view("STOCHRSIk_14_14_3_3_4h")
+    stochrsi_k_1h = np_view("STOCHRSIk_14_14_3_3_1h")
+    aroonu_14_1d = np_view("AROONU_14_1d")
+    rsi_3_1d = np_view("RSI_3_1d")
+    aroonu_14_15m = np_view("AROONU_14_15m")
+    roc_9_1h = np_view("ROC_9_1h")
+    stochrsi_k_15m = np_view("STOCHRSIk_14_14_3_3_15m")
+    stochrsi_k_1d = np_view("STOCHRSIk_14_14_3_3_1d")
+    rsi_3 = np_view("RSI_3")
     close = df["close"]
-    open_rate = df["open"].to_numpy(copy=False)
-    roc_9_15m = df["ROC_9_15m"].to_numpy(copy=False)
-    rsi_14_4h = df["RSI_14_4h"].to_numpy(copy=False)
+    open_rate = np_view("open")
+    roc_9_15m = np_view("ROC_9_15m")
+    rsi_14_4h = np_view("RSI_14_4h")
     rsi_14_4h_shift = df["RSI_14_4h"]
-    roc_2_1d = df["ROC_2_1d"].to_numpy(copy=False)
-    uo_7_14_28_4h = df["UO_7_14_28_4h"].to_numpy(copy=False)
-    willr_84_1h = df["WILLR_84_1h"].to_numpy(copy=False)
-    mfi_14 = df["MFI_14"].to_numpy(copy=False)
+    roc_2_1d = np_view("ROC_2_1d")
+    uo_7_14_28_4h = np_view("UO_7_14_28_4h")
+    willr_84_1h = np_view("WILLR_84_1h")
+    mfi_14 = np_view("MFI_14")
 
     # Reused entry Series and comparison masks
-    aroond_14 = df["AROOND_14"].to_numpy(copy=False)
-    aroond_14_15m = df["AROOND_14_15m"].to_numpy(copy=False)
-    aroond_14_1h = df["AROOND_14_1h"].to_numpy(copy=False)
-    aroond_14_4h = df["AROOND_14_4h"].to_numpy(copy=False)
-    aroonu_14 = df["AROONU_14"].to_numpy(copy=False)
-    bbb_20_2_0_1h = df["BBB_20_2.0_1h"].to_numpy(copy=False)
-    bbl_20_2_0 = df["BBL_20_2.0"].to_numpy(copy=False)
-    bbu_20_2_0 = df["BBU_20_2.0"].to_numpy(copy=False)
-    cci_20_change_pct_1h = df["CCI_20_change_pct_1h"].to_numpy(copy=False)
-    cci_20_change_pct_4h = df["CCI_20_change_pct_4h"].to_numpy(copy=False)
-    change_pct_1d = df["change_pct_1d"].to_numpy(copy=False)
+    aroond_14 = np_view("AROOND_14")
+    aroond_14_15m = np_view("AROOND_14_15m")
+    aroond_14_1h = np_view("AROOND_14_1h")
+    aroond_14_4h = np_view("AROOND_14_4h")
+    aroonu_14 = np_view("AROONU_14")
+    bbb_20_2_0 = np_view("BBB_20_2.0")
+    bbb_20_2_0_1h = np_view("BBB_20_2.0_1h")
+    bbl_20_2_0 = np_view("BBL_20_2.0")
+    bbu_20_2_0 = np_view("BBU_20_2.0")
+    cci_20_change_pct_1h = np_view("CCI_20_change_pct_1h")
+    cci_20_change_pct_4h = np_view("CCI_20_change_pct_4h")
+    change_pct_1d = np_view("change_pct_1d")
     change_pct_1d_shift = df["change_pct_1d"]
-    change_pct_1h = df["change_pct_1h"].to_numpy(copy=False)
+    change_pct_1h = np_view("change_pct_1h")
     change_pct_1h_shift = df["change_pct_1h"]
-    change_pct_4h = df["change_pct_4h"].to_numpy(copy=False)
+    change_pct_4h = np_view("change_pct_4h")
     change_pct_4h_shift = df["change_pct_4h"]
-    close_max_12 = df["close_max_12"].to_numpy(copy=False)
-    close_max_48 = df["close_max_48"].to_numpy(copy=False)
-    cmf_20_15m = df["CMF_20_15m"].to_numpy(copy=False)
-    cmf_20_1d = df["CMF_20_1d"].to_numpy(copy=False)
-    cmf_20_1h = df["CMF_20_1h"].to_numpy(copy=False)
-    cmf_20_4h = df["CMF_20_4h"].to_numpy(copy=False)
-    ema_12 = df["EMA_12"].to_numpy(copy=False)
+    close_max_12 = np_view("close_max_12")
+    close_max_48 = np_view("close_max_48")
+    cmf_20 = np_view("CMF_20")
+    cmf_20_15m = np_view("CMF_20_15m")
+    cmf_20_1d = np_view("CMF_20_1d")
+    cmf_20_1h = np_view("CMF_20_1h")
+    cmf_20_4h = np_view("CMF_20_4h")
+    ema_12 = np_view("EMA_12")
     ema_12_shift = df["EMA_12"]
-    ema_20 = df["EMA_20"].to_numpy(copy=False)
-    ema_26 = df["EMA_26"].to_numpy(copy=False)
+    ema_12_4h = np_view("EMA_12_4h")
+    ema_20 = np_view("EMA_20")
+    ema_26 = np_view("EMA_26")
     ema_26_shift = df["EMA_26"]
-    ema_200_1h = df["EMA_200_1h"].to_numpy(copy=False)
+    ema_200 = np_view("EMA_200")
+    ema_200_1h = np_view("EMA_200_1h")
     ema_200_1h_infer = df["EMA_200_1h"]
-    ema_200_4h = df["EMA_200_4h"].to_numpy(copy=False)
+    ema_200_4h = np_view("EMA_200_4h")
     ema_200_4h_infer = df["EMA_200_4h"]
-    ema_9 = df["EMA_9"].to_numpy(copy=False)
-    high_max_12_1d = df["high_max_12_1d"].to_numpy(copy=False)
-    high_max_12_4h = df["high_max_12_4h"].to_numpy(copy=False)
-    high_max_20_1d = df["high_max_20_1d"].to_numpy(copy=False)
-    high_max_24_4h = df["high_max_24_4h"].to_numpy(copy=False)
-    high_max_30_1d = df["high_max_30_1d"].to_numpy(copy=False)
-    high_max_6_1d = df["high_max_6_1d"].to_numpy(copy=False)
-    high_max_6_4h = df["high_max_6_4h"].to_numpy(copy=False)
-    low_min_12_1d = df["low_min_12_1d"].to_numpy(copy=False)
-    low_min_24_4h = df["low_min_24_4h"].to_numpy(copy=False)
-    mfi_14_15m = df["MFI_14_15m"].to_numpy(copy=False)
-    mfi_14_1h = df["MFI_14_1h"].to_numpy(copy=False)
-    num_empty_288 = df["num_empty_288"].to_numpy(copy=False)
+    ema_9 = np_view("EMA_9")
+    high_max_12_1d = np_view("high_max_12_1d")
+    high_max_12_4h = np_view("high_max_12_4h")
+    high_max_20_1d = np_view("high_max_20_1d")
+    high_max_24_4h = np_view("high_max_24_4h")
+    high_max_30_1d = np_view("high_max_30_1d")
+    high_max_6_1d = np_view("high_max_6_1d")
+    high_max_6_4h = np_view("high_max_6_4h")
+    low_min_12_1d = np_view("low_min_12_1d")
+    low_min_24_4h = np_view("low_min_24_4h")
+    mfi_14_15m = np_view("MFI_14_15m")
+    mfi_14_1h = np_view("MFI_14_1h")
+    num_empty_288 = np_view("num_empty_288")
     protections_long_global = df["protections_long_global"]
     protections_short_global = df["protections_short_global"]
-    roc_2 = df["ROC_2"].to_numpy(copy=False)
-    roc_9 = df["ROC_9"].to_numpy(copy=False)
-    rsi_14 = df["RSI_14"].to_numpy(copy=False)
-    rsi_14_15m = df["RSI_14_15m"].to_numpy(copy=False)
-    rsi_14_1d = df["RSI_14_1d"].to_numpy(copy=False)
-    rsi_14_1h = df["RSI_14_1h"].to_numpy(copy=False)
+    roc_2 = np_view("ROC_2")
+    roc_9 = np_view("ROC_9")
+    rsi_14 = np_view("RSI_14")
+    rsi_14_15m = np_view("RSI_14_15m")
+    rsi_14_1d = np_view("RSI_14_1d")
+    rsi_14_1h = np_view("RSI_14_1h")
     rsi_14_1h_shift = df["RSI_14_1h"]
-    rsi_20 = df["RSI_20"].to_numpy(copy=False)
+    rsi_20 = np_view("RSI_20")
     rsi_20_shift = df["RSI_20"]
-    rsi_3_change_pct_1h = df["RSI_3_change_pct_1h"].to_numpy(copy=False)
-    rsi_3_change_pct_4h = df["RSI_3_change_pct_4h"].to_numpy(copy=False)
-    rsi_4 = df["RSI_4"].to_numpy(copy=False)
-    sma_16 = df["SMA_16"].to_numpy(copy=False)
-    sma_21 = df["SMA_21"].to_numpy(copy=False)
+    rsi_3_change_pct_1h = np_view("RSI_3_change_pct_1h")
+    rsi_3_change_pct_4h = np_view("RSI_3_change_pct_4h")
+    rsi_4 = np_view("RSI_4")
+    sma_16 = np_view("SMA_16")
+    sma_21 = np_view("SMA_21")
     sma_21_shift = df["SMA_21"]
     sma_200 = df["SMA_200"]
-    stochrsi_k = df["STOCHRSIk_14_14_3_3"].to_numpy(copy=False)
-    top_wick_pct_1d = df["top_wick_pct_1d"].to_numpy(copy=False)
+    stochrsi_k = np_view("STOCHRSIk_14_14_3_3")
+    top_wick_pct_1d = np_view("top_wick_pct_1d")
     top_wick_pct_1d_shift = df["top_wick_pct_1d"]
-    willr_14 = df["WILLR_14"].to_numpy(copy=False)
+    willr_14 = np_view("WILLR_14")
+    willr_14_1h = np_view("WILLR_14_1h")
+    obv_change_pct_15m = np_view("OBV_change_pct_15m")
 
     rsi_3_gt_3 = rsi_3 > 3.0
     rsi_3_gt_5 = rsi_3 > 5.0
@@ -13551,6 +13322,8 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_gt_5) | (rsi_3_4h_gt_35) | (aroonu_14_4h_lt_70))
             # 15m down move, 1h downtrend, 1h high
             & ((rsi_3_15m > 1.0) | (cmf_20_1h_gt_neg_0_10) | (aroonu_14_1h_lt_70))
+            # 15m & 1h & 4h down move 1d still high
+            & ((rsi_3_15m_gt_3) | (rsi_3_1h_gt_3) | (rsi_3_4h_gt_20) | (aroonu_14_1d_lt_50))
             # 15m & 1h & 4h down move
             & ((rsi_3_15m_gt_3) | (rsi_3_1h_gt_10) | (rsi_3_4h_gt_15))
             # 15m & 1h down move, 1h still high
@@ -14190,6 +13963,8 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_15m_gt_15) | (rsi_3_1h_gt_15) | (roc_9_4h_gt_neg_20))
             # 15m & 1h & 4h & 1d down move, 4h still not low enough
             & ((rsi_3_15m_gt_15) | (rsi_3_1h_gt_20) | (rsi_3_4h_gt_30) | (rsi_3_1d_gt_30) | (stochrsi_k_4h_lt_30))
+            # 15m & 1h down move, 1h still high, 1d downtrend
+            & ((rsi_3_15m_gt_15) | (rsi_3_1h_gt_20) | (aroonu_14_1h_lt_50) | (roc_9_1d_gt_neg_50))
             # 15m & 1h down move, 1h downtrend
             & ((rsi_3_15m_gt_15) | (rsi_3_1h_gt_20) | (cmf_20_1h_gt_neg_0_30))
             # 15m & 1h down move, 1d overbought
@@ -14877,6 +14652,8 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_15m_gt_25) | (roc_9_4h_lt_50) | (roc_9_1d_lt_50))
             # 15m & 1h down move, 1h high
             & ((rsi_3_15m_gt_30) | (rsi_3_1h_gt_30) | (aroonu_14_1h_lt_80))
+            # 15m & 1h down move, 4h & 1d downtrend
+            & ((rsi_3_15m_gt_30) | (rsi_3_1h_gt_35) | (roc_9_4h_gt_neg_30) | (roc_9_1d_gt_neg_50))
             # 15m & 1h down move, 1d overbought
             & ((rsi_3_15m_gt_30) | (rsi_3_1h_gt_30) | (roc_9_1d_lt_40))
             # 15m & 1h & 4h down move, 15m & 1d high
@@ -16441,7 +16218,9 @@ class NostalgiaForInfinityX7(IStrategy):
             # 15m down move, 4h high & overbought
             & ((rsi_3_15m_gt_25) | (stochrsi_k_4h_lt_90) | (roc_9_4h_lt_30))
             # 15m & 1h down move, 1h high
-            & ((rsi_3_15m_gt_30) | (rsi_3_1h_gt_35) | aroonu_14_1h_lt_80)
+            & ((rsi_3_15m_gt_30) | (rsi_3_1h_gt_35) | (aroonu_14_1h_lt_80))
+            # 15m & 1h down move, 4h & 1d downtrend
+            & ((rsi_3_15m_gt_30) | (rsi_3_1h_gt_35) | (roc_9_4h_gt_neg_30) | (roc_9_1d_gt_neg_50))
             # 15m & 1h & 4h down move, 1h still high
             & ((rsi_3_15m_gt_30) | (rsi_3_1h_gt_40) | (rsi_3_4h_gt_60) | (stochrsi_k_1h_lt_50))
             # 15m & 1h & 4h down move, 1h still high
@@ -20492,13 +20271,13 @@ class NostalgiaForInfinityX7(IStrategy):
             # 15m down move, 4h high, 4h downtrend
             & ((rsi_3_15m_gt_15) | (aroonu_14_4h_lt_60) | (roc_9_4h_gt_neg_20))
             # 15m down move, 4h & 1d high
-            & ((rsi_3_15m_gt_15) | (aroonu_14_4h_lt_75) | aroonu_14_1d_lt_100)
+            & ((rsi_3_15m_gt_15) | (aroonu_14_4h_lt_75) | (aroonu_14_1d_lt_100))
             # 15m down move, 15m still not low enough, 1h still high
             & ((rsi_3_15m_gt_15) | (stochrsi_k_15m_lt_30) | (stochrsi_k_1h_lt_50))
             # 15m down move, 4h & 1d overbought
             & ((rsi_3_15m_gt_15) | (roc_9_4h_lt_20) | (roc_9_1d_lt_60))
             # 15m & 1h down move, 1h high
-            & ((rsi_3_15m_gt_20) | rsi_3_1h_gt_20 | (stochrsi_k_1h_lt_70))
+            & ((rsi_3_15m_gt_20) | (rsi_3_1h_gt_20) | (stochrsi_k_1h_lt_70))
             # 15m & 4h down move, 4h high
             & ((rsi_3_15m_gt_20) | (rsi_3_4h_gt_50) | (aroonu_14_4h_lt_85))
             # 15m down move, 1h high
@@ -20729,6 +20508,8 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_1h_gt_35) | (aroonu_14_1h_lt_70) | (roc_9_4h_lt_40))
             # 1h down move, 1h high, 1d downtrend
             & ((rsi_3_1h_gt_35) | (aroonu_14_1h_lt_70) | (roc_9_1d_gt_neg_25))
+            # 1h down move, 1h still high, 4h & 1d downtrend
+            & ((rsi_3_1h_gt_35) | (stochrsi_k_1h_lt_50) | (roc_9_4h_gt_neg_30) | (roc_9_1d_gt_neg_70))
             # 1h down move, 4h high & overbought
             & ((rsi_3_1h_gt_35) | (aroonu_14_4h_lt_85) | (roc_9_4h_lt_100))
             # 1h down move, 4h high & overbought
@@ -20940,6 +20721,37 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((ema_26 - ema_12) > (open_rate * 0.022))
             & ((ema_26_shift.shift() - ema_12_shift.shift()) > (open_rate / 100.0))
           )
+
+        # Condition #65 - Breakout mode (Long).
+        if long_entry_condition_index == 65:
+          # Protections
+          long_entry_logic.append(num_empty_288 <= allowed_empty_candles_288)
+          long_entry_logic.append(protections_long_global == True)
+
+          long_entry_logic.append(
+            # Trend confirmation
+            (ema_12_4h > ema_200_4h)
+            # 4h momentum strong but not extreme
+            & (rsi_14_4h > 50.0)
+            & (rsi_14_4h < 68.0)
+            # Daily positive
+            & (roc_9_1d > 0.0)
+            & (rsi_14_1d > 45.0)
+            # 4h extreme overbought, 1d big rally, 4h money outflow = blow-off top
+            & ((stochrsi_k_4h_lt_90) | (roc_9_1d_lt_20) | (cmf_20_4h_gt_neg_0_0))
+            # 15m euphoria spike without 4h confirmation = spike top fake breakout
+            & ((rsi_3_15m < 90.0) | (stochrsi_k_4h > 30.0))
+          )
+
+          # Logic — Breakout above BB upper with momentum
+          long_entry_logic.append(close > bbu_20_2_0)
+          long_entry_logic.append(rsi_14 > 60.0)
+          long_entry_logic.append(rsi_14 < 78.0)
+          long_entry_logic.append(rsi_3 > 70.0)
+          long_entry_logic.append(ema_12 > ema_26)
+          long_entry_logic.append(bbb_20_2_0 > 10.0)
+          long_entry_logic.append(obv_change_pct_15m > 0.0)
+          long_entry_logic.append(mfi_14 > 50.0)
 
         # Condition #101 - Rapid mode (Long).
         if long_entry_condition_index == 101:
@@ -21733,6 +21545,8 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_4h_gt_5) | (roc_9_1h_gt_neg_30) | (roc_9_4h_gt_neg_30))
             # 4h down move, 1d high, 1d overbought, 4h downtrend
             & ((rsi_3_4h_gt_10) | (aroonu_14_1d_lt_70) | (roc_9_1d_lt_50) | (roc_9_4h_gt_neg_30))
+            # 4h down move, 15m & 1d high, 1h downtrend
+            & ((rsi_3_4h_gt_20) | (aroonu_14_15m_lt_70) | (aroonu_14_1d_lt_100) | (roc_9_1h_gt_neg_20))
             # 4h down move, 4h still high, 1d downtrend
             & ((rsi_3_4h_gt_20) | (aroonu_14_4h_lt_50) | (roc_9_1d_gt_neg_40))
             # 1h down move, 15m & 1h still high
@@ -24181,6 +23995,8 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_15m_gt_15) | (roc_9_4h_gt_neg_10) | (roc_9_1d_gt_neg_40))
             # 15m & 1h down move, 1h high
             & ((rsi_3_15m_gt_20) | (rsi_3_1h_gt_25) | (aroonu_14_1h_lt_70))
+            # 15m & 4h down move, 4h & 1d downtrend
+            & ((rsi_3_15m_gt_20) | (rsi_3_4h_gt_20) | (roc_9_4h_gt_neg_40) | (roc_9_1d_gt_neg_50))
             # 15m down move, 4h high & overbought
             & ((rsi_3_15m_gt_20) | (aroonu_14_4h_lt_70) | (roc_9_4h_lt_20))
             # 15m & 1h down move, 4h high
@@ -24213,8 +24029,6 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_1h_gt_15) | rsi_3_4h_gt_20 | aroonu_14_4h_lt_70)
             # 1h down move, 1h downtrend, 1d overbought
             & ((rsi_3_1h_gt_15) | (roc_9_1h_gt_neg_30) | (roc_9_1d_lt_80))
-            # 1h & 4h down move, 4h high
-            & (rsi_3_1h_gt_20 | (rsi_3_4h_gt_35) | aroonu_14_4h_lt_70)
             # 1h & 4h down move, 1d downtrend
             & ((rsi_3_1h_gt_15) | (rsi_3_4h_gt_25) | (roc_9_1d > -30.0))
             # 1h down move, 1h & 1d high
@@ -24223,6 +24037,8 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_1h_gt_15) | (aroonu_14_1h_lt_60) | roc_9_1d_lt_50)
             # 1h down move, 1d high & overbought
             & ((rsi_3_1h_gt_15) | (stochrsi_k_1d_lt_90) | (roc_9_1d_lt_40))
+            # 1h & 4h down move, 4h high
+            & ((rsi_3_1h_gt_20) | (rsi_3_4h_gt_35) | aroonu_14_4h_lt_70)
             # 1h down move, 1h high, 1d overbought
             & ((rsi_3_1h_gt_25) | (aroonu_14_1h_lt_60) | (roc_9_1d_lt_100))
             # 1h down move, 1h high
@@ -24495,6 +24311,8 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_15m_gt_20) | (rsi_3_1h_gt_45) | (rsi_14_4h_lt_70) | (roc_9_4h_lt_50))
             # 15m & 1h down move, 1h high, 1d overbought
             & ((rsi_3_15m_gt_20) | (rsi_3_1h_gt_45) | (aroonu_14_1h_lt_90) | (roc_9_1d_lt_40))
+            # 15m & 4h down move, 4h & 1d downtrend
+            & ((rsi_3_15m_gt_20) | (rsi_3_4h_gt_20) | (roc_9_4h_gt_neg_30) | (roc_9_1d_gt_neg_50))
             # 15m & 4h down move, 15m high
             & ((rsi_3_15m_gt_20) | (rsi_3_4h_gt_25) | (aroonu_14_15m_lt_60))
             # 15m & 4h down move, 1h high
@@ -25790,6 +25608,86 @@ class NostalgiaForInfinityX7(IStrategy):
           short_entry_logic.append((ema_26_shift.shift() - ema_12_shift.shift()) > (open_rate / 100.0))
           short_entry_logic.append(close < (ema_20 * 0.958))
           short_entry_logic.append(close < (bbl_20_2_0 * 0.992))
+
+        # Condition #562 - Trend Breakdown mode (Short).
+        if short_entry_condition_index == 562:
+          # Protections
+          short_entry_logic.append(num_empty_288 <= allowed_empty_candles_288)
+          short_entry_logic.append(protections_short_global == True)
+          short_entry_logic.append(roc_9_1d < 5.0)
+          short_entry_logic.append(rsi_14_4h < 48.0)
+          short_entry_logic.append(rsi_14_1d < 50.0)
+          short_entry_logic.append(rsi_14_1d > 25.0)
+
+          short_entry_logic.append(
+            # Downtrend confirmation (higher TF)
+            (ema_12_4h < ema_200_4h)
+            & (rsi_14_4h < 42.0)
+            & (aroonu_14_4h < 35.0)
+            & (roc_9_4h < -2.0)
+            # 1h also bearish
+            & (rsi_14_1h < 42.0)
+            & (aroonu_14_1h < 40.0)
+            # Daily momentum negative
+            & (roc_9_1d < 0.0)
+            # 1h + 4h capitulation oversold = double-exhaustion bottom
+            & ((rsi_3_4h_gt_5) | (rsi_3_1h_gt_5) | (stochrsi_k_1h_gt_10))
+            # 4h still in oversold zone post first leg + 1d sustained drop = continuation V-trap
+            & ((rsi_3_4h_gt_20) | (stochrsi_k_4h > 10.0) | (rsi_3_1d_gt_40))
+            # 1d capitulation but 4h mid = bottom formation, skip shorts
+            & ((rsi_3_1d_gt_20) | (stochrsi_k_4h_lt_50) | (rsi_3_4h_gt_60))
+            # 4h crash already extreme (>50% drop) = oversold bottom, dead cat
+            & ((roc_9_4h_gt_neg_50) | (rsi_3_4h_gt_15) | (stochrsi_k_4h_gt_10))
+            # 1d ultra-capitulation (STOCHRSIk = 0, RSI_3 < 10) = absolute bottom
+            & ((rsi_3_1d_gt_10) | (stochrsi_k_1d > 5.0) | (rsi_3_4h_gt_40))
+          )
+
+          # Logic — Breakdown below BB lower in downtrend
+          short_entry_logic.append(close < bbl_20_2_0)
+          short_entry_logic.append(rsi_14 < 32.0)
+          short_entry_logic.append(rsi_14 > 15.0)
+          short_entry_logic.append(ema_12 < ema_26)
+          short_entry_logic.append(rsi_3 < 20.0)
+          short_entry_logic.append(cmf_20 < -0.08)
+          short_entry_logic.append(obv_change_pct_15m < 0.0)
+          short_entry_logic.append(rsi_3_15m < 35.0)
+
+        # Condition #563 - Dead Cat Bounce mode (Short).
+        if short_entry_condition_index == 563:
+          # Protections
+          short_entry_logic.append(num_empty_288 <= allowed_empty_candles_288)
+          short_entry_logic.append(protections_short_global == True)
+          short_entry_logic.append(roc_9_1d < 5.0)
+          short_entry_logic.append(rsi_14_1d < 45.0)
+          short_entry_logic.append(roc_9_1d < 0.0)
+
+          short_entry_logic.append(
+            # Context: recent large drop, 4h downtrend
+            (roc_9_4h < -8.0)
+            & (ema_12_4h < ema_200_4h)
+            & (rsi_14_4h < 40.0)
+            # 1h still bearish
+            & (rsi_14_1h < 45.0)
+            & (willr_14_1h < -50.0)
+            & (aroonu_14_4h < 35.0)
+            # 4h capitulation oversold + 15m strong rally start = V-reversal trap
+            & ((rsi_3_4h_gt_5) | (stochrsi_k_15m < 90.0) | (aroonu_14_15m_lt_100))
+            # 4h capitulation, 15m sustained overbought rally = V-reversal late stage
+            & ((rsi_3_4h_gt_5) | (stochrsi_k_15m_lt_80) | (aroonu_14_15m_lt_80))
+            # 4h oversold + 15m maxed out (STOCHRSIk = 100) = V-reversal already topped
+            & ((rsi_3_4h_gt_15) | (stochrsi_k_15m < 90.0) | (aroonu_14_15m_lt_90))
+            # 4h still oversold + 15m STOCHRSIk peaked = top distribution near recent levels
+            & ((rsi_3_4h_gt_15) | (stochrsi_k_15m < 90.0))
+          )
+
+          # Logic — Bounce that fails to reclaim resistance
+          short_entry_logic.append(rsi_14 > 55.0)
+          short_entry_logic.append(rsi_14 < 68.0)
+          short_entry_logic.append(close < ema_200)
+          short_entry_logic.append(close > ema_12)
+          short_entry_logic.append(rsi_3 < 35.0)
+          short_entry_logic.append(cci_20_change_pct_1h < 0.0)
+          short_entry_logic.append(mfi_14_1h < 45.0)
 
         # # Condition #620 - Grind mode (Short).
         # if short_entry_condition_index == 620:
