@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Periodically sync upstream/main into a local branch (default: pi2) and restart
-# the multi-bot Docker Compose stack when new upstream commits are merged.
+# the multi-bot Docker Compose stack. Restarts even when there are no new commits.
 #
 # Cron example (every 6 hours):
 #   0 */6 * * * /path/to/NostalgiaForInfinity/tools/sync_upstream_and_restart_multi_bot.sh
@@ -36,7 +36,7 @@ show_usage() {
 Usage: $(basename "$0") [--check-only] [--help]
 
 Sync ${UPSTREAM_REMOTE}/${UPSTREAM_BRANCH} into ${LOCAL_BRANCH} and restart
-${DOCKER_COMPOSE_FILE} when new upstream commits are available.
+${DOCKER_COMPOSE_FILE}. Restarts even when there are no new upstream commits.
 
 Environment overrides:
   LOCAL_BRANCH         Target branch (default: pi2)
@@ -166,52 +166,63 @@ main() {
     local_sha="$(git rev-parse "$LOCAL_BRANCH")"
     upstream_sha="$(git rev-parse "$UPSTREAM_REMOTE/$UPSTREAM_BRANCH")"
 
+    local merged=false
+
     if git merge-base --is-ancestor "$upstream_sha" "$local_sha"; then
         if [[ "$local_sha" == "$upstream_sha" ]]; then
             log "No updates. $LOCAL_BRANCH matches $UPSTREAM_REMOTE/$UPSTREAM_BRANCH ($upstream_sha)."
         else
             log "No new upstream commits. $LOCAL_BRANCH is ahead of $UPSTREAM_REMOTE/$UPSTREAM_BRANCH."
         fi
-        exit 0
-    fi
+    else
+        local pending_count
+        pending_count="$(git rev-list --count "$local_sha..$upstream_sha")"
+        log "Found $pending_count new commit(s) on $UPSTREAM_REMOTE/$UPSTREAM_BRANCH."
 
-    local pending_count
-    pending_count="$(git rev-list --count "$local_sha..$upstream_sha")"
-    log "Found $pending_count new commit(s) on $UPSTREAM_REMOTE/$UPSTREAM_BRANCH."
+        if [[ "$CHECK_ONLY" == "true" ]]; then
+            log "Pending commits:"
+            git --no-pager log --oneline "$local_sha..$upstream_sha" | tee -a "$LOG_FILE"
+            exit 0
+        fi
 
-    if [[ "$CHECK_ONLY" == "true" ]]; then
-        log "Pending commits:"
-        git --no-pager log --oneline "$local_sha..$upstream_sha" | tee -a "$LOG_FILE"
-        exit 0
-    fi
+        local original_branch
+        original_branch="$(git branch --show-current)"
 
-    local original_branch
-    original_branch="$(git branch --show-current)"
+        log "Checking out $LOCAL_BRANCH..."
+        git checkout "$LOCAL_BRANCH" 2>&1 | tee -a "$LOG_FILE"
 
-    log "Checking out $LOCAL_BRANCH..."
-    git checkout "$LOCAL_BRANCH" 2>&1 | tee -a "$LOG_FILE"
+        log "Merging $UPSTREAM_REMOTE/$UPSTREAM_BRANCH into $LOCAL_BRANCH..."
+        if ! git merge "$UPSTREAM_REMOTE/$UPSTREAM_BRANCH" --no-edit \
+            -m "Merge $UPSTREAM_REMOTE/$UPSTREAM_BRANCH into $LOCAL_BRANCH" 2>&1 | tee -a "$LOG_FILE"; then
+            log "ERROR: Merge failed. Resolve conflicts manually, then rerun this script."
+            if [[ -n "$original_branch" && "$original_branch" != "$LOCAL_BRANCH" ]]; then
+                git checkout "$original_branch" >/dev/null 2>&1 || true
+            fi
+            exit 1
+        fi
 
-    log "Merging $UPSTREAM_REMOTE/$UPSTREAM_BRANCH into $LOCAL_BRANCH..."
-    if ! git merge "$UPSTREAM_REMOTE/$UPSTREAM_BRANCH" --no-edit \
-        -m "Merge $UPSTREAM_REMOTE/$UPSTREAM_BRANCH into $LOCAL_BRANCH" 2>&1 | tee -a "$LOG_FILE"; then
-        log "ERROR: Merge failed. Resolve conflicts manually, then rerun this script."
+        if [[ "$PUSH_AFTER_MERGE" == "true" ]]; then
+            log "Pushing $LOCAL_BRANCH to $ORIGIN_REMOTE..."
+            git push "$ORIGIN_REMOTE" "$LOCAL_BRANCH" 2>&1 | tee -a "$LOG_FILE"
+        fi
+
         if [[ -n "$original_branch" && "$original_branch" != "$LOCAL_BRANCH" ]]; then
             git checkout "$original_branch" >/dev/null 2>&1 || true
         fi
-        exit 1
+
+        merged=true
     fi
 
-    if [[ "$PUSH_AFTER_MERGE" == "true" ]]; then
-        log "Pushing $LOCAL_BRANCH to $ORIGIN_REMOTE..."
-        git push "$ORIGIN_REMOTE" "$LOCAL_BRANCH" 2>&1 | tee -a "$LOG_FILE"
-    fi
-
-    if [[ -n "$original_branch" && "$original_branch" != "$LOCAL_BRANCH" ]]; then
-        git checkout "$original_branch" >/dev/null 2>&1 || true
+    if [[ "$CHECK_ONLY" == "true" ]]; then
+        exit 0
     fi
 
     restart_multi_bot
-    log "Sync complete."
+    if [[ "$merged" == "true" ]]; then
+        log "Sync complete (merged upstream updates and restarted)."
+    else
+        log "Sync complete (no upstream updates, restarted anyway)."
+    fi
 }
 
 main "$@"
