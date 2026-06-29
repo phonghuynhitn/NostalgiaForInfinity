@@ -20,6 +20,7 @@ LOCK_DIR="${LOCK_DIR:-/tmp/nfi-sync-upstream.lock}"
 LOCAL_BRANCH="${LOCAL_BRANCH:-pi2}"
 UPSTREAM_REMOTE="${UPSTREAM_REMOTE:-upstream}"
 UPSTREAM_BRANCH="${UPSTREAM_BRANCH:-main}"
+UPSTREAM_URL="${UPSTREAM_URL:-https://github.com/iterativv/NostalgiaForInfinity.git}"
 ORIGIN_REMOTE="${ORIGIN_REMOTE:-origin}"
 PUSH_AFTER_MERGE="${PUSH_AFTER_MERGE:-true}"
 DOCKER_COMPOSE_FILE="${DOCKER_COMPOSE_FILE:-docker-compose.multi-bot.yml}"
@@ -81,6 +82,15 @@ acquire_lock() {
     trap 'rmdir "$LOCK_DIR" 2>/dev/null || true' EXIT
 }
 
+ensure_upstream_remote() {
+    if git rev-parse --verify "$UPSTREAM_REMOTE" >/dev/null 2>&1; then
+        return 0
+    fi
+
+    log "Remote '$UPSTREAM_REMOTE' not found. Adding $UPSTREAM_URL ..."
+    git remote add "$UPSTREAM_REMOTE" "$UPSTREAM_URL" 2>&1 | tee -a "$LOG_FILE"
+}
+
 ensure_clean_worktree() {
     if ! git diff-index --quiet HEAD --; then
         log "ERROR: Working tree has uncommitted changes. Commit or stash them first."
@@ -135,12 +145,7 @@ main() {
     log "========================================================================"
 
     ensure_clean_worktree
-
-    if ! git rev-parse --verify "$UPSTREAM_REMOTE" >/dev/null 2>&1; then
-        log "ERROR: Remote '$UPSTREAM_REMOTE' not found. Add it with:"
-        log "  git remote add upstream https://github.com/iterativv/NostalgiaForInfinity.git"
-        exit 1
-    fi
+    ensure_upstream_remote
 
     if ! git rev-parse --verify "$LOCAL_BRANCH" >/dev/null 2>&1; then
         log "ERROR: Local branch '$LOCAL_BRANCH' not found."
