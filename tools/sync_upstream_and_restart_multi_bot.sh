@@ -83,12 +83,19 @@ acquire_lock() {
 }
 
 ensure_upstream_remote() {
-    if git rev-parse --verify "$UPSTREAM_REMOTE" >/dev/null 2>&1; then
+    if git remote get-url "$UPSTREAM_REMOTE" >/dev/null 2>&1; then
         return 0
     fi
 
     log "Remote '$UPSTREAM_REMOTE' not found. Adding $UPSTREAM_URL ..."
-    git remote add "$UPSTREAM_REMOTE" "$UPSTREAM_URL" 2>&1 | tee -a "$LOG_FILE"
+    if ! git remote add "$UPSTREAM_REMOTE" "$UPSTREAM_URL" 2>&1 | tee -a "$LOG_FILE"; then
+        if git remote get-url "$UPSTREAM_REMOTE" >/dev/null 2>&1; then
+            log "Remote '$UPSTREAM_REMOTE' is already configured."
+            return 0
+        fi
+        log "ERROR: Failed to configure remote '$UPSTREAM_REMOTE'."
+        exit 1
+    fi
 }
 
 ensure_clean_worktree() {
