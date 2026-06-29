@@ -4,10 +4,7 @@
     "../configs/trading_mode-futures.json",
     "../configs/exampleconfig.json",
     "../configs/exampleconfig_secret.json",
-    "../configs/pairlist-remote-binance-futures-usdt-defi.json",
-    "../configs/blacklist-binance.json",
-    "../configs/multi-bot-common.json",
     "../configs/leverage-5x.json",
-    "../configs/instance-defi.json"
+    "../configs/instance-major.json"
   ]
 }

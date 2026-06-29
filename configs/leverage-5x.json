@@ -1,0 +1,7 @@
+{
+  "nfi_parameters": {
+    "futures_mode_leverage": 5.0,
+    "futures_mode_leverage_rebuy_mode": 5.0,
+    "futures_mode_leverage_grind_mode": 5.0
+  }
+}

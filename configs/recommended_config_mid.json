@@ -7,6 +7,7 @@
     "../configs/pairlist-remote-binance-futures-usdt-mid.json",
     "../configs/blacklist-binance.json",
     "../configs/multi-bot-common.json",
+    "../configs/leverage-5x.json",
     "../configs/instance-mid.json"
   ]
 }
