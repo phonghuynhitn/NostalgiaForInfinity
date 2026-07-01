@@ -78,7 +78,7 @@
     },
     "ccxt_async_config": {
       "enableRateLimit": true,
-      "rateLimit": 300,
+      "rateLimit": 200,
       "options": {
         "brokerId": null,
         // "broker": {
