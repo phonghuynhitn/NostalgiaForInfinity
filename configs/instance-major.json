@@ -1,8 +1,8 @@
 {
   "bot_name": "nfi-major",
   "dry_run": true,
-  "max_open_trades": 5,
-  "tradable_balance_ratio": 0.99,
+  "max_open_trades": 4,
+  "tradable_balance_ratio": 0.98,
   "num_cores_indicators_calc": 2,
   "api_server": {
     "enabled": false,
