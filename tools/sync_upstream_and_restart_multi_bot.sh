@@ -99,8 +99,28 @@ ensure_upstream_remote() {
 }
 
 ensure_clean_worktree() {
-    if ! git diff-index --quiet HEAD --; then
-        log "ERROR: Working tree has uncommitted changes. Commit or stash them first."
+    # Refresh the index stat cache first. Without this, git diff-index can report
+    # false positives on NFS/network disks or while other processes touch files.
+    git update-index -q --refresh 2>/dev/null || true
+
+    local dirty_files
+    dirty_files="$(git status --porcelain --untracked-files=no)" || {
+        echo "$(date '+%Y-%m-%d %H:%M:%S') ERROR: Unable to inspect working tree." | tee -a "$LOG_FILE"
+        exit 1
+    }
+
+    # This script appends to LOG_FILE every run. If the log was ever committed
+    # before *.log was gitignored, it would look dirty on every cron run.
+    if [[ -n "$dirty_files" && "$LOG_FILE" == "$REPO_ROOT"/* ]]; then
+        local log_rel="${LOG_FILE#"$REPO_ROOT"/}"
+        dirty_files="$(printf '%s\n' "$dirty_files" | grep -vE "^.. ${log_rel//\//\\/}$" || true)"
+    fi
+
+    if [[ -n "$dirty_files" ]]; then
+        echo "$(date '+%Y-%m-%d %H:%M:%S') ERROR: Working tree has uncommitted changes. Commit or stash them first." | tee -a "$LOG_FILE"
+        while IFS= read -r line; do
+            [[ -n "$line" ]] && echo "$(date '+%Y-%m-%d %H:%M:%S')   $line" | tee -a "$LOG_FILE"
+        done <<< "$dirty_files"
         exit 1
     fi
 }
@@ -144,14 +164,15 @@ main() {
     acquire_lock
     cd "$REPO_ROOT"
 
+    # Check before writing to LOG_FILE; otherwise a tracked log file looks dirty.
+    ensure_clean_worktree
+
     log "========================================================================"
     log "Sync upstream -> $LOCAL_BRANCH"
     if [[ "$CHECK_ONLY" == "true" ]]; then
         log "Mode: check-only"
     fi
     log "========================================================================"
-
-    ensure_clean_worktree
     ensure_upstream_remote
 
     if ! git rev-parse --verify "$LOCAL_BRANCH" >/dev/null 2>&1; then
