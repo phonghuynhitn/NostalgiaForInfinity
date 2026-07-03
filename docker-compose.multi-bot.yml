@@ -68,9 +68,6 @@ services:
   nfi-mid:
     <<: *multi-bot-common-settings
     container_name: nfi-mid_binance_futures-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}
-    depends_on:
-      pairlist-updater:
-        condition: service_healthy
     env_file:
       - path: .env
         required: false
