@@ -38,32 +38,32 @@ services:
       start_period: 40s
       start_interval: 5s
 
-  nfi-major:
-    <<: *multi-bot-common-settings
-    container_name: nfi-major_binance_futures-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}
-    depends_on:
-      pairlist-updater:
-        condition: service_healthy
-    env_file:
-      - path: .env
-        required: false
-      - path: ./secrets/nfi-major.env
-        required: false
-    ports:
-      - "8081:8083"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8083"]
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-      start_interval: 5s
-    command: >
-      trade
-      --config /freqtrade/configs/recommended_config_major.json
-      --db-url sqlite:////freqtrade/user_data/nfi-major_binance_futures-live-tradesv3.sqlite
-      --log-file user_data/logs/nfi-major-binance-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}-futures.log
-      --strategy-path .
+  # nfi-major:
+  #   <<: *multi-bot-common-settings
+  #   container_name: nfi-major_binance_futures-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}
+  #   depends_on:
+  #     pairlist-updater:
+  #       condition: service_healthy
+  #   env_file:
+  #     - path: .env
+  #       required: false
+  #     - path: ./secrets/nfi-major.env
+  #       required: false
+  #   ports:
+  #     - "8081:8083"
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://localhost:8083"]
+  #     interval: 1m30s
+  #     timeout: 10s
+  #     retries: 3
+  #     start_period: 40s
+  #     start_interval: 5s
+  #   command: >
+  #     trade
+  #     --config /freqtrade/configs/recommended_config_major.json
+  #     --db-url sqlite:////freqtrade/user_data/nfi-major_binance_futures-live-tradesv3.sqlite
+  #     --log-file user_data/logs/nfi-major-binance-${FREQTRADE__STRATEGY:-NostalgiaForInfinityX7}-futures.log
+  #     --strategy-path .
 
   nfi-mid:
     <<: *multi-bot-common-settings
