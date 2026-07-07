@@ -16,27 +16,27 @@ x-common-settings:
 
 services:
 
-  pairlist-updater:
-    <<: *multi-bot-common-settings
-    container_name: nfi-pairlist-updater_binance_futures
-    user: "0:0"
-    environment:
-      PYTHONPATH: /home/ftuser/.local/lib/python3.14/site-packages
-    entrypoint: ["python", "/freqtrade/tools/generate-pairlists.py"]
-    command: >
-      --config /freqtrade/configs/pairlist-generator-binance-futures-usdt.json
-      --loop
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "python -c 'import json; from datetime import datetime, timezone; ready=\"/freqtrade/configs/generated/.ready\"; data=json.load(open(ready, encoding=\"utf-8\")); generated_at=datetime.fromisoformat(data[\"generated_at\"].replace(\"Z\", \"+00:00\")); age=(datetime.now(timezone.utc)-generated_at).total_seconds(); raise SystemExit(0 if age <= 3900 else 1)'"
-        ]
-      interval: 30s
-      timeout: 5s
-      retries: 5
-      start_period: 40s
-      start_interval: 5s
+  # pairlist-updater:
+  #   <<: *multi-bot-common-settings
+  #   container_name: nfi-pairlist-updater_binance_futures
+  #   user: "0:0"
+  #   environment:
+  #     PYTHONPATH: /home/ftuser/.local/lib/python3.14/site-packages
+  #   entrypoint: ["python", "/freqtrade/tools/generate-pairlists.py"]
+  #   command: >
+  #     --config /freqtrade/configs/pairlist-generator-binance-futures-usdt.json
+  #     --loop
+  #   healthcheck:
+  #     test:
+  #       [
+  #         "CMD-SHELL",
+  #         "python -c 'import json; from datetime import datetime, timezone; ready=\"/freqtrade/configs/generated/.ready\"; data=json.load(open(ready, encoding=\"utf-8\")); generated_at=datetime.fromisoformat(data[\"generated_at\"].replace(\"Z\", \"+00:00\")); age=(datetime.now(timezone.utc)-generated_at).total_seconds(); raise SystemExit(0 if age <= 3900 else 1)'"
+  #       ]
+  #     interval: 30s
+  #     timeout: 5s
+  #     retries: 5
+  #     start_period: 40s
+  #     start_interval: 5s
 
   # nfi-major:
   #   <<: *multi-bot-common-settings
