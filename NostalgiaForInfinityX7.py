@@ -70,7 +70,7 @@ class NostalgiaForInfinityX7(IStrategy):
   INTERFACE_VERSION = 3
 
   def version(self) -> str:
-    return "v17.4.404"
+    return "v17.4.409"
 
   stoploss = -0.99
 
@@ -15948,6 +15948,8 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_4h_gt_30) | (aroonu_14_1h_lt_70) | (roc_9_4h_gt_neg_10))
             # 4h down move, 1h high, 1d downtrend
             & ((rsi_3_4h_gt_30) | (stochrsi_k_1h_lt_60) | (roc_9_1d_gt_neg_40))
+            # 4h down move, 1d high & overbought
+            & ((rsi_3_4h_gt_40) | (aroonu_14_1d_lt_100) | (roc_9_1d_lt_80))
             # 4h down move, 4h & 1d high
             & ((rsi_3_4h_gt_35) | (aroonu_14_4h_lt_70) | (aroonu_14_1d_lt_100))
             # 4h down move, 4h high & overbought
@@ -46569,6 +46571,82 @@ class NostalgiaForInfinityX7(IStrategy):
     ):
       self._grind_entry_tag = "g21"
       return True
+    # g22 — early recovery rebuild: reclaiming off the low BEFORE the 4h trend confirms (g14 needs
+    #        EMA_12_4h > EMA_200_4h and fires too late for a deep-derisk bounce). Anti-fake-rise gating via
+    #        multi-TF RSI recovery + reclaim off the 4h low + not-extended. NOTE: slice_profit_entry gate
+    #        removed — it self-defeats in recovery (last grind buy is in profit); underwater-scope TBD.
+    if (
+      (last_rsi_3 > 30.0)
+      and (last_rsi_3_15m > 30.0)
+      and (last_rsi_14 > 45.0)
+      and (last_rsi_14_1h > 45.0)
+      and (last_roc_9_1h > 0.0)
+      and (last_roc_9_4h > -10.0)
+      # anti-parabolic: even at a formed bottom, a parabolic 4h overshoot reverses (dead-cat).
+      # cross-coin (SFP/CELR/DYDX/APE): cuts 17 severe at ~1% good cost within recovery-starts.
+      and (last_roc_9_4h < 25.0)
+      # recovery-started gate: only rebuild once the 4h bottom is IN (not still making new lows).
+      # g22's job is the recovery rebuild — NOT entering mid-dump (that's g1..g21). AROOND high =
+      # a fresh 4h low was just made = still dumping; require it low = bottom formed = recovery start.
+      and (last_aroonu_14_4h < 50.0)
+      # aggressive risk-free: g22 fires ONLY deep below the 4h 200-EMA (fresh recovery zone). The
+      # near/above-EMA overextended-bounce zone is where dead-cats live AND where g22's late-recovery
+      # adds sit — we sacrifice those wins on purpose, because g23 (extended-continuation, ~0.2% severe)
+      # backstops the real recoveries above. So g22 stays clean, g23 captures the continuation.
+      and (last_close < last_ema_200_4h)
+      and (last_close > (last_low_min_12_4h * 1.10))
+      and (last_close > (last_ema_20 * 0.97))
+      and (last_close < (last_ema_20 * 1.02))
+      and ((last_rsi_3_4h > 50.0) or (last_aroonu_14_1h < 100.0))
+      and ((last_rsi_3_1d > 10.0) or (last_aroonu_14_1d < 70.0))
+      and ((last_rsi_3_1d > 40.0) or (last_stochrsi_k_1h < 80.0))
+      and ((last_rsi_3_1d > 40.0) or (last_stochrsi_k_4h < 80.0))
+      and ((last_rsi_3_1d > 45.0) or (last_aroonu_14_1h < 100.0))
+      and ((last_rsi_3_1d > 45.0) or (last_aroonu_14_4h < 100.0))
+      and ((last_rsi_3_1d > 45.0) or (last_stochrsi_k_1h < 90.0))
+      and ((last_rsi_3_1d > 45.0) or (last_stochrsi_k_4h < 90.0))
+      and ((last_aroonu_14_15m < 80.0) or (last_stochrsi_k_15m < 80.0))
+      and ((last_roc_9_1d > -20.0) or (last_aroonu_14_4h < 100.0))
+      and ((last_roc_9_1d > -20.0) or (last_stochrsi_k_4h < 90.0))
+      and ((last_roc_9_1d > -30.0) or (last_stochrsi_k_1h < 90.0))
+    ):
+      self._grind_entry_tag = "g22"
+      return True
+    # g23 — pump-continuation scalp: extended zone ABOVE g22's EMA_20*1.02 cap. Only rides a CONFIRMED
+    # continuation (price already advancing past the reclaim), so dead-cats (which roll over before
+    # reaching the extended zone) are structurally avoided. Complements g22: g22 = early recovery-start
+    # (ambiguous zone, dead-cat risk trimmed by P1), g23 = confirmed continuation (clean, ~0.2% severe).
+    if (
+      (last_rsi_3 > 30.0)
+      and (last_rsi_3_15m > 30.0)
+      and (last_rsi_14 > 50.0)
+      and (last_rsi_14_1h > 50.0)
+      and (last_roc_9_1h > 0.0)
+      and (last_roc_9_4h > 0.0)
+      # anti-parabolic blow-off + anti-exhaustion top
+      and (last_roc_9_4h < 25.0)
+      and ((last_stochrsi_k < 97.0) or (last_rsi_14 < 80.0))
+      and (last_close > (last_low_min_12_4h * 1.10))
+      # extended zone: above g22's 1.02*EMA cap = continuation confirmed, not a reclaim
+      and (last_close >= (last_ema_20 * 1.02))
+      and (last_close < (last_ema_20 * 1.12))
+      and ((last_rsi_3_4h > 50.0) or (last_aroonu_14_4h < 70.0))
+      and ((last_rsi_3_1d > 15.0) or (last_stochrsi_k_1h < 80.0))
+      and ((last_rsi_3_1d > 30.0) or (last_aroonu_14_1h < 100.0))
+      and ((last_rsi_3_1d > 30.0) or (last_aroonu_14_4h < 100.0))
+      and ((last_rsi_3_1d > 50.0) or (last_stochrsi_k_1h < 80.0) or (last_stochrsi_k_4h < 90.0))
+      and ((last_aroonu_14_15m < 100.0) or (last_aroonu_14_1h < 100.0))
+      and ((last_aroonu_14_15m < 100.0) or (last_aroonu_14_4h < 100.0))
+      and ((last_aroonu_14_15m < 100.0) or (last_aroonu_14_1d < 100.0))
+      and ((last_aroonu_14_15m < 100.0) or (last_stochrsi_k_1h < 80.0))
+      and ((last_aroonu_14_4h < 70.0) or (last_roc_9_1d < 50.0))
+      and ((last_stochrsi_k_15m < 80.0) or (last_stochrsi_k_1h < 90.0))
+      and ((last_stochrsi_k_15m < 90.0) or (last_aroonu_14_1h < 100.0))
+      and ((last_stochrsi_k_15m < 90.0) or (last_stochrsi_k_4h < 90.0))
+      and ((last_stochrsi_k_1h < 90.0) or (last_stochrsi_k_4h < 90.0))
+    ):
+      self._grind_entry_tag = "g23"
+      return True
 
     self._grind_entry_tag = ""
     return False
@@ -47465,7 +47543,9 @@ class NostalgiaForInfinityX7(IStrategy):
             else:
               return -ft_sell_amount
 
-    is_long_grind_entry = self.long_grind_entry(last_candle, previous_candle, slice_profit, True)
+    is_long_grind_entry = self.long_grind_entry_v3(
+      last_candle, previous_candle, num_open_grinds, slice_profit, slice_profit_entry, slice_profit_exit, True
+    )  # 120 grinds via the v3 entry set (g0..g23) instead of the legacy grind mode
     slice_profit_lt_neg_0_06 = slice_profit < -0.06
     num_open_grinds_eq_0 = num_open_grinds == 0
 
@@ -69878,6 +69958,8 @@ class NostalgiaForInfinityX7(IStrategy):
       and ((last_rsi_3_4h < 70.0) or (last_stochrsi_k_4h > 40.0))
       and (last_close < (last_close_min_48 * 1.15))
       and (last_close > (last_ema_12 * 1.020))
+      and ((last_rsi_3_1h < 80.0) or (last_stochrsi_k_1d > 30.0))
+      and ((last_rsi_3_1h < 75.0) or (last_stochrsi_k_1h > 30.0))
     ):
       self._grind_entry_tag = "g3"
       return True
@@ -70034,6 +70116,8 @@ class NostalgiaForInfinityX7(IStrategy):
       and (last_sma_9 < last_sma_21)
       and (last_ema_12_4h < last_ema_200_4h)
       and (last_close < (last_close_min_48 * 1.10))
+      and ((last_rsi_3_1h < 70.0) or (last_stochrsi_k_1h > 30.0))
+      and ((last_rsi_3_1d < 75.0) or (last_stochrsi_k_1h > 20.0))
     ):
       self._grind_entry_tag = "g14"
       return True
@@ -70115,6 +70199,9 @@ class NostalgiaForInfinityX7(IStrategy):
       and ((last_stochrsi_k_4h > 10.0) or (last_roc_9_4h > -30.0))
       and (last_ema_50_4h < last_ema_100_4h)
       and (last_close > (last_close_min_48 * 1.05))
+      and ((last_rsi_3_1h < 50.0) or (last_roc_9_1d > -60.0))
+      and ((last_rsi_3_4h < 60.0) or (last_aroond_14_4h < 90.0))
+      and ((last_rsi_3_4h < 55.0) or (last_aroond_14_4h < 100.0))
     ):
       self._grind_entry_tag = "g20"
       return True
@@ -70128,6 +70215,64 @@ class NostalgiaForInfinityX7(IStrategy):
       and (last_close > (last_ema_20 * 1.045))
     ):
       self._grind_entry_tag = "g21"
+      return True
+    # g22 — early breakdown rebuild: rejecting off the high BEFORE the 4h trend confirms (mirror long g22)
+    if (
+      (last_rsi_3 < 70.0)
+      and (last_rsi_3_15m < 70.0)
+      and (last_rsi_14 < 55.0)
+      and (last_rsi_14_1h < 55.0)
+      and (last_roc_9_1h < 0.0)
+      and (last_roc_9_4h < 10.0)
+      and (last_roc_9_4h > -25.0)
+      and (last_aroond_14_4h < 50.0)
+      and (last_close > last_ema_200_4h)
+      and (last_close < (last_high_max_12_4h * 0.90))
+      and (last_close < (last_ema_20 * 1.03))
+      and (last_close > (last_ema_20 * 0.98))
+      and ((last_rsi_3_4h < 50.0) or (last_aroond_14_1h < 100.0))
+      and ((last_rsi_3_1d < 90.0) or (last_aroond_14_1d < 70.0))
+      and ((last_rsi_3_1d < 60.0) or (last_stochrsi_k_1h > 20.0))
+      and ((last_rsi_3_1d < 60.0) or (last_stochrsi_k_4h > 20.0))
+      and ((last_rsi_3_1d < 55.0) or (last_aroond_14_1h < 100.0))
+      and ((last_rsi_3_1d < 55.0) or (last_aroond_14_4h < 100.0))
+      and ((last_rsi_3_1d < 55.0) or (last_stochrsi_k_1h > 10.0))
+      and ((last_rsi_3_1d < 55.0) or (last_stochrsi_k_4h > 10.0))
+      and ((last_aroond_14_15m < 80.0) or (last_stochrsik_15m > 20.0))
+      and ((last_roc_9_1d < 20.0) or (last_aroond_14_4h < 100.0))
+      and ((last_roc_9_1d < 20.0) or (last_stochrsi_k_4h > 10.0))
+      and ((last_roc_9_1d < 30.0) or (last_stochrsi_k_1h > 10.0))
+    ):
+      self._grind_entry_tag = "g22"
+      return True
+    # g23 — breakdown-continuation scalp: extended zone BELOW g22's EMA_20*0.98 cap (mirror long g23)
+    if (
+      (last_rsi_3 < 70.0)
+      and (last_rsi_3_15m < 70.0)
+      and (last_rsi_14 < 50.0)
+      and (last_rsi_14_1h < 50.0)
+      and (last_roc_9_1h < 0.0)
+      and (last_roc_9_4h < 0.0)
+      and (last_roc_9_4h > -25.0)
+      and ((last_stochrsi_k > 3.0) or (last_rsi_14 > 20.0))
+      and (last_close < (last_high_max_12_4h * 0.90))
+      and (last_close <= (last_ema_20 * 0.98))
+      and (last_close > (last_ema_20 * 0.88))
+      and ((last_rsi_3_4h < 50.0) or (last_aroond_14_4h < 70.0))
+      and ((last_rsi_3_1d < 85.0) or (last_stochrsi_k_1h > 20.0))
+      and ((last_rsi_3_1d < 70.0) or (last_aroond_14_1h < 100.0))
+      and ((last_rsi_3_1d < 70.0) or (last_aroond_14_4h < 100.0))
+      and ((last_aroond_14_15m < 100.0) or (last_aroond_14_1h < 100.0))
+      and ((last_aroond_14_15m < 100.0) or (last_aroond_14_4h < 100.0))
+      and ((last_aroond_14_15m < 100.0) or (last_aroond_14_1d < 100.0))
+      and ((last_aroond_14_15m < 100.0) or (last_stochrsi_k_1h > 20.0))
+      and ((last_aroond_14_4h < 70.0) or (last_roc_9_1d > -50.0))
+      and ((last_stochrsik_15m > 20.0) or (last_stochrsi_k_1h > 10.0))
+      and ((last_stochrsik_15m > 10.0) or (last_aroond_14_1h < 100.0))
+      and ((last_stochrsik_15m > 10.0) or (last_stochrsi_k_4h > 10.0))
+      and ((last_stochrsi_k_1h > 10.0) or (last_stochrsi_k_4h > 10.0))
+    ):
+      self._grind_entry_tag = "g23"
       return True
 
     self._grind_entry_tag = ""
