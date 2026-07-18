@@ -21398,6 +21398,16 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_15m < 90.0) | (stochrsi_k_4h > 30.0))
             # 1d parabolic pump (huge ROC + extreme RSI_14) = exhaustion top
             & ((rsi_14_1d < 75.0) | (roc_9_1d < 30.0))
+            # P07 - daily extreme with weak 4h participation and elevated 1h RSI
+            & ((aroonu_14_1d_lt_100) | (cmf_20_4h_gt_neg_0_10) | (rsi_14_1h_lt_50))
+            # P10 - weak 1h short-RSI participation
+            & ((rsi_3_1h_gt_50) | (stochrsi_k_1h_lt_60))
+            # P16 - weak 4h money flow during an extended 4h move
+            & ((cmf_20_4h_gt_neg_0_10) | (roc_9_4h_lt_20))
+            # P18 - daily extension without 1h or 15m continuation
+            & ((roc_9_1d_lt_40) | (rsi_3_1h_gt_60) | (stochrsi_k_15m_lt_50))
+            # P19 - mature 4h move without short-term continuation
+            & ((aroonu_14_4h_lt_70) | (rsi_3_4h_gt_65) | (stochrsi_k_1h_lt_50))
           )
 
           # Logic — Breakout above BB upper with momentum
@@ -68434,7 +68444,6 @@ class NostalgiaForInfinityX7(IStrategy):
     grind_open_orders,
     trade: Trade,
   ) -> tuple:
-
     # Normalize so profit is always positive when the short is profitable.
     profit = -grind_profit_rate
 
