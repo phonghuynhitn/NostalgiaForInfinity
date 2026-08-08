@@ -1,7 +1,7 @@
 {
   "bot_name": "nfi-mid",
   "dry_run": true,
-  "max_open_trades": 6,
+  "max_open_trades": 8,
   "tradable_balance_ratio": 0.98,
   "num_cores_indicators_calc": 2,
   "api_server": {
