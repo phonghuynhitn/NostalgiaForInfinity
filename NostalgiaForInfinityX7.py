@@ -71,7 +71,7 @@ class NostalgiaForInfinityX7(IStrategy):
   INTERFACE_VERSION = 3
 
   def version(self) -> str:
-    return "v17.4.544"
+    return "v17.4.546"
 
   stoploss = -0.99
 
@@ -2042,14 +2042,10 @@ class NostalgiaForInfinityX7(IStrategy):
     short_exit_normal = self.short_exit_normal
 
     df, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
-    if len(df) < 6:
+    if len(df) < 2:
       return None
     last_candle = df.iloc[-1]
     previous_candle_1 = df.iloc[-2]
-    previous_candle_2 = df.iloc[-3]
-    previous_candle_3 = df.iloc[-4]
-    previous_candle_4 = df.iloc[-5]
-    previous_candle_5 = df.iloc[-6]
 
     enter_tag = "empty"
     if hasattr(trade, "enter_tag"):
@@ -2089,10 +2085,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -2116,10 +2108,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -2143,10 +2131,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -2171,10 +2155,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -2198,10 +2178,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -2227,10 +2203,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -2253,10 +2225,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -2279,10 +2247,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -2306,10 +2270,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -2335,10 +2295,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -2362,10 +2318,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -2389,10 +2341,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -2416,10 +2364,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -2442,10 +2386,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -2469,10 +2409,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -2495,10 +2431,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -2524,10 +2456,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -2552,10 +2480,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -2580,10 +2504,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -2822,25 +2742,16 @@ class NostalgiaForInfinityX7(IStrategy):
     current_exit_profit: float,
     **kwargs,
   ):
-    long_adjust_mode_tags = self.long_adjust_mode_tags
-    long_known_mode_tags = self.long_known_mode_tags
-    short_adjust_mode_tags = self.short_adjust_mode_tags
-    short_known_mode_tags = self.short_known_mode_tags
-
-    trade_is_short = trade.is_short
-    long_grind_mode_tags = self.long_grind_mode_tags
-    long_btc_mode_tags = self.long_btc_mode_tags
-    short_grind_mode_tags = self.short_grind_mode_tags
-    long_rebuy_mode_tags = self.long_rebuy_mode_tags
-    long_rebuy_grind_mode_tags = self.long_rebuy_grind_mode_tags
-    short_rebuy_mode_tags = self.short_rebuy_mode_tags
-    short_rebuy_grind_mode_tags = self.short_rebuy_grind_mode_tags
-    long_rebuy_adjust_trade_position_v3 = self.long_rebuy_adjust_trade_position_v3
-    short_rebuy_adjust_trade_position_v3 = self.short_rebuy_adjust_trade_position_v3
-
-    if self.position_adjustment_enable == False:
+    # =========================================================================
+    # FAST EXIT
+    # =========================================================================
+    if not self.position_adjustment_enable:
       return None
 
+    # =========================================================================
+    # BASIC TRADE STATE
+    # =========================================================================
+    trade_is_short = trade.is_short
     enter_tag = "empty"
     if hasattr(trade, "enter_tag"):
       trade_enter_tag = trade.enter_tag
@@ -2848,184 +2759,138 @@ class NostalgiaForInfinityX7(IStrategy):
         enter_tag = trade_enter_tag
     enter_tags = enter_tag.split()
 
+    # =========================================================================
+    # SYSTEM VERSION
+    # =========================================================================
     is_backtest = self.is_backtest_mode()
-    is_long_grind_mode = all(c in long_grind_mode_tags for c in enter_tags)
-    is_long_btc_mode = all(c in long_btc_mode_tags for c in enter_tags)
-    is_short_grind_mode = all(c in short_grind_mode_tags for c in enter_tags)
-    is_v2_date = is_backtest or trade.open_date_utc.replace(tzinfo=None) >= datetime(2025, 2, 13)
     is_system_v3, is_system_v3_1, is_system_v3_2 = self.get_system_version_flags(trade)
     is_system_v3_family = is_system_v3 or is_system_v3_1 or is_system_v3_2
 
-    # Rebuy mode
-    if not trade_is_short and (
-      all(c in long_rebuy_mode_tags for c in enter_tags)
-      or (
-        any(c in long_rebuy_mode_tags for c in enter_tags) and all(c in long_rebuy_grind_mode_tags for c in enter_tags)
-      )
-    ):
-      if is_system_v3_family:
-        return long_rebuy_adjust_trade_position_v3(
-          trade,
-          enter_tags,
-          current_time,
-          current_rate,
-          current_profit,
-          min_stake,
-          max_stake,
-          current_entry_rate,
-          current_exit_rate,
-          current_entry_profit,
-          current_exit_profit,
-        )
-      else:
-        return self.long_rebuy_adjust_trade_position(
-          trade,
-          enter_tags,
-          current_time,
-          current_rate,
-          current_profit,
-          min_stake,
-          max_stake,
-          current_entry_rate,
-          current_exit_rate,
-          current_entry_profit,
-          current_exit_profit,
-        )
-    elif trade_is_short and (
-      all(c in short_rebuy_mode_tags for c in enter_tags)
-      or (
-        any(c in short_rebuy_mode_tags for c in enter_tags)
-        and all(c in short_rebuy_grind_mode_tags for c in enter_tags)
-      )
-    ):
-      if is_system_v3_family:
-        return short_rebuy_adjust_trade_position_v3(
-          trade,
-          enter_tags,
-          current_time,
-          current_rate,
-          current_profit,
-          min_stake,
-          max_stake,
-          current_entry_rate,
-          current_exit_rate,
-          current_entry_profit,
-          current_exit_profit,
-        )
-      else:
-        return self.short_rebuy_adjust_trade_position(
-          trade,
-          enter_tags,
-          current_time,
-          current_rate,
-          current_profit,
-          min_stake,
-          max_stake,
-          current_entry_rate,
-          current_exit_rate,
-          current_entry_profit,
-          current_exit_profit,
+    if is_backtest:
+      is_v2_date = True
+    else:
+      is_v2_date = trade.open_date_utc.replace(tzinfo=None) >= datetime(2025, 2, 13)
+
+    # =========================================================================
+    # ARGS
+    # =========================================================================
+    args = (
+      trade,
+      enter_tags,
+      current_time,
+      current_rate,
+      current_profit,
+      min_stake,
+      max_stake,
+      current_entry_rate,
+      current_exit_rate,
+      current_entry_profit,
+      current_exit_profit,
+    )
+
+    # =========================================================================
+    # LONG
+    # =========================================================================
+    if not trade_is_short:
+      # -----------------------------------------------------------------------
+      # REBUY MODE
+      # -----------------------------------------------------------------------
+      is_long_rebuy = all(c in self.long_rebuy_mode_tags for c in enter_tags)
+      if not is_long_rebuy:
+        is_long_rebuy = any(c in self.long_rebuy_mode_tags for c in enter_tags) and all(
+          c in self.long_rebuy_grind_mode_tags for c in enter_tags
         )
 
-    # Grinding
-    elif not trade_is_short:
-      if not is_long_grind_mode and not is_long_btc_mode and (is_system_v3_family):
-        if any(c in long_adjust_mode_tags for c in enter_tags) or not any(
-          c in long_known_mode_tags for c in enter_tags
-        ):
-          return self.long_grind_adjust_trade_position_v3(
-            trade,
-            enter_tags,
-            current_time,
-            current_rate,
-            current_profit,
-            min_stake,
-            max_stake,
-            current_entry_rate,
-            current_exit_rate,
-            current_entry_profit,
-            current_exit_profit,
-          )
-      elif is_long_grind_mode or is_long_btc_mode or not is_v2_date:
-        return self.long_grind_adjust_trade_position(
-          trade,
-          enter_tags,
-          current_time,
-          current_rate,
-          current_profit,
-          min_stake,
-          max_stake,
-          current_entry_rate,
-          current_exit_rate,
-          current_entry_profit,
-          current_exit_profit,
-        )
-      elif any(c in long_adjust_mode_tags for c in enter_tags) or not any(
-        c in long_known_mode_tags for c in enter_tags
-      ):
-        return self.long_grind_adjust_trade_position_v2(
-          trade,
-          enter_tags,
-          current_time,
-          current_rate,
-          current_profit,
-          min_stake,
-          max_stake,
-          current_entry_rate,
-          current_exit_rate,
-          current_entry_profit,
-          current_exit_profit,
-        )
+      if is_long_rebuy:
+        if is_system_v3_family:
+          return self.long_rebuy_adjust_trade_position_v3(*args)
+        return self.long_rebuy_adjust_trade_position(*args)
 
-    elif trade_is_short:
-      if not is_short_grind_mode and (is_system_v3_family):
-        if any(c in short_adjust_mode_tags for c in enter_tags) or not any(
-          c in short_known_mode_tags for c in enter_tags
-        ):
-          return self.short_grind_adjust_trade_position_v3(
-            trade,
-            enter_tags,
-            current_time,
-            current_rate,
-            current_profit,
-            min_stake,
-            max_stake,
-            current_entry_rate,
-            current_exit_rate,
-            current_entry_profit,
-            current_exit_profit,
-          )
-      elif is_short_grind_mode or not is_v2_date:
-        return self.short_grind_adjust_trade_position(
-          trade,
-          enter_tags,
-          current_time,
-          current_rate,
-          current_profit,
-          min_stake,
-          max_stake,
-          current_entry_rate,
-          current_exit_rate,
-          current_entry_profit,
-          current_exit_profit,
+      # -----------------------------------------------------------------------
+      # LONG MODE CLASSIFICATION
+      # -----------------------------------------------------------------------
+      is_long_grind_mode = all(c in self.long_grind_mode_tags for c in enter_tags)
+      is_long_btc_mode = all(c in self.long_btc_mode_tags for c in enter_tags)
+
+      # -----------------------------------------------------------------------
+      # V3 GRIND
+      # -----------------------------------------------------------------------
+      if is_system_v3_family:
+        if not is_long_grind_mode and not is_long_btc_mode:
+          is_long_adjust_mode = any(c in self.long_adjust_mode_tags for c in enter_tags)
+          is_long_known_mode = any(c in self.long_known_mode_tags for c in enter_tags)
+
+          if is_long_adjust_mode or not is_long_known_mode:
+            return self.long_grind_adjust_trade_position_v3(*args)
+
+        # ---------------------------------------------------------------------
+        # LEGACY GRIND
+        # ---------------------------------------------------------------------
+        elif is_long_grind_mode or is_long_btc_mode or not is_v2_date:
+          return self.long_grind_adjust_trade_position(*args)
+
+      # -----------------------------------------------------------------------
+      # V2 / LEGACY ROUTING
+      # -----------------------------------------------------------------------
+      if is_long_grind_mode or is_long_btc_mode or not is_v2_date:
+        return self.long_grind_adjust_trade_position(*args)
+
+      is_long_adjust_mode = any(c in self.long_adjust_mode_tags for c in enter_tags)
+      is_long_known_mode = any(c in self.long_known_mode_tags for c in enter_tags)
+
+      if is_long_adjust_mode or not is_long_known_mode:
+        return self.long_grind_adjust_trade_position_v2(*args)
+
+    # =========================================================================
+    # SHORT
+    # =========================================================================
+    else:
+      # -----------------------------------------------------------------------
+      # REBUY MODE
+      # -----------------------------------------------------------------------
+      is_short_rebuy = all(c in self.short_rebuy_mode_tags for c in enter_tags)
+      if not is_short_rebuy:
+        is_short_rebuy = any(c in self.short_rebuy_mode_tags for c in enter_tags) and all(
+          c in self.short_rebuy_grind_mode_tags for c in enter_tags
         )
-      else:
-        if any(c in short_adjust_mode_tags for c in enter_tags) or not any(
-          c in short_known_mode_tags for c in enter_tags
-        ):
-          return self.short_grind_adjust_trade_position_v2(
-            trade,
-            enter_tags,
-            current_time,
-            current_rate,
-            current_profit,
-            min_stake,
-            max_stake,
-            current_entry_rate,
-            current_exit_rate,
-            current_entry_profit,
-            current_exit_profit,
-          )
+      if is_short_rebuy:
+        if is_system_v3_family:
+          return self.short_rebuy_adjust_trade_position_v3(*args)
+        return self.short_rebuy_adjust_trade_position(*args)
+
+      # -----------------------------------------------------------------------
+      # SHORT MODE CLASSIFICATION
+      # -----------------------------------------------------------------------
+      is_short_grind_mode = all(c in self.short_grind_mode_tags for c in enter_tags)
+
+      # -----------------------------------------------------------------------
+      # V3 GRIND
+      # -----------------------------------------------------------------------
+      if is_system_v3_family:
+        if not is_short_grind_mode:
+          is_short_adjust_mode = any(c in self.short_adjust_mode_tags for c in enter_tags)
+          is_short_known_mode = any(c in self.short_known_mode_tags for c in enter_tags)
+
+          if is_short_adjust_mode or not is_short_known_mode:
+            return self.short_grind_adjust_trade_position_v3(*args)
+
+        # ---------------------------------------------------------------------
+        # LEGACY GRIND
+        # ---------------------------------------------------------------------
+        elif is_short_grind_mode or not is_v2_date:
+          return self.short_grind_adjust_trade_position(*args)
+
+      # -----------------------------------------------------------------------
+      # V2 / LEGACY ROUTING
+      # -----------------------------------------------------------------------
+      if is_short_grind_mode or not is_v2_date:
+        return self.short_grind_adjust_trade_position(*args)
+
+      is_short_adjust_mode = any(c in self.short_adjust_mode_tags for c in enter_tags)
+      is_short_known_mode = any(c in self.short_known_mode_tags for c in enter_tags)
+
+      if is_short_adjust_mode or not is_short_known_mode:
+        return self.short_grind_adjust_trade_position_v2(*args)
 
     return None
 
@@ -4096,6 +3961,13 @@ class NostalgiaForInfinityX7(IStrategy):
     rsi_20 = ta_rsi(close_np, timeperiod=20)
     bb_upper_20, bb_middle_20, bb_lower_20 = ta_bbands(close_np, timeperiod=20, nbdevup=2.0, nbdevdn=2.0, matype=0)
     bb_middle_20_safe = np.where(bb_middle_20 == 0, np.nan, bb_middle_20)
+    bb_above_mask = close_np > bb_upper_20
+    bb_below_mask = close_np < bb_lower_20
+    idx = np.arange(close_np.size)
+    last_false_above_idx = np.maximum.accumulate(np.where(bb_above_mask, -1, idx))
+    bb_above_count = idx - last_false_above_idx
+    last_false_below_idx = np.maximum.accumulate(np.where(bb_below_mask, -1, idx))
+    bb_below_count = idx - last_false_below_idx
     bb_upper_40, bb_middle_40, bb_lower_40 = ta_bbands(close_np, timeperiod=40, nbdevup=2.0, nbdevdn=2.0, matype=0)
     aroon_down, aroon_up = ta_aroon(high_np, low_np, timeperiod=14)
 
@@ -4322,6 +4194,8 @@ class NostalgiaForInfinityX7(IStrategy):
         "BBL_40_2.0": bb_lower_40,
         "BBD_40_2.0": np.abs(bb_middle_40 - bb_lower_40),
         "BBT_40_2.0": np.abs(close_np - bb_lower_40),
+        "BB_ABOVE_COUNT": bb_above_count,
+        "BB_BELOW_COUNT": bb_below_count,
         "MFI_14": mfi_14,
         "CMF_20": cmf_20,
         "WILLR_14": willr_14,
@@ -18804,18 +18678,20 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((cmf_20_4h_gt_neg_0_50) | (cmf_20_1d_gt_neg_0_50) | (aroonu_14_1d_lt_85))
             # 15m & 1d high, 4h overbought
             & ((aroonu_14_15m_lt_70) | (aroonu_14_1d_lt_100) | (roc_9_4h_lt_20))
+            # 15m & 4h & 1d high
+            & ((aroonu_14_15m_lt_80) | (aroonu_14_4h_lt_80) | (aroonu_14_1d_lt_100))
             # 15m & 4h high, 1d downtrend
             & ((aroonu_14_15m_lt_85) | (aroonu_14_4h_lt_85) | (roc_9_1d_gt_neg_20))
             # 1h still high, 1h & 4h downtrend
             & ((aroonu_14_1h_lt_50) | (roc_9_1h_gt_neg_20) | (roc_9_4h_gt_neg_30))
             # 1h & 4h high, 4h overbought
-            & (aroonu_14_1h_lt_80 | aroonu_14_4h_lt_100 | (roc_9_4h_lt_10))
+            & ((aroonu_14_1h_lt_80) | aroonu_14_4h_lt_100 | (roc_9_4h_lt_10))
             # 4h high, 4h & 1d downtrend
             & ((aroonu_14_4h_lt_60) | (roc_9_4h_gt_neg_30) | (roc_9_1d_gt_neg_30))
             # 4h & 1d high, 4h overbought
-            & (aroonu_14_4h_lt_70 | aroonu_14_1d_lt_100 | (roc_9_4h_lt_30))
+            & ((aroonu_14_4h_lt_70) | aroonu_14_1d_lt_100 | (roc_9_4h_lt_30))
             # 4h & 1d high, 1d overbought
-            & (aroonu_14_4h_lt_70 | aroonu_14_1d_lt_100 | (roc_9_1d_lt_80))
+            & ((aroonu_14_4h_lt_70) | aroonu_14_1d_lt_100 | (roc_9_1d_lt_80))
             # 4h high, 4h & 1d overbought
             & ((aroonu_14_4h_lt_90) | (roc_9_4h_lt_10) | (roc_9_1d_lt_10))
             # 1d high, 4h & 1d overbought
@@ -18823,11 +18699,11 @@ class NostalgiaForInfinityX7(IStrategy):
             # 1d high, 4h downtrend, 1d overbought
             & ((aroonu_14_1d_lt_85) | (roc_9_4h_gt_neg_20) | (roc_9_1d_lt_200))
             # 1d high, 1h & 4h downtrend
-            & (aroonu_14_1d_lt_100 | (roc_9_1h_gt_neg_30) | (roc_9_4h_gt_neg_30))
+            & ((aroonu_14_1d_lt_100) | (roc_9_1h_gt_neg_30) | (roc_9_4h_gt_neg_30))
             # 1d high, 1h & 1d overbought
-            & (aroonu_14_1d_lt_100 | (roc_9_1h_lt_10) | (roc_9_1d_lt_30))
+            & ((aroonu_14_1d_lt_100) | (roc_9_1h_lt_10) | (roc_9_1d_lt_30))
             # 1d high, 4h & 1d overbought
-            & (aroonu_14_1d_lt_100 | (roc_9_4h_lt_30) | (roc_9_1d_lt_60))
+            & ((aroonu_14_1d_lt_100) | (roc_9_4h_lt_30) | (roc_9_1d_lt_60))
             # 15m still high, 1h & 4h downtrend
             & ((stochrsi_k_15m_lt_50) | (roc_9_1h_gt_neg_20) | (roc_9_4h_gt_neg_20))
             # 4h high, 1h & 4h overbought
@@ -22199,7 +22075,7 @@ class NostalgiaForInfinityX7(IStrategy):
             # 1h & 1d high
             & ((stochrsi_k_1h_lt_90) | (stochrsi_k_1d_lt_90))
             # 4h & 1d high, 1d overbought
-            & ((stochrsi_k_4h_lt_90) | (stochrsi_k_1d_lt_90) | (roc_9_1d_lt_50))
+            & ((stochrsi_k_4h_lt_80) | (stochrsi_k_1d_lt_90) | (roc_9_1d_lt_50))
             # 4h high, 1h & 4h overbought
             & ((stochrsi_k_4h_lt_90) | (roc_9_1h_lt_20) | (roc_9_4h_lt_20))
             # 4h high, 1d overbought
@@ -27274,12 +27150,70 @@ class NostalgiaForInfinityX7(IStrategy):
 
         # Condition #505 - ADX trend-birth (Short, experimental, RAW — mirror).
         if short_entry_condition_index == 505:
+          # Protections
           short_entry_logic.append(num_empty_288 <= allowed_empty_candles_288)
           short_entry_logic.append(protections_short_global == True)
-          short_entry_logic.append(adx_14_4h > 20.0)
-          short_entry_logic.append(np_shift(adx_14_4h, 48) <= 20.0)
-          short_entry_logic.append(minus_di_14_4h > plus_di_14_4h)
-          short_entry_logic.append(close < ema_200)
+
+          short_entry_logic.append(
+            # 5m thrust up while price is already well off its 40h low
+            ((rsi_3 < 85.0) | (willr_480 < -75.0))
+            # 15m printing a fresh low with the 5m bid
+            & ((cmf_20 < 0.15) | aroond_14_15m_lt_80)
+            # 15m at its low with a fresh 5m high
+            & ((aroonu_14 < 95.0) | (willr_14_15m > -60.0))
+            # 15m stoch on the floor while the 5m has lifted
+            & ((stochrsi_k < 50.0) | (stochk_14_3_3_15m > 10.0))
+            # 15m falling fast while the 5m is off its low
+            & ((willr_14 < -30.0) | (roc_9_15m > -2.0))
+            # 1h stoch on the floor while the 5m dumps
+            & ((cmf_20 > -0.3) | (stochk_14_3_3_1h > 10.0))
+            # 1h snapback off an oversold low
+            & (stochrsi_k_1h_lt_60 | (rsi_14_1h > 40.0))
+            # 1h squeezed flat with money coming in
+            & ((bbb_20_2_0_1h > 5.0) | (mfi_14_1h < 55.0))
+            # 15m recovered with the 4h pinned at its floor
+            & ((rsi_3_15m < 30.0) | (willr_14_4h > -95.0))
+            # 1h selling into a 4h that is not weak
+            & ((cmf_20_1h > -0.25) | (uo_7_14_28_4h < 45.0))
+            # 15m bid into a 4h that has already dropped
+            & ((mfi_14_15m < 55.0) | (roc_2_4h > -3.0))
+            # 4h high recent, 4h still no selling
+            & (aroonu_14_4h_lt_50 | (mfi_14_4h < 35.0))
+            # 1h stretched while the 4h RSI_3 collapses
+            & ((uo_7_14_28_1h < 55.0) | (rsi_3_change_pct_4h > -30.0))
+            # 15m and 4h both flat — nothing is going down
+            & ((roc_9_15m < -0.5) | (roc_9_4h < -1.0))
+            # 1h up inside a 4h that has already dropped
+            & ((change_pct_1h < 0.0) | (change_pct_4h > -5.0))
+            # 1d strong with buyers defending a long lower wick
+            & ((rsi_14_1d < 55.0) | (bot_wick_pct_1d < 1.5))
+            # 15m selling into a flat day
+            & ((cmf_20_15m > -0.25) | (change_pct_1d < -1.0))
+            # 15m bid while the day collapses
+            & ((cmf_20_15m < 0.15) | (rsi_3_change_pct_1d > -50.0))
+            # 1h bid while the two-day drift is flat
+            & ((mfi_14_1h < 45.0) | (roc_2_1d < -3.0))
+            # 15m bouncing hard, 1d pinned at its low
+            & (aroonu_14_15m_lt_80 | (willr_14_1d > -90.0))
+            # 1d down move spent, 1h off the floor
+            & (stochrsi_k_1h_lt_20 | rsi_3_1d_gt_20)
+            # 1d printing a fresh 14-day low while its stoch is not washed out
+            & ((stochk_14_3_3_1d < 40.0) | (aroond_14_1d < 90.0))
+            # 1d strong underneath a topped-out fast stoch
+            & ((stoch_4_4 < 80.0) | (rsi_14_1d < 55.0))
+            # 4h already down hard under a day that is still firm
+            & ((change_pct_4h > -5.0) | rsi_14_1d_lt_50)
+          )
+
+          # Logic
+          short_entry_logic.append(
+            # 4h trend birth: ADX up through 20 after 8 quiet days
+            (adx_14_4h > 20.0)
+            & (np_shift(adx_14_4h, 48) <= 20.0)
+            # pointing down, under the 200 EMA
+            & (minus_di_14_4h > plus_di_14_4h)
+            & (close < ema_200)
+          )
 
         # Condition #506 - Donchian 7-day breakdown (Short, experimental, RAW — mirror).
         if short_entry_condition_index == 506:
@@ -28753,217 +28687,359 @@ class NostalgiaForInfinityX7(IStrategy):
           short_entry_logic.append(
             # --- 5m: no room left below, and the break candle itself
             (rsi_3 > 0.4)
-            & (willr_480 > -99.5)
-            & (ph_base_pos > 0.03)
-            & (ph_pre_tight > 0.4)
-            & (sqz_cnt_24 < 23.0)
-            # the 5m is not really selling and the hour is flat: nothing to ride
-            & ((rsi_3 < 15.0) | (roc_9_1h < -0.25))
+            # base momentum is not spent while the 4h has already given way: selling after the
+            # move, not into it
+            & ((rsi_3 < 20.0) | (rsi_4 > 25.0) | rsi_3_4h_gt_15)
             # the base RSI is not low, the 4-period RSI is not washed and the base stochastic is
             # off zero: the fast timeframe has nothing left to give (3 losses, free everywhere)
             & ((rsi_14 > 25.0) | (rsi_4 < 10.0) | (stochrsi_k > 0.0))
-            # no high anywhere on the base or 15m, the day is falling and not overbought: the
-            # market is already down and there is nothing left to break (5 losses)
-            & ((aroonu_14 > 0.0) | (roc_9_1d > 0.0) | (rsi_14_1d < 55.0))
-            # a high already printed on the base timeframe, 4h directional strength positive, the
-            # pair not far down over the day and the daily oscillator elevated: shorting into a
-            # market that is holding up on every reading (4 losses, free in all three years)
-            & ((plus_di_14_4h > 12.0) | (roc_288 > -7.0) | stochrsi_k_1d_lt_60)
-            # the base ROC still falling while the 15m momentum holds up, the hourly oscillator
-            # is mid-band and price sits high in the hour's range: no leg underneath (5 losses)
-            & ((rsi_3_change_pct_15m > -50.0) | stochrsi_k_1h_lt_60 | (willr_14_1h > -75.0))
-            # volume leaving on the 15m while the hour has just printed a high (BERA -2,049;
-            # 0W/1L | 0W/2L | 0W/1L)
-            & ((obv_change_pct > -15.0) | aroonu_14_1h_gt_20 | (uo_7_14_28_change_pct_15m < -10.0))
-            # a wide, choppy pre-break hour on a pair that has not really fallen over the day and
-            # whose 15m is already pinned at its floor: the "break" is just another swing inside
-            # the range with no room left under it (SAND -5,934 + others)
-            & ((ph_pre_tight < 5.0) | (roc_9_4h > -3.0) | (willr_14_15m > -95.0))
+            # 4h strong with clearly positive 4h money flow: that is shorting a healthy uptrend
+            # (ARPA -6,334 + 1 more; the only one of the late chains that also pays in 2022)
+            & (rsi_14_4h_lt_50 | cmf_20_4h_lt_0_15)
+            # 4h: just printed a high, or money flow still rich (DODOX -3314 at AROONU_14_4h 78.6)
+            & aroonu_14_4h_lt_50
+            # a fully washed 4h on a pair whose DAILY has just printed a high: that is a dip inside
+            # a strong uptrend, not a breakdown. Blocked trades average -3.5% in the 2021 bull and
+            # +1.4% in 2026 (well under the tag average), so it costs nothing and saves the bull
+            & (stochrsi_k_4h_gt_10 | aroonu_14_1d_lt_85)
+            # price is not pinned at the very floor of its 40h range — there has to be room left below
+            & (willr_480 > -99.5)
+            # the base has a position at all: a dead-flat base is not a breakdown
+            & (ph_base_pos > 0.03)
+            # something was coiled before the break; a break out of nothing has nothing behind it
+            & (ph_pre_tight > 0.4)
             # a tight pre-break hour blown apart by a volume spike: the move is the spike itself
             & ((ph_pre_tight > 0.8) | (vol_rel < 10.0))
-            # the 15m is already deep in its own range while its oscillator holds up: no leg left
-            # to sell (INJ -1,844; 0W/1L | 0W/0L | 0W/1L)
-            & ((quad_s93_min_12 < 15.0) | (uo_7_14_28_15m > 35.0) | (rsi_14_15m < 25.0))
+            # the base has not been squeezed for the whole day — that is a range, not a setup
+            & (sqz_cnt_24 < 23.0)
             # a bearish engulfing while the DAILY is making highs and strong is a pullback inside
             # an uptrend, not a breakdown. In the 2021 bull the blocked group averages -7.2%
             # against a +0.2% population; in 2026/2022 it touches three trades in total
             & ((engulf_bear < 0.5) | aroonu_14_1d_lt_70 | rsi_14_1d_lt_60)
             # --- 15m: the fast timeframe has to confirm the break
-            & (rsi_14_15m > 17.0)
-            & (uo_7_14_28_change_pct_15m < 10.0)
-            # 15m money flow already negative, the day flat and the 15m RSI_3 collapsing on a
-            # day that has not fallen: a spike being sold into a stable market (3 losses)
-            & ((cmf_20_15m > -0.2) | (roc_2_1d < 2.0) | (change_pct_1d > -2.0))
-            # no fresh 15m low, base and 15m money flow both drained, and the 12-candle high sits
-            # near the top of its range: sold out into a market that just topped (5 losses)
-            & ((mfi_14 < 35.0) | (mfi_14_15m < 30.0) | (quad_s93_max_12 > 60.0))
-            # no fresh 15m low while the 4h low is recent, hourly CCI already recovering and the
-            # 15m RSI not low: the 15m has finished its leg (4 losses, free in all three years)
-            & (aroond_14_15m_lt_80 | (cci_20_1h > -175.0) | rsi_14_15m_lt_35)
-            # the 15m has dropped but its RSI is not low, price is pinned at the 15m floor and
-            # the hour is flat: the move already happened on the fast timeframe (5 losses)
-            & ((roc_9_15m < -2.5) | (willr_14_15m < -75.0) | (change_pct_1h > -1.5))
-            # 15m money flow still rich while the hour is red and the 4h has already dropped:
-            # buyers are underneath the break (6 losses, all in 2022)
-            & ((mfi_14_15m > 35.0) | rsi_3_4h_gt_10 | (change_pct_1h < 0.0))
-            # the 15m momentum has already collapsed and volume is coming back in: the flush is
-            # over (SOL -2,739; 0W/0L | 0W/0L | 1W/3L)
-            & ((cci_20_change_pct_15m > -850.0) | (willr_14_15m > -95.0) | (obv_change_pct_15m > 1.0))
-            # the 15m has already been sold off hard and the base oscillator has not confirmed
-            # (SAND 2021 -822,676; 0W/0L | 1W/1L | 0W/1L)
-            & ((cci_20_change_pct_15m > -1200.0) | rsi_14_15m_lt_40 | (aroond_14_15m < 100.0))
-            # 15m CCI already turning up while the hourly is still falling, hourly RSI low and
-            # the day barely down: a bounce forming under a tired hour (5 losses)
-            & ((cci_20_change_pct_1h < 50.0) | (rsi_14_1h < 45.0) | (change_pct_1d > -2.0))
-            # a dead 15m oscillator under a huge volume spike = climax, not a leg down
-            & ((uo_7_14_28_15m > 30.0) | (vol_rel < 10.0))
-            # volume leaving on the 15m while the day is dropping hard, the base RSI is low and
-            # the 15m oscillator is off its floor: selling the end of a move (5 losses)
-            & ((obv_change_pct_15m > 0.0) | (rsi_20 < 35.0) | stochrsi_k_15m_gt_20)
-            # --- 1h: the hour must not already be turning back up
-            & (roc_2_1h < 0.5)
-            & (mfi_14_1h < 50.0)
-            & (cci_20_change_pct_1h < 500.0)
             # a 15m stuck at its low that has not made a new low, entered from above the 24h base
             # (RUNE -29,002; 0W/1L | 2W/1L | 3W/2L)
             & (rsi_3_1h_lt_55 | (aroond_14_15m < 100.0) | (ph_base_pos < 0.5))
+            & (rsi_14_15m > 17.0)
+            # the 15m selling is spent while the 4h RSI is nowhere near washed (ADA -20,094)
+            & (rsi_14_4h_gt_20 | (cci_20_change_pct_15m < 100.0) | rsi_3_15m_gt_20)
+            # no fresh 15m low, base and 15m money flow both drained, and the 12-candle high sits
+            # near the top of its range: sold out into a market that just topped (5 losses)
+            & ((mfi_14 < 35.0) | (mfi_14_15m < 30.0) | (quad_s93_max_12 > 60.0))
+            # 4h and 1h both printing highs while the 15m RSI is not falling (LINK -20,140;
+            # 1W/0L | 1W/1L | 0W/2L)
+            & (aroonu_14_4h_lt_40 | aroonu_14_1h_lt_70 | (rsi_14_change_pct_15m > -10.0))
+            # the 15m stochastics are both on the floor after a long coil: the fast
+            # timeframe is already spent when the break prints
+            & ((stochrsi_k_15m > 0.0) | (sqz_cnt_24 < 18.0) | (stochk_14_3_3_15m > 10.0))
+            # the 15m is already deep in its own range while its oscillator holds up: no leg left
+            # to sell (INJ -1,844; 0W/1L | 0W/0L | 0W/1L)
+            & ((quad_s93_min_12 < 15.0) | (uo_7_14_28_15m > 35.0) | (rsi_14_15m < 25.0))
+            # the 15m has already been sold off hard and the base oscillator has not confirmed
+            # (SAND 2021 -822,676; 0W/0L | 1W/1L | 0W/1L)
+            & ((cci_20_change_pct_15m > -1200.0) | rsi_14_15m_lt_40 | (aroond_14_15m < 100.0))
+            # the 15m momentum has already collapsed and volume is coming back in: the flush is
+            # over (SOL -2,739; 0W/0L | 0W/0L | 1W/3L)
+            & ((cci_20_change_pct_15m > -850.0) | (willr_14_15m > -95.0) | (obv_change_pct_15m > 1.0))
+            # the base is pinned at its 14-bar low while the 15m stochastic is still high:
+            # the low is already in and the fast timeframe has not confirmed it
+            & ((willr_14 > -100.0) | (stochk_14_3_3_15m < 60.0))
+            # a dead 15m oscillator under a huge volume spike = climax, not a leg down
+            & ((uo_7_14_28_15m > 30.0) | (vol_rel < 10.0))
+            # the 15m oscillator is not surging: the fast timeframe must not be turning up
+            & (uo_7_14_28_change_pct_15m < 10.0)
+            # volume leaving on the 15m while the hour has just printed a high (BERA -2,049;
+            # 0W/1L | 0W/2L | 0W/1L)
+            & ((obv_change_pct > -15.0) | aroonu_14_1h_gt_20 | (uo_7_14_28_change_pct_15m < -10.0))
+            # volume leaving on the 15m while the day is dropping hard, the base RSI is low and
+            # the 15m oscillator is off its floor: selling the end of a move (5 losses)
+            & ((obv_change_pct_15m > 0.0) | (rsi_20 < 35.0) | stochrsi_k_15m_gt_20)
+            # a long coil whose base stochastic has been high while the 15m collapses: the
+            # break is the end of the coil, not the start of a move
+            & ((sqz_cnt_24 < 20.0) | (quad_s93_max_12 > 50.0) | (rsi_3_15m < 10.0))
+            # --- 1h: the hour must not already be turning back up
+            # the 5m is not really selling and the hour is flat: nothing to ride
+            & ((rsi_3 < 15.0) | (roc_9_1h < -0.25))
+            # the hour is rising into the break — momentum high, the candle green and the hourly RSI mid-
+            # range: selling a move that has not turned
+            & ((rsi_3_1h < 65.0) | (change_pct_1h < 0.5) | (rsi_14_1h < 50.0))
+            # the base ROC still falling while the 15m momentum holds up, the hourly oscillator
+            # is mid-band and price sits high in the hour's range: no leg underneath (5 losses)
+            & ((rsi_3_change_pct_15m > -50.0) | stochrsi_k_1h_lt_60 | (willr_14_1h > -75.0))
             # hourly RSI_3 snapping up on a falling candle with 15m money flow still neutral
             # (BTC -23,817; 0W/1L | 1W/1L | 0W/0L)
             & ((rsi_3_change_pct_1h < 740.0) | (roc_2 < -1.5) | (cmf_20_15m > -0.05))
+            # the base is not oversold, the 15m stochastic is off its floor and the hour has
+            # not rolled over: nothing is confirming the break
+            & ((rsi_14 < 30.0) | (stochrsi_k_15m > 0.0) | (stochk_14_3_3_1h > 25.0))
+            # the base RSI is on its floor while the base stochastic is mid-range and the hour is dead: a
+            # stalled flush
+            & ((rsi_14 > 20.0) | (stoch_9_3 < 35.0) | (rsi_3_1h > 5.0))
+            # the base is not oversold, base money flow has not turned negative and the
+            # hour is far from its low: selling with the move not yet under way
+            & ((rsi_14 > 25.0) | (cmf_20 < -0.1) | (willr_14_1h < -70.0))
+            # the 15m is not washed out, the hour is not oversold and hourly money flow is
+            # still positive: selling before anything has given way
+            & ((rsi_14_15m > 20.0) | (rsi_14_1h < 35.0) | (mfi_14_1h > 40.0))
             # hourly oversold while price is nowhere near its 40h low: the sell-off is paid for
             # and what is left is the bounce (EIGEN -6,312, BERA -6,235)
             & ((rsi_14_1h > 40.0) | (willr_480 < -85.0))
             # high-volume break into an hour that has already recovered = squeeze fuel
             # (NAORIS -5,028, ARB -4,918, SAND -4,261)
             & (rsi_14_1h_lt_40 | (vol_rel < 6.0) | (mfi_14_1h < 30.0))
-            # hourly RSI mid-range while the 4h momentum has collapsed but the 15m has not
-            # confirmed: the fast timeframe is not selling (UNI -10,291; 2W/0L | 2W/0L | 0W/1L)
-            & (rsi_14_1h_lt_50 | (rsi_3_change_pct_4h > -30.0) | (rsi_3_change_pct_15m < -60.0))
-            # 5m selling stalled and the 15m oscillator snapping back up under the break (XMR
-            # -2,340; 0W/1L | 0W/1L | 0W/1L)
-            & ((cmf_20_1h > -0.25) | (rsi_3_change_pct_15m > -70.0) | (stochrsi_k_change_pct_4h > -40.0))
+            # the base momentum barely moved and the hour is not really rolling over:
+            # a break with no acceleration behind it
+            & ((rsi_14_change_pct < -20.0) | (aroonu_14 > 0.0) | (rsi_3_change_pct_1h < 40.0))
+            # base money flow is not draining, the hourly momentum has not really given way
+            # and the hour is off its floor: the sellers are not there yet
+            & ((cmf_20 > -0.25) | (rsi_3_change_pct_1h < 60.0) | (willr_14_1h > -85.0))
             # hourly money flow still neutral while the hour is no longer falling and the 5m is
             # not washed: nothing is actually selling (3 losses, free in all three years)
             & ((cmf_20_1h > -0.05) | (roc_9_1h < 0.0) | rsi_3_gt_5)
-            # the hour is not falling, its RSI is mid-range, the daily candle has a long lower
-            # wick and the 4h is flat: a market being bought on every dip (5 losses)
-            & ((roc_9_1h < -1.0) | (bot_wick_pct_1d < 4.0) | (change_pct_4h > -1.5))
+            # money flow is intact on both the base and the hour while the hour is off its
+            # low: selling into a market that is not under pressure
+            & ((mfi_14 > 15.0) | (mfi_14_1h > 25.0) | (willr_14_1h < -70.0))
+            # 15m money flow still rich while the hour is red and the 4h has already dropped:
+            # buyers are underneath the break (6 losses, all in 2022)
+            & ((mfi_14_15m > 35.0) | rsi_3_4h_gt_10 | (change_pct_1h < 0.0))
+            # hourly money flow is not rich — buyers should not be in control of the hour
+            & (mfi_14_1h < 50.0)
             # hourly money flow drained while price sits high in its own range = exhausted seller
             & ((mfi_14_1h > 20.0) | (willr_14_1h < -75.0))
-            # hourly money flow drained, 4h already down hard, and the base timeframe printing a
-            # high (SOON -2,118; 2W/1L | 2W/3L | 3W/3L)
-            & ((mfi_14_1h > 10.0) | (roc_9_4h > -4.0) | (aroonu_14 > 30.0))
             # the 15m stochastic pinned at zero with hourly money flow drained and the 15m no
             # longer falling: the flush already happened (6 losses, mostly 2021)
             & ((mfi_14_1h > 25.0) | (roc_9_15m > -3.0) | (stochrsi_k_15m > 0.0))
-            # hourly CCI collapsing while volume comes back in and the daily sits high in its own
-            # range: squeeze fuel on a strong day (6 losses across all three years)
-            & ((cci_20_1h > -200.0) | (obv_change_pct > 0.0) | (willr_14_1d > -60.0))
-            # hourly CCI collapsing into a base oscillator that is already low, on a 4h that has
-            # not made a recent low (DOT -26,460; 0W/0L | 0W/1L | 0W/0L)
-            & ((cci_20_change_pct_1h > -475.0) | (stochrsi_k < 40.0) | (aroond_14_4h < 60.0))
-            # hourly CCI snapping up, daily money flow rich, the 15m oscillator above mid-band
-            # and price at the 15m floor: buyers already stepped in (5 losses)
-            & ((cci_20_change_pct_1h < 75.0) | (mfi_14_1d < 60.0) | (willr_14_15m < -75.0))
-            # hourly CCI already recovering, the daily RSI_3 snapping up and price nowhere near
-            # its 40h low: the hour has turned and there is room above, not below (3 losses)
-            & ((cci_20_change_pct_1h > -25.0) | (rsi_3_change_pct_1d < 75.0) | (willr_480 > -90.0))
-            # --- 4h: the higher timeframe carries the move — it must not be washed out or
-            & (rsi_14_change_pct_4h < 8.0)
-            # 4h: just printed a high, or money flow still rich (DODOX -3314 at AROONU_14_4h 78.6)
-            & aroonu_14_4h_lt_50
-            # 4h: turning back up under the break (KOMA -2725, DODOX -2051, CLANKER -1850)
-            & (stochrsi_k_change_pct_4h < 25.0)
-            # recovering. Floor already washed out (PLAY -1785 at 7.11, ALCH -1159 at 5.19)
-            & (stochk_14_3_3_4h > 12.0)
-            & (mfi_14_4h < 55.0)
-            & (uo_7_14_28_4h > 35.0)
-            # the 15m selling is spent while the 4h RSI is nowhere near washed (ADA -20,094)
-            & (rsi_14_4h_gt_20 | (cci_20_change_pct_15m < 100.0) | rsi_3_15m_gt_20)
-            # 4h strong with clearly positive 4h money flow: that is shorting a healthy uptrend
-            # (ARPA -6,334 + 1 more; the only one of the late chains that also pays in 2022)
-            & (rsi_14_4h_lt_50 | cmf_20_4h_lt_0_15)
-            # the hourly turning up hard while price sits high in its 84-candle range: the 4h RSI
-            # is rising as we sell (APR -14,372, our largest 2026 loss; 2W/1L | 1W/2L | 0W/1L)
-            & ((rsi_14_change_pct_4h < 6.0) | stochrsi_k_1h_lt_60 | (willr_84_1h < -70.0))
-            # 4h money flow negative with the base money flow at zero, a squeeze behind it and a
-            # daily candle with no upper wick: the down-move is spent (3 losses, free everywhere)
-            & ((mfi_14 > 5.0) | (sqz_cnt_24 > 4.0) | (top_wick_pct_1d < 1.5))
-            # 4h money flow clearly positive while the 4h is pinned at its low = accumulation at
-            # the bottom, not a breakdown (AVAX -6,879; 1W/1L | 0W/2L | 1W/1L)
-            & (cmf_20_4h_lt_0_15 | (willr_14_4h > -90.0) | (rsi_3_change_pct_4h > -40.0))
-            # no 4h high behind it, 4h CCI still climbing, directional strength weak and the base
-            # RSI already low: selling a market with no down-leg to give
-            & ((cci_20_change_pct_4h < 200.0) | (plus_di_14_4h < 18.0) | (rsi_20 < 35.0))
-            # 4h already recovering off a pair that has fallen hard over the day, while the 4h
-            # itself is no longer in a live down-leg
-            & (aroonu_14_4h_lt_30 | (roc_288 > -7.0) | (cci_20_4h < -125.0))
-            # 4h and 1h both printing highs while the 15m RSI is not falling (LINK -20,140;
-            # 1W/0L | 1W/1L | 0W/2L)
-            & (aroonu_14_4h_lt_40 | aroonu_14_1h_lt_70 | (rsi_14_change_pct_15m > -10.0))
-            # 4h at its 14-period low and the 5m selling already stopped
-            # (PLAY -16,653 on 2026-07-04: AROOND_14_4h 100 with RSI_3 20.8)
-            & ((aroond_14_4h < 100.0) | (rsi_3 < 15.0))
-            # the low printed on BOTH 4h and 15m right now, money flow above neutral
-            # (CLANKER -4,785 on 2026-04-29)
-            & ((aroond_14_4h < 100.0) | (aroond_14_15m < 100.0) | (mfi_14_1h < 40.0))
+            # no fresh 15m low while the 4h low is recent, hourly CCI already recovering and the
+            # 15m RSI not low: the 15m has finished its leg (4 losses, free in all three years)
+            & (aroond_14_15m_lt_80 | (cci_20_1h > -175.0) | rsi_14_15m_lt_35)
             # 4h near its low, its oscillator back up, hourly off its own low
             # (NAORIS -5,539 on 2026-04-18: AROOND_14_4h 85.7, STOCHRSIk_4h 92.0, WILLR_14_1h -70.2)
             & (aroond_14_4h_lt_80 | stochrsi_k_4h_lt_40 | (willr_14_1h < -85.0))
             # 4h near its low while the 1h has just printed a high and its oscillator is above
             # mid-band: the leg down is finished (AVAX -16,736; thresholds picked on 2026+2022)
             & (aroond_14_4h_lt_80 | aroonu_14_1h_lt_40 | (uo_7_14_28_1h < 50.0))
-            # a fully washed 4h on a pair whose DAILY has just printed a high: that is a dip inside
-            # a strong uptrend, not a breakdown. Blocked trades average -3.5% in the 2021 bull and
-            # +1.4% in 2026 (well under the tag average), so it costs nothing and saves the bull
-            & (stochrsi_k_4h_gt_10 | aroonu_14_1d_lt_85)
+            # the hourly CCI has collapsed while the 15m momentum is still alive and its oscillator rich
+            & ((cci_20_1h > -300.0) | (rsi_3_15m < 35.0) | (uo_7_14_28_15m < 50.0))
+            # the hourly CCI is exploding upward while OBV drains on both the base and the 15m
+            & ((cci_20_change_pct_1h < 250.0) | (obv_change_pct > 0.0) | (obv_change_pct_15m > 0.0))
+            # the hourly CCI has not exploded upward
+            & (cci_20_change_pct_1h < 500.0)
+            # the hourly oscillator is rich while every base RSI is elevated: nothing is oversold to sell
+            & ((uo_7_14_28_1h < 55.0) | (rsi_14 < 35.0) | (rsi_3 < 15.0))
+            # the hourly oscillator is rich, the 15m CCI has exploded and the base stochastic is on its
+            # floor
+            & ((uo_7_14_28_1h < 55.0) | (cci_20_change_pct_15m < 250.0) | (stoch_4_4 > 5.0))
+            # the 15m oscillator is turning up, the base sits on its floor and the hourly CCI is washed out
+            & ((uo_7_14_28_change_pct_15m < 5.0) | (ph_base_pos > 0.1) | (cci_20_1h > -250.0))
+            # the hour itself is not rising into the break
+            & (roc_2_1h < 0.5)
+            # the 15m is not falling, the 4h stochastic is maxed and the hour is not pinned:
+            # the break is a spike inside a market still holding up
+            & ((roc_9_15m < -1.0) | (willr_14_1h > -90.0) | stochrsi_k_4h_lt_90)
+            # the 15m has dropped but its RSI is not low, price is pinned at the 15m floor and
+            # the hour is flat: the move already happened on the fast timeframe (5 losses)
+            & ((roc_9_15m < -2.5) | (willr_14_15m < -75.0) | (change_pct_1h > -1.5))
+            # shorting a small red candle while the 15m has not really broken down and the
+            # hour is only mildly negative: no conviction behind the break
+            & ((change_pct < -0.4) | (rsi_14_change_pct_15m > -30.0) | (roc_2_1h < -2.0))
+            # --- 4h: the higher timeframe carries the move — it must not be washed out
+            # the 4h has not been pushed to an extreme, its momentum is only mildly down and
+            # its stochastic is mid-range: the higher timeframe has not committed
+            & ((rsi_3_4h < 45.0) | (stochk_14_3_3_4h < 40.0) | (cci_20_4h > -75.0))
+            # the 4h sits at its own high, stochastic and CCI both up there: there is no exhaustion above to
+            # sell into
+            & ((rsi_3_4h < 85.0) | (stochk_14_3_3_4h < 70.0) | (cci_20_4h < 50.0))
+            # 4h momentum is dead, the pair has not fallen over the rolling day and the 15m
+            # is still alive: selling a 4h low in a market that never dropped
+            & ((rsi_3_4h > 5.0) | (roc_288 < -3.0) | (rsi_3_15m < 30.0))
+            # shorting into a violent hourly bounce while the base is washed out and the 4h
+            # has barely fallen: the break is being bought back
+            & ((rsi_14 < 30.0) | (rsi_3_change_pct_1h < 250.0) | (change_pct_4h > -1.5))
+            # hourly RSI mid-range while the 4h momentum has collapsed but the 15m has not
+            # confirmed: the fast timeframe is not selling (UNI -10,291; 2W/0L | 2W/0L | 0W/1L)
+            & (rsi_14_1h_lt_50 | (rsi_3_change_pct_4h > -30.0) | (rsi_3_change_pct_15m < -60.0))
+            # the 15m RSI barely moved, the 4h momentum has not given way and the base has
+            # been coiled for a while: a break out of a quiet base with nothing behind it
+            & ((rsi_14_change_pct_15m > -30.0) | (rsi_3_change_pct_4h > -60.0) | (sqz_cnt_24 < 12.0))
+            # the hourly turning up hard while price sits high in its 84-candle range: the 4h RSI
+            # is rising as we sell (APR -14,372, our largest 2026 loss; 2W/1L | 1W/2L | 0W/1L)
+            & ((rsi_14_change_pct_4h < 6.0) | stochrsi_k_1h_lt_60 | (willr_84_1h < -70.0))
+            # the 4h RSI is not jumping: the higher timeframe must not be recovering
+            & (rsi_14_change_pct_4h < 8.0)
+            # the pair has not fallen over the rolling day, the base is not oversold and the
+            # 4h oscillator is still rich: a break with the trend untouched
+            & ((rsi_20 < 30.0) | (roc_288 > -5.0) | (uo_7_14_28_4h < 55.0))
+            # money is flowing into the base, OBV is rising and the 4h sits high: nothing is breaking down
+            & ((cmf_20 < 0.05) | (obv_change_pct < 5.0) | (stochk_14_3_3_4h < 65.0))
+            # money is entering the base, the 4h candle is green and the base stochastic is mid-range
+            & ((cmf_20 < 0.05) | (change_pct_4h < 0.0) | (stoch_9_3 < 25.0))
+            # base money has already left, the 4h stochrsi is on its floor and the 4h oscillator is low
+            & ((cmf_20 > -0.3) | (stochrsi_k_4h > 5.0) | (uo_7_14_28_4h > 40.0))
+            # 5m selling stalled and the 15m oscillator snapping back up under the break (XMR
+            # -2,340; 0W/1L | 0W/1L | 0W/1L)
+            & ((cmf_20_1h > -0.25) | (rsi_3_change_pct_15m > -70.0) | (stochrsi_k_change_pct_4h > -40.0))
+            # money is flowing into the 4h and the base stochastic has just been at its ceiling
+            & ((cmf_20_4h < 0.15) | (quad_s93_max_12 < 95.0) | (stochk_14_3_3_4h > 15.0))
+            # 4h money flow clearly positive while the 4h is pinned at its low = accumulation at
+            # the bottom, not a breakdown (AVAX -6,879; 1W/1L | 0W/2L | 1W/1L)
+            & (cmf_20_4h_lt_0_15 | (willr_14_4h > -90.0) | (rsi_3_change_pct_4h > -40.0))
+            # 15m money flow is not exhausted, the 15m RSI has barely dropped and the 4h
+            # stochastic is turning back up: the flush is already being bought
+            & ((mfi_14_15m > 10.0) | (rsi_14_change_pct_15m > -15.0) | (stochrsi_k_change_pct_4h < 10.0))
+            # hourly money flow drained, 4h already down hard, and the base timeframe printing a
+            # high (SOON -2,118; 2W/1L | 2W/3L | 3W/3L)
+            & ((mfi_14_1h > 10.0) | (roc_9_4h > -4.0) | (aroonu_14 > 30.0))
+            # 4h money flow is rich, the 15m stochastic is mid-range and its CCI has jumped: no capitulation
+            # here
+            & ((mfi_14_4h < 50.0) | (stochk_14_3_3_15m < 50.0) | (cci_20_change_pct_15m < 300.0))
+            # 4h money flow is not rich either
+            & (mfi_14_4h < 55.0)
+            # 4h money is drained and the bands are flat, yet the base never printed a low: nothing has
+            # broken
+            & ((mfi_14_4h > 20.0) | (quad_s93_min_12 < 10.0) | (willr_84_1h > -95.0))
+            # the 15m has not turned down, 15m money flow is still healthy and the 4h is
+            # not draining: a break with nothing behind it on the fast timeframes
+            & (aroonu_14_15m_lt_70 | (mfi_14_15m > 35.0) | (cmf_20_4h > -0.2))
+            # 4h already recovering off a pair that has fallen hard over the day, while the 4h
+            # itself is no longer in a live down-leg
+            & (aroonu_14_4h_lt_30 | (roc_288 > -7.0) | (cci_20_4h < -125.0))
+            # 4h at its 14-period low and the 5m selling already stopped
+            # (PLAY -16,653 on 2026-07-04: AROOND_14_4h 100 with RSI_3 20.8)
+            & ((aroond_14_4h < 100.0) | (rsi_3 < 15.0))
+            # the low printed on BOTH 4h and 15m right now, money flow above neutral
+            # (CLANKER -4,785 on 2026-04-29)
+            & ((aroond_14_4h < 100.0) | (aroond_14_15m < 100.0) | (mfi_14_1h < 40.0))
+            # the 4h is high on stochrsi while the hourly CCI has collapsed underneath it
+            & ((stochrsi_k_4h < 80.0) | (cci_20_change_pct_1h > -400.0) | (roc_2 < -0.5))
+            # the 4h stochrsi is near its ceiling, hourly money is coming in and the 4h has no downward
+            # direction
+            & ((stochrsi_k_4h < 85.0) | (cmf_20_1h < 0.05) | (plus_di_14_4h > 10.0))
+            # the 4h stochrsi sits at zero while 15m money flow and the 15m oscillator both turn up
+            & ((stochrsi_k_4h > 5.0) | (cmf_20_15m < 0.05) | (uo_7_14_28_change_pct_15m < 0.0))
             # the 4h oscillator has stopped falling, the 4h low is not fresh, and the hourly
             # oscillator is already at the floor (SOL 2021 -815,130; 1W/0L | 3W/0L | 0W/4L)
             & ((stochrsi_k_change_pct_4h < 10.0) | (aroond_14_4h > 20.0) | stochrsi_k_1h_lt_30)
-            # the day has not really fallen while both the 5m and the hourly RSI_3 are washed and
-            # the 4h sits at its low: everything is oversold except the day (5 losses)
-            & ((roc_2_1d > -10.0) | (rsi_3 < 10.0) | (willr_14_4h < -80.0))
-            # the 4h has already fallen more than 6%, its RSI is not washed, the hour is pinned
-            # at its low and flat: the drop is finished (4 losses, all in 2022)
-            & ((roc_9_4h < -6.0) | (rsi_14_4h > 25.0) | (willr_14_1h < -80.0))
-            # the daily has fallen and its 2-period ROC is bouncing while 4h money flow holds up
-            # (BTC 2021 -873,230; 1W/0L | 1W/0L | 1W/2L)
-            & ((mfi_14_4h > 15.0) | (change_pct_1d < -2.0) | (roc_2_1d > -4.0))
-            # 4h CCI collapsing into a washed 4h RSI_3 with the 4h stochastic still elevated:
-            # the down-leg is spent (APR -2,531; 0W/1L | 0W/1L | 0W/1L)
-            & ((cci_20_change_pct_4h > -600.0) | rsi_3_4h_gt_10 | (stochk_14_3_3_4h < 35.0))
-            # a bounce day on weak daily money flow, 4h CCI already falling, and the 5m fully
-            # spent: nothing left to sell (7 losses in 2026|2022|2021, 1 protected winner)
-            & ((cci_20_change_pct_4h > 0.0) | (mfi_14_1d > 40.0) | (roc_9_1d < 5.0))
+            # 4h: turning back up under the break (KOMA -2725, DODOX -2051, CLANKER -1850)
+            & (stochrsi_k_change_pct_4h < 25.0)
+            # the 4h is at its ceiling on every measure — stochastic, money flow and williams
+            & ((stochk_14_3_3_4h < 75.0) | (mfi_14_4h < 50.0) | (willr_14_4h < -30.0))
+            # recovering. Floor already washed out (PLAY -1785 at 7.11, ALCH -1159 at 5.19)
+            & (stochk_14_3_3_4h > 12.0)
+            # the 4h is on its own floor — stochastic at the low, money flow drained and williams pinned:
+            # the break has nothing left underneath it
+            & ((stochk_14_3_3_4h > 15.0) | (mfi_14_4h > 25.0) | (willr_14_4h > -95.0))
+            # the 4h stochastic is on its floor and the hour's momentum has already collapsed: the break is
+            # late
+            & ((stochk_14_3_3_4h > 15.0) | (rsi_14_change_pct_1h > -20.0) | (roc_2 < -0.5))
+            # the 4h stochastic is on its floor with no trend strength while the 4h itself ticks up
+            & ((stochk_14_3_3_4h > 15.0) | (adx_14_4h > 15.0) | (roc_2_4h < 0.0))
+            # base stochastic high, 4h RSI rising and the 15m oversold: selling into a
+            # market that has already turned back up
+            & ((stoch_4_4 < 40.0) | (rsi_14_change_pct_4h < 4.0) | (rsi_14_15m > 30.0))
+            # the hourly CCI has exploded, money is entering the base and the 4h stochrsi is near its
+            # ceiling
+            & ((cci_20_change_pct_1h < 350.0) | (cmf_20 < 0.05) | (stochrsi_k_4h < 85.0))
+            # hourly CCI collapsing into a base oscillator that is already low, on a 4h that has
+            # not made a recent low (DOT -26,460; 0W/0L | 0W/1L | 0W/0L)
+            & ((cci_20_change_pct_1h > -475.0) | (stochrsi_k < 40.0) | (aroond_14_4h < 60.0))
+            # no 4h high behind it, 4h CCI still climbing, directional strength weak and the base
+            # RSI already low: selling a market with no down-leg to give
+            & ((cci_20_change_pct_4h < 200.0) | (plus_di_14_4h < 20.0) | (rsi_20 < 35.0))
             # 4h momentum has not turned over on any reading — CCI still rising, neither the 15m
             # nor the 4h RSI falling, and the 4h oscillator above mid-band
             & ((cci_20_change_pct_4h < 200.0) | (rsi_14_change_pct_4h > -18.0) | stochrsi_k_4h_lt_60)
+            # 4h CCI collapsing into a washed 4h RSI_3 with the 4h stochastic still elevated:
+            # the down-leg is spent (APR -2,531; 0W/1L | 0W/1L | 0W/1L)
+            & ((cci_20_change_pct_4h > -600.0) | rsi_3_4h_gt_10 | (stochk_14_3_3_4h < 35.0))
+            # the 15m williams is at the absolute floor while 4h money is drained and the 4h has no
+            # direction
+            & ((willr_14_15m > -100.0) | (mfi_14_4h > 20.0) | (plus_di_14_4h > 10.0))
+            # price is on its 40h floor while the 4h stochastic collapses and the 15m barely moved: the
+            # flush already happened
+            & ((willr_480 > -95.0) | (stochrsi_k_change_pct_4h > -90.0) | (rsi_14_change_pct_15m > -30.0))
+            # price sits on its 40h floor, the base stochastic never got high all session, and the 4h shows
+            # a rejection wick above
+            & ((willr_480 > -95.0) | (quad_s93_max_12 > 25.0) | (top_wick_pct_4h < 2.0))
+            # the hourly williams is near its top and the 4h CCI is positive with no coil behind the break
+            & ((willr_84_1h < -40.0) | (cci_20_4h < 20.0) | (sqz_cnt_24 > 0.0))
+            # the 4h stochastic is high and still turning up while the hour is not washed:
+            # selling into a higher timeframe that has not rolled over yet
+            & ((willr_84_1h < -70.0) | stochrsi_k_4h_lt_80 | (stochrsi_k_change_pct_4h > -10.0))
+            # the hourly oscillator is rich while the 4h has no directional strength and no momentum left
+            & ((uo_7_14_28_1h < 55.0) | (plus_di_14_4h > 10.0) | (rsi_3_4h > 10.0))
+            # but the 4h oscillator is not on its floor — the move must not already be finished
+            & (uo_7_14_28_4h > 35.0)
+            # the 4h oscillator is low while the base RSI is high and the hour is on its floor
+            & ((uo_7_14_28_4h > 40.0) | (rsi_14 < 35.0) | (stochrsi_k_1h > 5.0))
+            # the pair has already fallen hard over the day and the 4h, yet the base never printed a low:
+            # the sellers are late
+            & ((roc_288 > -8.0) | (roc_9_4h > -10.0) | (quad_s93_min_12 < 15.0))
+            # both the 4h and the hour are rising into the break, with the 4h stochastic turning up
+            & ((roc_2_4h < 1.0) | (roc_9_1h < 0.0) | (stochrsi_k_change_pct_4h < 15.0))
+            # the 4h has already fallen more than 6%, its RSI is not washed, the hour is pinned
+            # at its low and flat: the drop is finished (4 losses, all in 2022)
+            & ((roc_9_4h < -6.0) | (rsi_14_4h > 25.0) | (willr_14_1h < -80.0))
+            # every fast timeframe is pinned at its floor while the 4h is actually rising: the flush is done
+            # and the higher timeframe never joined
+            & ((roc_9_4h < 1.0) | (willr_14_1h > -95.0) | (uo_7_14_28_1h > 35.0))
+            # the 15m candle is barely red, the hour is not accelerating down and the 4h
+            # has no downward strength: a break nobody is following
+            & ((change_pct_15m < -0.75) | (rsi_14_change_pct_1h > -25.0) | (minus_di_14_4h < 35.0))
             # selling into a 4h that has already dropped hard while the base stochastic is not
             # washed (APR -4,592; 0W/0L | 1W/3L | 1W/0L)
             & ((change_pct_4h > -7.0) | (stoch_9_3 < 15.0) | (rsi_3_change_pct_15m < -60.0))
-            # a trending 4h under a daily that is neither weak nor washed, out of a long squeeze:
-            # shorting strength (6 losses in 2026 and 2022)
-            & ((adx_14_4h > 15.0) | rsi_14_1d_gt_40 | (stochk_14_3_3_1d > 20.0))
+            # the base is off its floor, the 15m has not capitulated and the 4h shows a
+            # rejection wick: the move down is not the one being sold
+            & ((ph_base_pos > 0.25) | (rsi_3_change_pct_15m > -80.0) | (top_wick_pct_4h > 0.25))
+            # a wide, choppy pre-break hour on a pair that has not really fallen over the day and
+            # whose 15m is already pinned at its floor: the "break" is just another swing inside
+            # the range with no room left under it (SAND -5,934 + others)
+            & ((ph_pre_tight < 5.0) | (roc_9_4h > -3.0) | (willr_14_15m > -95.0))
+            # a long coil has ended with every williams pinned at the floor and the 4h stochastic down there
+            # too
+            & ((sqz_cnt_24 < 15.0) | (willr_14_4h > -95.0) | (stochk_14_3_3_4h > 15.0))
+            # a high already printed on the base timeframe, 4h directional strength positive, the
+            # pair not far down over the day and the daily oscillator elevated: shorting into a
+            # market that is holding up on every reading (4 losses, free in all three years)
+            & ((plus_di_14_4h > 12.0) | (roc_288 > -7.0) | stochrsi_k_1d_lt_60)
+            # the daily low is fresh, 4h directional strength is positive, the hour is falling and
+            # price is far off its 40h low: a live daily down-leg we are late to (4 losses, and it
+            # costs nothing in any of the three years)
+            & ((plus_di_14_4h > 12.0) | (roc_9_1h < 0.0) | (willr_480 > -85.0))
+            # the 4h has no downward direction, its money flow is rich and the hour is rising
+            & ((minus_di_14_4h > 15.0) | (mfi_14_4h < 50.0) | (roc_9_1h < 0.0))
+            # the 4h trend is already strong, 15m money is coming in and the hour is not weak: the move is
+            # running, not breaking
+            & ((adx_14_4h < 45.0) | (cmf_20_15m < 0.05) | (uo_7_14_28_1h < 50.0))
+            # the 4h shows no rejection wick at all, the base stochastic is mid-range and 4h momentum is
+            # dead
+            & ((top_wick_pct_4h > 0.25) | (stoch_4_4 < 35.0) | (rsi_3_4h > 10.0))
+            # a heavy volume flush while hourly money still comes in and the 4h has no trend behind it
+            & ((vol_rel < 6.0) | (cmf_20_1h < 0.10) | (adx_14_4h > 15.0))
             # --- 1d: the day must not be strong underneath the break
+            # same hourly bounce, this time with no 4h rejection wick under a day that is
+            # holding up: nothing is confirming the break
+            & ((rsi_3_change_pct_1h < 250.0) | (top_wick_pct_4h > 0.25) | (change_pct_1d > -2.0))
+            # the hour is accelerating upward, the 4h has no trend and the daily stochastic is high
+            & ((rsi_3_change_pct_1h < 300.0) | (adx_14_4h > 15.0) | (stochk_14_3_3_1d < 80.0))
+            # 15m money flow already negative, the day flat and the 15m RSI_3 collapsing on a
+            # day that has not fallen: a spike being sold into a stable market (3 losses)
+            & ((cmf_20_15m > -0.2) | (roc_2_1d < 2.0) | (change_pct_1d > -2.0))
+            # 15m money flow is not draining, the hour is not oversold and the day has not
+            # fallen: selling a break into a market that is still intact
+            & ((cmf_20_15m > -0.35) | (rsi_14_1h > 25.0) | (roc_9_1d > -10.0))
             # a bounce day on weak daily money flow with the 4h momentum not confirming — unless
             # the hour itself is genuinely falling right now. The fifth clause is what makes this
             # free: with four it cut $16,530 of 2026 winners, with five it blocks 8 losses across
             # the three years and not one protected winner (blocked group averages -24% / -18% /
             # -34% against positive populations)
             & ((cmf_20_1d > -0.05) | (roc_9_1d < 5.0) | rsi_14_1d_gt_50)
-            # the daily low is not fresh, the daily 5m proxy is snapping up, a long squeeze sits
-            # behind it and the 4h candle has no upper wick: a coiled market about to expand up
-            & ((aroond_14_1d > 25.0) | (rsi_3_change_pct_1d < 50.0) | (top_wick_pct_4h < 0.25))
-            # the daily low is fresh, 4h directional strength is positive, the hour is falling and
-            # price is far off its 40h low: a live daily down-leg we are late to (4 losses, and it
-            # costs nothing in any of the three years)
-            & ((plus_di_14_4h > 12.0) | (roc_9_1h < 0.0) | (willr_480 > -85.0))
-            # daily still rising, no long squeeze behind it, 4h money flow not negative
-            # (AVAX 2021 -846,246; 0W/0L | 1W/2L | 0W/0L)
-            & ((roc_2_1d < 8.0) | (sqz_cnt_24 < 10.0) | (cmf_20_4h > -0.05))
-            # daily down hard, 4h pinned at its low, price above the 24h base: the low is in
-            # (AVAX -20,591; 0W/0L | 1W/1L | 0W/2L)
-            & ((roc_9_1d > -30.0) | (willr_14_4h > -90.0) | (ph_base_pos > 0.5))
+            # hourly money is still flowing in, 4h money flow is rich and the day is up: a capitulation
+            # candle, not a breakdown
+            & ((cmf_20_1h < 0.10) | (mfi_14_4h < 50.0) | (roc_2_1d < 1.0))
+            # 4h money flow negative with the base money flow at zero, a squeeze behind it and a
+            # daily candle with no upper wick: the down-move is spent (3 losses, free everywhere)
+            & ((mfi_14 > 5.0) | (sqz_cnt_24 > 4.0) | (top_wick_pct_1d < 1.5))
             # daily money flow washed out on a pair that has actually fallen over the day, while
             # the 15m has still printed a recent high = capitulation, and shorting there is
             # shorting into the bounce
@@ -28971,20 +29047,133 @@ class NostalgiaForInfinityX7(IStrategy):
             # daily money flow washed on a 4h that has already dropped, with the hourly RSI
             # turning back up (OP -1,943; 2W/2L | 0W/2L | 0W/0L)
             & ((mfi_14_1d > 20.0) | (change_pct_4h > -2.5) | (rsi_14_change_pct_1h < -15.0))
+            # 4h money is plentiful, the 15m momentum has just exploded and the daily stochrsi is at its
+            # ceiling
+            & ((mfi_14_4h < 50.0) | (rsi_3_change_pct_15m < 150.0) | (stochrsi_k_1d < 90.0))
+            # the daily has fallen and its 2-period ROC is bouncing while 4h money flow holds up
+            # (BTC 2021 -873,230; 1W/0L | 1W/0L | 1W/2L)
+            & ((mfi_14_4h > 15.0) | (change_pct_1d < -2.0) | (roc_2_1d > -4.0))
+            # no high anywhere on the base or 15m, the day is falling and not overbought: the
+            # market is already down and there is nothing left to break (5 losses)
+            & ((aroonu_14 > 0.0) | (roc_9_1d > 0.0) | (rsi_14_1d < 55.0))
+            # the day is at a fresh high and has already run: no exhaustion to sell
+            & (aroonu_14_1d_lt_100 | (change_pct_1d < 6.0))
+            # the daily low is not fresh, the daily 5m proxy is snapping up, a long squeeze sits
+            # behind it and the 4h candle has no upper wick: a coiled market about to expand up
+            & ((aroond_14_1d > 25.0) | (rsi_3_change_pct_1d < 50.0) | (top_wick_pct_4h < 0.25))
+            # the hour is already at its floor and the 4h is green under a day that has not
+            # fallen: nothing below to sell into
+            & (stochrsi_k_1h_lt_30 | (change_pct_4h < 0.0) | (roc_9_1d > -20.0))
+            # the hourly oscillator is high, the hour has barely fallen and the daily
+            # stochastic is mid-range: no exhaustion anywhere to sell into
+            & (stochrsi_k_1h_lt_60 | (change_pct_1h > -1.5) | (stochk_14_3_3_1d < 60.0))
+            # the 4h stochastic has collapsed to zero under a long 4h upper wick while the day is up: the
+            # rejection already happened
+            & ((stochrsi_k_4h > 5.0) | (top_wick_pct_4h < 2.0) | (roc_2_1d < 5.0))
+            # the base stochastic is still high, the 4h momentum has not collapsed and the
+            # day is far from its own low: selling into a market with room above
+            & ((stoch_4_4 < 40.0) | (rsi_3_change_pct_4h > -40.0) | (willr_14_1d < -50.0))
+            # the 15m CCI is on its floor while the 4h CCI explodes upward and the day shows no lower wick
+            & ((cci_20_15m > -250.0) | (cci_20_change_pct_4h < 400.0) | (bot_wick_pct_1d > 1.0))
+            # hourly CCI collapsing while volume comes back in and the daily sits high in its own
+            # range: squeeze fuel on a strong day (6 losses across all three years)
+            & ((cci_20_1h > -200.0) | (obv_change_pct > 0.0) | (willr_14_1d > -60.0))
+            # the 15m CCI has not really turned down, the 4h oscillator is rich and the day
+            # has barely moved: nothing has broken yet
+            & ((cci_20_change_pct_15m < 175.0) | (uo_7_14_28_4h < 55.0) | (rsi_3_change_pct_1d > -25.0))
+            # 15m CCI already turning up while the hourly is still falling, hourly RSI low and
+            # the day barely down: a bounce forming under a tired hour (5 losses)
+            & ((cci_20_change_pct_1h < 50.0) | (rsi_14_1h < 45.0) | (change_pct_1d > -2.0))
+            # hourly CCI snapping up, daily money flow rich, the 15m oscillator above mid-band
+            # and price at the 15m floor: buyers already stepped in (5 losses)
+            & ((cci_20_change_pct_1h < 75.0) | (mfi_14_1d < 60.0) | (willr_14_15m < -75.0))
+            # hourly CCI already recovering, the daily RSI_3 snapping up and price nowhere near
+            # its 40h low: the hour has turned and there is room above, not below (3 losses)
+            & ((cci_20_change_pct_1h > -25.0) | (rsi_3_change_pct_1d < 75.0) | (willr_480 > -90.0))
+            # a bounce day on weak daily money flow, 4h CCI already falling, and the 5m fully
+            # spent: nothing left to sell (7 losses in 2026|2022|2021, 1 protected winner)
+            & ((cci_20_change_pct_4h > 0.0) | (mfi_14_1d > 40.0) | (roc_9_1d < 5.0))
+            # the 4h oscillator is not elevated and daily momentum is already dead: nothing
+            # left underneath to sell into
+            & ((uo_7_14_28_4h < 60.0) | (rsi_3_1d > 10.0))
+            # the 4h oscillator is at its low while the 15m CCI explodes upward under a long daily upper
+            # wick
+            & ((uo_7_14_28_4h > 40.0) | (cci_20_change_pct_15m < 250.0) | (top_wick_pct_1d < 4.0))
+            # the 4h oscillator is on its floor under a long daily lower wick with base money already gone
+            & ((uo_7_14_28_4h > 40.0) | (bot_wick_pct_1d < 5.0) | (cmf_20 > -0.3))
+            # the 15m oscillator is turning up under a strong day while the hour is pinned at its low
+            & ((uo_7_14_28_change_pct_15m < 5.0) | (rsi_14_1d < 55.0) | (willr_14_1h > -95.0))
+            # daily still rising, no long squeeze behind it, 4h money flow not negative
+            # (AVAX 2021 -846,246; 0W/0L | 1W/2L | 0W/0L)
+            & ((roc_2_1d < 8.0) | (sqz_cnt_24 < 10.0) | (cmf_20_4h > -0.05))
+            # the day has not really fallen while both the 5m and the hourly RSI_3 are washed and
+            # the 4h sits at its low: everything is oversold except the day (5 losses)
+            & ((roc_2_1d > -10.0) | (rsi_3 < 10.0) | (willr_14_4h < -80.0))
+            # the day has already fallen hard and printed a long upper wick, with the 4h stochastic on its
+            # floor
+            & ((roc_2_1d > -10.0) | (top_wick_pct_1d < 5.0) | (stochk_14_3_3_4h > 15.0))
+            # the base has not really dropped and neither the day nor the base oscillator is
+            # weak: a break with the whole structure still intact
+            & ((roc_9 > -3.0) | (rsi_20 > 20.0) | (rsi_14_1d > 35.0))
+            # 15m has not really dropped, the hour is not accelerating down and the day shows
+            # a long upper wick: the sellers already showed up and left
+            & ((roc_9_15m > -3.5) | (mfi_14_1h < 45.0) | (top_wick_pct_1d < 3.0))
+            # the day is up hard with 15m money flow drained: shorting into a squeeze
+            & ((roc_9_1d < 80.0) | (mfi_14_15m > 20.0))
+            # the day has collapsed yet 4h money flow and the base RSI are both high: the drop is already
+            # paid for
+            & ((roc_9_1d > -25.0) | (mfi_14_4h < 50.0) | (rsi_14 < 30.0))
+            # daily down hard, 4h pinned at its low, price above the 24h base: the low is in
+            # (AVAX -20,591; 0W/0L | 1W/1L | 0W/2L)
+            & ((roc_9_1d > -30.0) | (willr_14_4h > -90.0) | (ph_base_pos > 0.5))
+            # the hour is not falling, its RSI is mid-range, the daily candle has a long lower
+            # wick and the 4h is flat: a market being bought on every dip (5 losses)
+            & ((roc_9_1h < -1.0) | (bot_wick_pct_1d < 4.0) | (change_pct_4h > -1.5))
+            # the 4h has already fallen hard, the day shows no lower wick and the base RSIs are mid-range
+            & ((roc_9_4h > -8.0) | (bot_wick_pct_1d > 0.3) | (rsi_20 < 35.0))
+            # the day is deep in the red, the daily RSI is washed and the 15m candle is enormous: the drop
+            # is over
+            & ((change_pct_15m > -2.0) | (rsi_14_1d > 30.0) | (roc_9_1d > -20.0))
+            # the 4h is not stretched down, the base was never tight and the day printed a
+            # long lower wick: the flush was already bought once
+            & ((ph_pre_tight < 4.5) | (cci_20_4h < -25.0) | (bot_wick_pct_1d > 2.5))
+            # volume has drained on the 15m while the 4h CCI explodes upward under a day taking money in
+            & ((obv_change_pct_15m > -20.0) | (cci_20_change_pct_4h < 300.0) | (cmf_20_1d < 0.15))
+            # volatility has already expanded, the day is strong and the 4h is weak: the
+            # move being sold is the one that already happened
+            & ((bbt_40_2_0 < 15.0) | (rsi_14_4h > 35.0) | (rsi_14_1d < 60.0))
+            # volatility has already expanded, OBV is draining and the day is up: the move is behind us
+            & ((bbt_40_2_0 < 400.0) | (obv_change_pct > 0.0) | (roc_2_1d < 4.0))
+            # a trending 4h under a daily that is neither weak nor washed, out of a long squeeze:
+            # shorting strength (6 losses in 2026 and 2022)
+            & ((adx_14_4h > 15.0) | rsi_14_1d_gt_40 | (stochk_14_3_3_1d > 20.0))
+            # a long upper wick on a day still taking money in, with the hour turning up underneath it
+            & ((top_wick_pct_1d < 5.0) | (roc_2_1h < 0.0) | (mfi_14_1d < 65.0))
+            # the day printed a long lower wick — buyers already stepped in — while the hour sits on its
+            # floor with no money left
+            & ((bot_wick_pct_1d < 5.0) | (willr_84_1h > -95.0) | (mfi_14_1h > 15.0))
+            # no lower wick on the day, the 4h oscillator is low and the 15m CCI is on its floor
+            & ((bot_wick_pct_1d > 0.25) | (uo_7_14_28_4h > 40.0) | (cci_20_15m > -250.0))
+            # a volume explosion while the daily stochastic is high and 15m money is flowing in: a spike
+            # inside strength
+            & ((vol_rel < 10.0) | (stochk_14_3_3_1d < 70.0) | (cmf_20_15m < 0.15))
+            # an enormous volume spike under a long daily lower wick while the 4h is rising: the
+            # capitulation candle is already being bought
+            & ((vol_rel < 25.0) | (bot_wick_pct_1d < 5.0) | (roc_9_4h < 1.0))
           )
 
           # Logic
           short_entry_logic.append(
             # calm base: not already crashed over the rolling 24h (ride the ignition, don't chase)
             (roc_288 > -10.0)
-            # ignition: red candle with a real body (a doji-sized "breakdown" has no follow-through:
-            # bodies under 0.3% are net negative) CROSSING below the prior 48-candle low...
-            & (close < (open_rate * 0.997))
-            & (np_shift(close, 1) >= dh_prev_min)
-            & (close < dh_prev_min)
             # ...on explosive volume. 3.0 is load-bearing: at 2.0 the tag takes 95 more trades and
             # loses ~92% of its profit (measured 2026-08-13)
             & (vol_rel > 3.0)
+            # ignition: red candle with a real body (a doji-sized "breakdown" has no follow-through:
+            # bodies under 0.3% are net negative) CROSSING below the prior 48-candle low...
+            & (close < (open_rate * 0.997))
+            & (close < dh_prev_min)
+            & (np_shift(close, 1) >= dh_prev_min)
           )
 
         # Condition #670 - Marubozu momentum (Short, experimental, RAW — mirror).
@@ -29072,10 +29261,6 @@ class NostalgiaForInfinityX7(IStrategy):
     filled_exits,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     enter_tags,
@@ -29098,10 +29283,6 @@ class NostalgiaForInfinityX7(IStrategy):
         max_loss,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -29116,10 +29297,6 @@ class NostalgiaForInfinityX7(IStrategy):
           max_loss,
           last_candle,
           previous_candle_1,
-          previous_candle_2,
-          previous_candle_3,
-          previous_candle_4,
-          previous_candle_5,
           trade,
           current_time,
           enter_tags,
@@ -29134,10 +29311,6 @@ class NostalgiaForInfinityX7(IStrategy):
           max_loss,
           last_candle,
           previous_candle_1,
-          previous_candle_2,
-          previous_candle_3,
-          previous_candle_4,
-          previous_candle_5,
           trade,
           current_time,
           enter_tags,
@@ -29152,10 +29325,6 @@ class NostalgiaForInfinityX7(IStrategy):
           max_loss,
           last_candle,
           previous_candle_1,
-          previous_candle_2,
-          previous_candle_3,
-          previous_candle_4,
-          previous_candle_5,
           trade,
           current_time,
           enter_tags,
@@ -29177,10 +29346,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -29346,10 +29511,6 @@ class NostalgiaForInfinityX7(IStrategy):
     filled_exits,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     enter_tags,
@@ -29370,10 +29531,6 @@ class NostalgiaForInfinityX7(IStrategy):
     candle_args = (
       last_candle,
       previous_candle_1,
-      previous_candle_2,
-      previous_candle_3,
-      previous_candle_4,
-      previous_candle_5,
     )
 
     common_args = (
@@ -29593,10 +29750,6 @@ class NostalgiaForInfinityX7(IStrategy):
     filled_exits,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     enter_tags,
@@ -29617,10 +29770,6 @@ class NostalgiaForInfinityX7(IStrategy):
     candle_args = (
       last_candle,
       previous_candle_1,
-      previous_candle_2,
-      previous_candle_3,
-      previous_candle_4,
-      previous_candle_5,
     )
 
     common_args = (
@@ -29897,10 +30046,6 @@ class NostalgiaForInfinityX7(IStrategy):
     filled_exits,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     enter_tags,
@@ -29926,10 +30071,6 @@ class NostalgiaForInfinityX7(IStrategy):
       max_loss,
       last_candle,
       previous_candle_1,
-      previous_candle_2,
-      previous_candle_3,
-      previous_candle_4,
-      previous_candle_5,
       trade,
       current_time,
       enter_tags,
@@ -30169,10 +30310,6 @@ class NostalgiaForInfinityX7(IStrategy):
     filled_exits,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     enter_tags,
@@ -30197,10 +30334,6 @@ class NostalgiaForInfinityX7(IStrategy):
       max_loss,
       last_candle,
       previous_candle_1,
-      previous_candle_2,
-      previous_candle_3,
-      previous_candle_4,
-      previous_candle_5,
       trade,
       current_time,
       enter_tags,
@@ -30233,10 +30366,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -30413,10 +30542,6 @@ class NostalgiaForInfinityX7(IStrategy):
     filled_exits,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     enter_tags,
@@ -30449,10 +30574,6 @@ class NostalgiaForInfinityX7(IStrategy):
       max_loss,
       last_candle,
       previous_candle_1,
-      previous_candle_2,
-      previous_candle_3,
-      previous_candle_4,
-      previous_candle_5,
       trade,
       current_time,
       enter_tags,
@@ -30718,10 +30839,6 @@ class NostalgiaForInfinityX7(IStrategy):
     filled_exits,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     enter_tags,
@@ -30748,10 +30865,6 @@ class NostalgiaForInfinityX7(IStrategy):
     filled_exits,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     enter_tags,
@@ -30779,10 +30892,6 @@ class NostalgiaForInfinityX7(IStrategy):
     filled_exits,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     enter_tags,
@@ -30810,10 +30919,6 @@ class NostalgiaForInfinityX7(IStrategy):
       max_loss,
       last_candle,
       previous_candle_1,
-      previous_candle_2,
-      previous_candle_3,
-      previous_candle_4,
-      previous_candle_5,
       trade,
       current_time,
       enter_tags,
@@ -30847,10 +30952,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -31011,10 +31112,6 @@ class NostalgiaForInfinityX7(IStrategy):
     filled_exits,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     enter_tags,
@@ -31038,10 +31135,6 @@ class NostalgiaForInfinityX7(IStrategy):
       max_loss,
       last_candle,
       previous_candle_1,
-      previous_candle_2,
-      previous_candle_3,
-      previous_candle_4,
-      previous_candle_5,
       trade,
       current_time,
       enter_tags,
@@ -31243,10 +31336,6 @@ class NostalgiaForInfinityX7(IStrategy):
     max_loss: float,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     buy_tag,
@@ -31258,25 +31347,11 @@ class NostalgiaForInfinityX7(IStrategy):
     last_rsi_14_1h = last_candle["RSI_14_1h"]
     last_bbu_20 = last_candle["BBU_20_2.0"]
     last_bbu_20_1h = last_candle["BBU_20_2.0_1h"]
-    previous_1_close = previous_candle_1["close"]
-    previous_1_bbu_20 = previous_candle_1["BBU_20_2.0"]
-    previous_2_close = previous_candle_2["close"]
-    previous_2_bbu_20 = previous_candle_2["BBU_20_2.0"]
-    previous_3_close = previous_candle_3["close"]
-    previous_3_bbu_20 = previous_candle_3["BBU_20_2.0"]
-    previous_4_close = previous_candle_4["close"]
-    previous_4_bbu_20 = previous_candle_4["BBU_20_2.0"]
+    bb_above_count = last_candle["BB_ABOVE_COUNT"]
     current_profit_gt_0_01 = current_profit > 0.01
 
     # Sell signal 1
-    if (
-      (last_rsi_14 > 84.0)
-      and (last_close > last_bbu_20)
-      and (previous_1_close > previous_1_bbu_20)
-      and (previous_2_close > previous_2_bbu_20)
-      and (previous_3_close > previous_3_bbu_20)
-      and (previous_4_close > previous_4_bbu_20)
-    ):
+    if (last_rsi_14 > 84.0) and (last_close > last_bbu_20) and (bb_above_count >= 5):
       if last_close > last_ema_200:
         if current_profit_gt_0_01:
           return True, f"exit_{mode_name}_1_1_1"
@@ -31285,12 +31360,7 @@ class NostalgiaForInfinityX7(IStrategy):
           return True, f"exit_{mode_name}_1_2_1"
 
     # Sell signal 2
-    elif (
-      (last_rsi_14 > 86.0)
-      and (last_close > last_bbu_20)
-      and (previous_1_close > previous_1_bbu_20)
-      and (previous_2_close > previous_2_bbu_20)
-    ):
+    elif (last_rsi_14 > 86.0) and (last_close > last_bbu_20) and (bb_above_count >= 3):
       if last_close > last_ema_200:
         if current_profit_gt_0_01:
           return True, f"exit_{mode_name}_2_1_1"
@@ -31353,10 +31423,6 @@ class NostalgiaForInfinityX7(IStrategy):
     max_loss: float,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     buy_tag,
@@ -31460,10 +31526,6 @@ class NostalgiaForInfinityX7(IStrategy):
     max_loss: float,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     buy_tag,
@@ -32829,10 +32891,6 @@ class NostalgiaForInfinityX7(IStrategy):
     max_loss: float,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     buy_tag,
@@ -44084,10 +44142,6 @@ class NostalgiaForInfinityX7(IStrategy):
     filled_exits,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     buy_tag,
@@ -46836,116 +46890,97 @@ class NostalgiaForInfinityX7(IStrategy):
     stake_scale_leverage = trade_leverage if is_futures_mode else 1.0
     grind_entry_retry_time = current_time - timedelta(minutes=5)
 
+    # =========================================================================
+    # GRINDING CONFIGURATION
+    # =========================================================================
+    if is_futures_mode:
+      grind_1_stakes = self.system_v3_grind_1_stakes_futures
+      grind_1_sub_thresholds = self.system_v3_grind_1_thresholds_futures
+      grind_1_derisk_grinds = self.system_v3_grind_1_derisk_futures
+      grind_1_profit_threshold = self.system_v3_grind_1_profit_threshold_futures
+
+      grind_2_stakes = self.system_v3_grind_2_stakes_futures
+      grind_2_sub_thresholds = self.system_v3_grind_2_thresholds_futures
+      grind_2_derisk_grinds = self.system_v3_grind_2_derisk_futures
+      grind_2_profit_threshold = self.system_v3_grind_2_profit_threshold_futures
+
+      grind_3_stakes = self.system_v3_grind_3_stakes_futures
+      grind_3_sub_thresholds = self.system_v3_grind_3_thresholds_futures
+      grind_3_derisk_grinds = self.system_v3_grind_3_derisk_futures
+      grind_3_profit_threshold = self.system_v3_grind_3_profit_threshold_futures
+
+      grind_4_stakes = self.system_v3_grind_4_stakes_futures
+      grind_4_sub_thresholds = self.system_v3_grind_4_thresholds_futures
+      grind_4_derisk_grinds = self.system_v3_grind_4_derisk_futures
+      grind_4_profit_threshold = self.system_v3_grind_4_profit_threshold_futures
+
+      grind_5_stakes = self.system_v3_grind_5_stakes_futures
+      grind_5_sub_thresholds = self.system_v3_grind_5_thresholds_futures
+      grind_5_derisk_grinds = self.system_v3_grind_5_derisk_futures
+      grind_5_profit_threshold = self.system_v3_grind_5_profit_threshold_futures
+
+      rebuy_stakes = self.system_v3_1_rebuy_stakes_futures
+      rebuy_sub_thresholds = self.system_v3_1_rebuy_thresholds_futures
+    else:
+      grind_1_stakes = self.system_v3_grind_1_stakes_spot
+      grind_1_sub_thresholds = self.system_v3_grind_1_thresholds_spot
+      grind_1_derisk_grinds = self.system_v3_grind_1_derisk_spot
+      grind_1_profit_threshold = self.system_v3_grind_1_profit_threshold_spot
+
+      grind_2_stakes = self.system_v3_grind_2_stakes_spot
+      grind_2_sub_thresholds = self.system_v3_grind_2_thresholds_spot
+      grind_2_derisk_grinds = self.system_v3_grind_2_derisk_spot
+      grind_2_profit_threshold = self.system_v3_grind_2_profit_threshold_spot
+
+      grind_3_stakes = self.system_v3_grind_3_stakes_spot
+      grind_3_sub_thresholds = self.system_v3_grind_3_thresholds_spot
+      grind_3_derisk_grinds = self.system_v3_grind_3_derisk_spot
+      grind_3_profit_threshold = self.system_v3_grind_3_profit_threshold_spot
+
+      grind_4_stakes = self.system_v3_grind_4_stakes_spot
+      grind_4_sub_thresholds = self.system_v3_grind_4_thresholds_spot
+      grind_4_derisk_grinds = self.system_v3_grind_4_derisk_spot
+      grind_4_profit_threshold = self.system_v3_grind_4_profit_threshold_spot
+
+      grind_5_stakes = self.system_v3_grind_5_stakes_spot
+      grind_5_sub_thresholds = self.system_v3_grind_5_thresholds_spot
+      grind_5_derisk_grinds = self.system_v3_grind_5_derisk_spot
+      grind_5_profit_threshold = self.system_v3_grind_5_profit_threshold_spot
+
+      rebuy_stakes = self.system_v3_1_rebuy_stakes_spot
+      rebuy_sub_thresholds = self.system_v3_1_rebuy_thresholds_spot
+
     grind_1_max_sub_grinds = 0
     grind_1_stakes = scale_stakes_for_min_stake(
-      self.system_v3_grind_1_stakes_futures if is_futures_mode else self.system_v3_grind_1_stakes_spot,
-      slice_amount,
-      min_stake,
-      trade_leverage,
-      trade_leverage,
-    )
-    grind_1_sub_thresholds = (
-      self.system_v3_grind_1_thresholds_futures if is_futures_mode else self.system_v3_grind_1_thresholds_spot
+      grind_1_stakes, slice_amount, min_stake, trade_leverage, trade_leverage
     )
     grind_1_max_sub_grinds = len(grind_1_stakes)
-    grind_1_derisk_grinds = (
-      self.system_v3_grind_1_derisk_futures if is_futures_mode else self.system_v3_grind_1_derisk_spot
-    )
-    grind_1_profit_threshold = (
-      self.system_v3_grind_1_profit_threshold_futures
-      if is_futures_mode
-      else self.system_v3_grind_1_profit_threshold_spot
-    )
 
     grind_2_max_sub_grinds = 0
     grind_2_stakes = scale_stakes_for_min_stake(
-      self.system_v3_grind_2_stakes_futures if is_futures_mode else self.system_v3_grind_2_stakes_spot,
-      slice_amount,
-      min_stake,
-      stake_scale_leverage,
-      trade_leverage,
-    )
-    grind_2_sub_thresholds = (
-      self.system_v3_grind_2_thresholds_futures if is_futures_mode else self.system_v3_grind_2_thresholds_spot
+      grind_2_stakes, slice_amount, min_stake, stake_scale_leverage, trade_leverage
     )
     grind_2_max_sub_grinds = len(grind_2_stakes)
-    grind_2_derisk_grinds = (
-      self.system_v3_grind_2_derisk_futures if is_futures_mode else self.system_v3_grind_2_derisk_spot
-    )
-    grind_2_profit_threshold = (
-      self.system_v3_grind_2_profit_threshold_futures
-      if is_futures_mode
-      else self.system_v3_grind_2_profit_threshold_spot
-    )
 
     grind_3_max_sub_grinds = 0
     grind_3_stakes = scale_stakes_for_min_stake(
-      self.system_v3_grind_3_stakes_futures if is_futures_mode else self.system_v3_grind_3_stakes_spot,
-      slice_amount,
-      min_stake,
-      stake_scale_leverage,
-      trade_leverage,
-    )
-    grind_3_sub_thresholds = (
-      self.system_v3_grind_3_thresholds_futures if is_futures_mode else self.system_v3_grind_3_thresholds_spot
+      grind_3_stakes, slice_amount, min_stake, stake_scale_leverage, trade_leverage
     )
     grind_3_max_sub_grinds = len(grind_3_stakes)
-    grind_3_derisk_grinds = (
-      self.system_v3_grind_3_derisk_futures if is_futures_mode else self.system_v3_grind_3_derisk_spot
-    )
-    grind_3_profit_threshold = (
-      self.system_v3_grind_3_profit_threshold_futures
-      if is_futures_mode
-      else self.system_v3_grind_3_profit_threshold_spot
-    )
 
     grind_4_max_sub_grinds = 0
     grind_4_stakes = scale_stakes_for_min_stake(
-      self.system_v3_grind_4_stakes_futures if is_futures_mode else self.system_v3_grind_4_stakes_spot,
-      slice_amount,
-      min_stake,
-      stake_scale_leverage,
-      trade_leverage,
-    )
-    grind_4_sub_thresholds = (
-      self.system_v3_grind_4_thresholds_futures if is_futures_mode else self.system_v3_grind_4_thresholds_spot
+      grind_4_stakes, slice_amount, min_stake, stake_scale_leverage, trade_leverage
     )
     grind_4_max_sub_grinds = len(grind_4_stakes)
-    grind_4_derisk_grinds = (
-      self.system_v3_grind_4_derisk_futures if is_futures_mode else self.system_v3_grind_4_derisk_spot
-    )
-    grind_4_profit_threshold = (
-      self.system_v3_grind_4_profit_threshold_futures
-      if is_futures_mode
-      else self.system_v3_grind_4_profit_threshold_spot
-    )
 
     grind_5_max_sub_grinds = 0
     grind_5_stakes = scale_stakes_for_min_stake(
-      self.system_v3_grind_5_stakes_futures if is_futures_mode else self.system_v3_grind_5_stakes_spot,
-      slice_amount,
-      min_stake,
-      stake_scale_leverage,
-      trade_leverage,
-    )
-    grind_5_sub_thresholds = (
-      self.system_v3_grind_5_thresholds_futures if is_futures_mode else self.system_v3_grind_5_thresholds_spot
+      grind_5_stakes, slice_amount, min_stake, stake_scale_leverage, trade_leverage
     )
     grind_5_max_sub_grinds = len(grind_5_stakes)
-    grind_5_derisk_grinds = (
-      self.system_v3_grind_5_derisk_futures if is_futures_mode else self.system_v3_grind_5_derisk_spot
-    )
-    grind_5_profit_threshold = (
-      self.system_v3_grind_5_profit_threshold_futures
-      if is_futures_mode
-      else self.system_v3_grind_5_profit_threshold_spot
-    )
 
-    rebuy_stakes = self.system_v3_1_rebuy_stakes_futures if is_futures_mode else self.system_v3_1_rebuy_stakes_spot
     rebuy_max_sub_grinds = len(rebuy_stakes)
-    rebuy_sub_thresholds = (
-      self.system_v3_1_rebuy_thresholds_futures if is_futures_mode else self.system_v3_1_rebuy_thresholds_spot
-    )
 
     is_derisk_1 = False
     is_derisk_1_found = False  # derisk_level_1 de-risk exit
@@ -47332,261 +47367,183 @@ class NostalgiaForInfinityX7(IStrategy):
     )
     is_long_buyback_entry = self.long_buyback_entry_v3(last_candle, previous_candle, slice_profit, True)
     is_long_rebuy_entry = self.long_rebuy_entry_v3(last_candle, previous_candle, slice_profit, True)
-    stake_fmt = ".8f" if self.config["stake_currency"] in ("BTC", "ETH", "BNB", "SOL") else ".3f"
-    # De-risk level 1
+    stake_fmt = ".8f" if stake_currency in ("BTC", "ETH", "BNB", "SOL") else ".3f"
+    send_notifications = not is_backtest
+    # =========================================================================
+    # DE-RISK CONFIGURATION
+    # =========================================================================
 
+    if is_system_v3:
+      derisk_1_enable = self.system_v3_derisk_level_1_enable
+      derisk_2_enable = self.system_v3_derisk_level_2_enable
+      derisk_3_enable = self.system_v3_derisk_level_3_enable
+      derisk_4_enable = False
+      if is_futures_mode:
+        derisk_1_threshold = self.system_v3_derisk_level_1_futures[1]
+        derisk_1_stake = self.system_v3_derisk_level_1_stake_futures
+        derisk_2_threshold = self.system_v3_derisk_level_2_futures[1]
+        derisk_2_stake = self.system_v3_derisk_level_2_stake_futures
+        derisk_3_threshold = self.system_v3_derisk_level_3_futures[1]
+        derisk_3_stake = self.system_v3_derisk_level_3_stake_futures
+      else:
+        derisk_1_threshold = self.system_v3_derisk_level_1_spot[1]
+        derisk_1_stake = self.system_v3_derisk_level_1_stake_spot
+        derisk_2_threshold = self.system_v3_derisk_level_2_spot[1]
+        derisk_2_stake = self.system_v3_derisk_level_2_stake_spot
+        derisk_3_threshold = self.system_v3_derisk_level_3_spot[1]
+        derisk_3_stake = self.system_v3_derisk_level_3_stake_spot
+    elif is_system_v3_2:
+      derisk_1_enable = self.system_v3_2_derisk_level_1_enable
+      derisk_2_enable = self.system_v3_2_derisk_level_2_enable
+      derisk_3_enable = self.system_v3_2_derisk_level_3_enable
+      derisk_4_enable = self.system_v3_2_derisk_level_4_enable
+      if is_futures_mode:
+        derisk_1_threshold = self.system_v3_2_derisk_level_1_futures[1]
+        derisk_1_stake = self.system_v3_2_derisk_level_1_stake_futures
+        derisk_2_threshold = self.system_v3_2_derisk_level_2_futures[1]
+        derisk_2_stake = self.system_v3_2_derisk_level_2_stake_futures
+        derisk_3_threshold = self.system_v3_2_derisk_level_3_futures[1]
+        derisk_3_stake = self.system_v3_2_derisk_level_3_stake_futures
+        derisk_4_threshold = self.system_v3_2_derisk_level_4_futures[1]
+        derisk_4_stake = self.system_v3_2_derisk_level_4_stake_futures
+      else:
+        derisk_1_threshold = self.system_v3_2_derisk_level_1_spot[1]
+        derisk_1_stake = self.system_v3_2_derisk_level_1_stake_spot
+        derisk_2_threshold = self.system_v3_2_derisk_level_2_spot[1]
+        derisk_2_stake = self.system_v3_2_derisk_level_2_stake_spot
+        derisk_3_threshold = self.system_v3_2_derisk_level_3_spot[1]
+        derisk_3_stake = self.system_v3_2_derisk_level_3_stake_spot
+        derisk_4_threshold = self.system_v3_2_derisk_level_4_spot[1]
+        derisk_4_stake = self.system_v3_2_derisk_level_4_stake_spot
+    derisk_enable = self.derisk_enable
+    # ---------------------------------------------------------------------
+    # De-risk level 1
+    # ---------------------------------------------------------------------
     if (
-      self.derisk_enable
-      and (
-        (is_system_v3 and self.system_v3_derisk_level_1_enable)
-        or (is_system_v3_2 and self.system_v3_2_derisk_level_1_enable)
-      )
-      and (not is_derisk_1_found)
+      derisk_enable
+      and derisk_1_enable
+      and not (is_derisk_1_found)
       and not is_rebuy_mode
-      and (
-        profit_stake
-        < (
-          slice_amount
-          * (
-            (self.system_v3_derisk_level_1_futures[1] if is_futures_mode else self.system_v3_derisk_level_1_spot[1])
-            if is_system_v3
-            else (
-              self.system_v3_2_derisk_level_1_futures[1]
-              if is_futures_mode
-              else self.system_v3_2_derisk_level_1_spot[1]
-            )
-          )
-        )
-        / trade_leverage
-      )
+      and profit_stake < slice_amount * derisk_1_threshold / trade_leverage
     ):
-      sell_amount = (
-        (
-          filled_entries[0].safe_filled
-          * (
-            (
-              self.system_v3_derisk_level_1_stake_futures
-              if is_futures_mode
-              else self.system_v3_derisk_level_1_stake_spot
-            )
-            if is_system_v3
-            else (
-              self.system_v3_2_derisk_level_1_stake_futures
-              if is_futures_mode
-              else self.system_v3_2_derisk_level_1_stake_spot
-            )
-          )
-        )
-        * exit_rate
-        / trade_leverage
-      )
+      sell_amount = filled_entries[0].safe_filled * derisk_1_stake * exit_rate / trade_leverage
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
       if sell_amount > min_stake and ft_sell_amount > min_stake:
         grind_profit = 0.0
-        send_msg(
-          notification_msg(
-            "de-risk",
-            tag="Level 1",
-            pair=trade_pair,
-            rate=exit_rate,
-            stake_amount=sell_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "de-risk",
+              tag="Level 1",
+              pair=trade_pair,
+              rate=exit_rate,
+              stake_amount=sell_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+            )
           )
-        )
         log.info(
           f"De-risk Level 1 [{current_time}] [{trade_pair}] | Rate: {exit_rate} | Stake amount: {sell_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}%"
         )
         return -ft_sell_amount, "derisk_level_1"
-
+    # ---------------------------------------------------------------------
     # De-risk level 2
-
+    # ---------------------------------------------------------------------
     if (
-      self.derisk_enable
-      and (
-        (is_system_v3 and self.system_v3_derisk_level_2_enable)
-        or (is_system_v3_2 and self.system_v3_2_derisk_level_2_enable)
-      )
+      derisk_enable
+      and derisk_2_enable
       and not is_derisk_2_found
       and not is_rebuy_mode
-      and (
-        profit_stake
-        < (
-          slice_amount
-          * (
-            (self.system_v3_derisk_level_2_futures[1] if is_futures_mode else self.system_v3_derisk_level_2_spot[1])
-            if is_system_v3
-            else (
-              self.system_v3_2_derisk_level_2_futures[1]
-              if is_futures_mode
-              else self.system_v3_2_derisk_level_2_spot[1]
-            )
-          )
-        )
-        / trade_leverage
-      )
+      and profit_stake < slice_amount * derisk_2_threshold / trade_leverage
     ):
-      sell_amount = (
-        (
-          filled_entries[0].safe_filled
-          * (
-            (
-              self.system_v3_derisk_level_2_stake_futures
-              if is_futures_mode
-              else self.system_v3_derisk_level_2_stake_spot
-            )
-            if is_system_v3
-            else (
-              self.system_v3_2_derisk_level_2_stake_futures
-              if is_futures_mode
-              else self.system_v3_2_derisk_level_2_stake_spot
-            )
-          )
-        )
-        * exit_rate
-        / trade_leverage
-      )
+      sell_amount = filled_entries[0].safe_filled * derisk_2_stake * exit_rate / trade_leverage
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
       if sell_amount > min_stake and ft_sell_amount > min_stake:
         grind_profit = 0.0
-        send_msg(
-          notification_msg(
-            "de-risk",
-            tag="Level 2",
-            pair=trade_pair,
-            rate=exit_rate,
-            stake_amount=sell_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "de-risk",
+              tag="Level 2",
+              pair=trade_pair,
+              rate=exit_rate,
+              stake_amount=sell_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+            )
           )
-        )
         log.info(
           f"De-risk Level 2 [{current_time}] [{trade_pair}] | Rate: {exit_rate} | Stake amount: {sell_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}%"
         )
         return -ft_sell_amount, "derisk_level_2"
-
+    # ---------------------------------------------------------------------
     # De-risk level 3
-
+    # ---------------------------------------------------------------------
     if (
-      self.derisk_enable
-      and (
-        (is_system_v3 and self.system_v3_derisk_level_3_enable)
-        or (is_system_v3_2 and self.system_v3_2_derisk_level_3_enable)
-      )
+      derisk_enable
+      and derisk_3_enable
       and not is_derisk_3_found
       and not is_rebuy_mode
-      and (
-        profit_stake
-        < (
-          slice_amount
-          * (
-            (self.system_v3_derisk_level_3_futures[1] if is_futures_mode else self.system_v3_derisk_level_3_spot[1])
-            if is_system_v3
-            else (
-              self.system_v3_2_derisk_level_3_futures[1]
-              if is_futures_mode
-              else self.system_v3_2_derisk_level_3_spot[1]
-            )
-          )
-        )
-        / trade_leverage
-      )
+      and profit_stake < slice_amount * derisk_3_threshold / trade_leverage
     ):
-      sell_amount = (
-        (
-          filled_entries[0].safe_filled
-          * (
-            (
-              self.system_v3_derisk_level_3_stake_futures
-              if is_futures_mode
-              else self.system_v3_derisk_level_3_stake_spot
-            )
-            if is_system_v3
-            else (
-              self.system_v3_2_derisk_level_3_stake_futures
-              if is_futures_mode
-              else self.system_v3_2_derisk_level_3_stake_spot
-            )
-          )
-        )
-        * exit_rate
-        / trade_leverage
-      )
+      sell_amount = filled_entries[0].safe_filled * derisk_3_stake * exit_rate / trade_leverage
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
       if sell_amount > min_stake and ft_sell_amount > min_stake:
         grind_profit = 0.0
-        send_msg(
-          notification_msg(
-            "de-risk",
-            tag="Level 3",
-            pair=trade_pair,
-            rate=exit_rate,
-            stake_amount=sell_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "de-risk",
+              tag="Level 3",
+              pair=trade_pair,
+              rate=exit_rate,
+              stake_amount=sell_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+            )
           )
-        )
         log.info(
           f"De-risk Level 3 [{current_time}] [{trade_pair}] | Rate: {exit_rate} | Stake amount: {sell_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}%"
         )
         return -ft_sell_amount, "derisk_level_3"
-
+    # ---------------------------------------------------------------------
     # De-risk level 4
-
+    # ---------------------------------------------------------------------
     if (
-      self.derisk_enable
-      and (is_system_v3_2 and self.system_v3_2_derisk_level_4_enable)
+      derisk_enable
+      and derisk_4_enable
       and not is_derisk_4_found
       and not is_rebuy_mode
-      and (
-        profit_stake
-        < (
-          slice_amount
-          * (
-            self.system_v3_2_derisk_level_4_futures[1] if is_futures_mode else self.system_v3_2_derisk_level_4_spot[1]
-          )
-        )
-        / trade_leverage
-      )
+      and profit_stake < (slice_amount * derisk_4_threshold / trade_leverage)
     ):
-      sell_amount = (
-        (
-          filled_entries[0].safe_filled
-          * (
-            self.system_v3_2_derisk_level_4_stake_futures
-            if is_futures_mode
-            else self.system_v3_2_derisk_level_4_stake_spot
-          )
-        )
-        * exit_rate
-        / trade_leverage
-      )
+      sell_amount = filled_entries[0].safe_filled * derisk_4_stake * exit_rate / trade_leverage
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
       if sell_amount > min_stake and ft_sell_amount > min_stake:
         grind_profit = 0.0
-        send_msg(
-          notification_msg(
-            "de-risk",
-            tag="Level 4",
-            pair=trade_pair,
-            rate=exit_rate,
-            stake_amount=sell_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "de-risk",
+              tag="Level 4",
+              pair=trade_pair,
+              rate=exit_rate,
+              stake_amount=sell_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+            )
           )
-        )
         log.info(
           f"De-risk Level 4 [{current_time}] [{trade_pair}] | Rate: {exit_rate} | Stake amount: {sell_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}%"
         )
@@ -47608,18 +47565,19 @@ class NostalgiaForInfinityX7(IStrategy):
         buy_amount = min_stake * 1.5
       if buy_amount > max_stake:
         return None
-      send_msg(
-        notification_msg(
-          "grinding-entry",
-          tag="grind_1_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if send_notifications:
+        send_msg(
+          notification_msg(
+            "grinding-entry",
+            tag="grind_1_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
       log.info(
         f"Grinding entry (grind_1_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
       )
@@ -47679,21 +47637,22 @@ class NostalgiaForInfinityX7(IStrategy):
             if grind_1_is_exit_found
             else profit_ratio
           )
-        send_msg(
-          notification_msg(
-            "grinding-derisk",
-            tag="grind_1_derisk",
-            pair=trade_pair,
-            rate=exit_rate,
-            stake_amount=sell_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_1_current_grind_profit_stake,
-            grind_profit_pct=grind_profit,
-            coin_amount=grind_1_total_amount,
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "grinding-derisk",
+              tag="grind_1_derisk",
+              pair=trade_pair,
+              rate=exit_rate,
+              stake_amount=sell_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_1_current_grind_profit_stake,
+              grind_profit_pct=grind_profit,
+              coin_amount=grind_1_total_amount,
+            )
           )
-        )
         log.info(
           f"Grinding de-risk (grind_1_derisk) [{current_time}] [{trade_pair}] | Rate: {exit_rate} | Stake amount: {sell_amount:{stake_fmt}} | Coin amount: {grind_1_total_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_1_current_grind_profit_stake:{stake_fmt}} {stake_currency})"
         )
@@ -47721,18 +47680,19 @@ class NostalgiaForInfinityX7(IStrategy):
         buy_amount = min_stake * 1.5
       if buy_amount > max_stake:
         return None
-      send_msg(
-        notification_msg(
-          "grinding-entry",
-          tag="grind_2_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if send_notifications:
+        send_msg(
+          notification_msg(
+            "grinding-entry",
+            tag="grind_2_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
       log.info(
         f"Grinding entry (grind_2_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
       )
@@ -47792,21 +47752,22 @@ class NostalgiaForInfinityX7(IStrategy):
             if grind_2_is_exit_found
             else profit_ratio
           )
-        send_msg(
-          notification_msg(
-            "grinding-derisk",
-            tag="grind_2_derisk",
-            pair=trade_pair,
-            rate=exit_rate,
-            stake_amount=sell_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_2_current_grind_profit_stake,
-            grind_profit_pct=grind_profit,
-            coin_amount=grind_2_total_amount,
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "grinding-derisk",
+              tag="grind_2_derisk",
+              pair=trade_pair,
+              rate=exit_rate,
+              stake_amount=sell_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_2_current_grind_profit_stake,
+              grind_profit_pct=grind_profit,
+              coin_amount=grind_2_total_amount,
+            )
           )
-        )
         log.info(
           f"Grinding de-risk (grind_2_derisk) [{current_time}] [{trade_pair}] | Rate: {exit_rate} | Stake amount: {sell_amount:{stake_fmt}} | Coin amount: {grind_2_total_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_2_current_grind_profit_stake:{stake_fmt}} {stake_currency})"
         )
@@ -47834,18 +47795,19 @@ class NostalgiaForInfinityX7(IStrategy):
         buy_amount = min_stake * 1.5
       if buy_amount > max_stake:
         return None
-      send_msg(
-        notification_msg(
-          "grinding-entry",
-          tag="grind_3_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if send_notifications:
+        send_msg(
+          notification_msg(
+            "grinding-entry",
+            tag="grind_3_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
       log.info(
         f"Grinding entry (grind_3_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
       )
@@ -47905,21 +47867,22 @@ class NostalgiaForInfinityX7(IStrategy):
             if grind_3_is_exit_found
             else profit_ratio
           )
-        send_msg(
-          notification_msg(
-            "grinding-derisk",
-            tag="grind_3_derisk",
-            pair=trade_pair,
-            rate=exit_rate,
-            stake_amount=sell_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_3_current_grind_profit_stake,
-            grind_profit_pct=grind_profit,
-            coin_amount=grind_3_total_amount,
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "grinding-derisk",
+              tag="grind_3_derisk",
+              pair=trade_pair,
+              rate=exit_rate,
+              stake_amount=sell_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_3_current_grind_profit_stake,
+              grind_profit_pct=grind_profit,
+              coin_amount=grind_3_total_amount,
+            )
           )
-        )
         log.info(
           f"Grinding de-risk (grind_3_derisk) [{current_time}] [{trade_pair}] | Rate: {exit_rate} | Stake amount: {sell_amount:{stake_fmt}} | Coin amount: {grind_3_total_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_3_current_grind_profit_stake:{stake_fmt}} {stake_currency})"
         )
@@ -47963,18 +47926,19 @@ class NostalgiaForInfinityX7(IStrategy):
         buy_amount = min_stake * 1.5
       if buy_amount > max_stake:
         return None
-      send_msg(
-        notification_msg(
-          "grinding-entry",
-          tag="grind_4_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if send_notifications:
+        send_msg(
+          notification_msg(
+            "grinding-entry",
+            tag="grind_4_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
       log.info(
         f"Grinding entry (grind_4_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
       )
@@ -48034,21 +47998,22 @@ class NostalgiaForInfinityX7(IStrategy):
             if grind_4_is_exit_found
             else profit_ratio
           )
-        send_msg(
-          notification_msg(
-            "grinding-derisk",
-            tag="grind_4_derisk",
-            pair=trade_pair,
-            rate=exit_rate,
-            stake_amount=sell_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_4_current_grind_profit_stake,
-            grind_profit_pct=grind_profit,
-            coin_amount=grind_4_total_amount,
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "grinding-derisk",
+              tag="grind_4_derisk",
+              pair=trade_pair,
+              rate=exit_rate,
+              stake_amount=sell_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_4_current_grind_profit_stake,
+              grind_profit_pct=grind_profit,
+              coin_amount=grind_4_total_amount,
+            )
           )
-        )
         log.info(
           f"Grinding de-risk (grind_4_derisk) [{current_time}] [{trade_pair}] | Rate: {exit_rate} | Stake amount: {sell_amount:{stake_fmt}} | Coin amount: {grind_4_total_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_4_current_grind_profit_stake:{stake_fmt}} {stake_currency})"
         )
@@ -48095,18 +48060,19 @@ class NostalgiaForInfinityX7(IStrategy):
         buy_amount = min_stake * 1.5
       if buy_amount > max_stake:
         return None
-      send_msg(
-        notification_msg(
-          "grinding-entry",
-          tag="grind_5_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if send_notifications:
+        send_msg(
+          notification_msg(
+            "grinding-entry",
+            tag="grind_5_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
       log.info(
         f"Grinding entry (grind_5_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
       )
@@ -48166,21 +48132,22 @@ class NostalgiaForInfinityX7(IStrategy):
             if grind_5_is_exit_found
             else profit_ratio
           )
-        send_msg(
-          notification_msg(
-            "grinding-derisk",
-            tag="grind_5_derisk",
-            pair=trade_pair,
-            rate=exit_rate,
-            stake_amount=sell_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_5_current_grind_profit_stake,
-            grind_profit_pct=grind_profit,
-            coin_amount=grind_5_total_amount,
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "grinding-derisk",
+              tag="grind_5_derisk",
+              pair=trade_pair,
+              rate=exit_rate,
+              stake_amount=sell_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_5_current_grind_profit_stake,
+              grind_profit_pct=grind_profit,
+              coin_amount=grind_5_total_amount,
+            )
           )
-        )
         log.info(
           f"Grinding de-risk (grind_5_derisk) [{current_time}] [{trade_pair}] | Rate: {exit_rate} | Stake amount: {sell_amount:{stake_fmt}} | Coin amount: {grind_5_total_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_5_current_grind_profit_stake:{stake_fmt}} {stake_currency})"
         )
@@ -48230,18 +48197,19 @@ class NostalgiaForInfinityX7(IStrategy):
         buy_amount = min_stake * 1.5
       if buy_amount > max_stake:
         return None
-      send_msg(
-        notification_msg(
-          "buyback-entry",
-          tag="buyback_1_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if send_notifications:
+        send_msg(
+          notification_msg(
+            "buyback-entry",
+            tag="buyback_1_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
       log.info(
         f"Buyback entry (buyback_1_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}%"
       )
@@ -48330,21 +48298,22 @@ class NostalgiaForInfinityX7(IStrategy):
             if buyback_1_is_exit_found
             else profit_ratio
           )
-        send_msg(
-          notification_msg(
-            "buyback-derisk",
-            tag="buyback_1_derisk",
-            pair=trade_pair,
-            rate=exit_rate,
-            stake_amount=sell_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=buyback_1_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
-            coin_amount=buyback_1_total_amount,
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "buyback-derisk",
+              tag="buyback_1_derisk",
+              pair=trade_pair,
+              rate=exit_rate,
+              stake_amount=sell_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=buyback_1_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+              coin_amount=buyback_1_total_amount,
+            )
           )
-        )
         log.info(
           f"Buyback de-risk (buyback_1_derisk) [{current_time}] [{trade_pair}] | Rate: {exit_rate} | Stake amount: {sell_amount:{stake_fmt}} | Coin amount: {buyback_1_total_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({buyback_1_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
         )
@@ -48372,18 +48341,19 @@ class NostalgiaForInfinityX7(IStrategy):
         buy_amount = min_stake * 1.5
       if buy_amount > max_stake:
         return None
-      send_msg(
-        notification_msg(
-          "rebuy",
-          tag="rebuy_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if send_notifications:
+        send_msg(
+          notification_msg(
+            "rebuy",
+            tag="rebuy_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
       log.info(
         f"Rebuy (rebuy_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}%"
       )
@@ -48404,6 +48374,13 @@ class NostalgiaForInfinityX7(IStrategy):
     slice_profit_exit: float,
     is_derisk: bool,
   ) -> float:
+    if last_candle["protections_long_global"] != True:
+      return False
+    # g0 — signal entry
+    if last_candle["enter_long"] == True:
+      self._grind_entry_tag = "g0"
+      return True
+
     last_close = last_candle["close"]
     last_open = last_candle["open"]
     last_close_min_12 = last_candle["close_min_12"]
@@ -48458,12 +48435,6 @@ class NostalgiaForInfinityX7(IStrategy):
     prev_ema_12 = previous_candle["EMA_12"]
     prev_ema_26 = previous_candle["EMA_26"]
 
-    if last_candle["protections_long_global"] != True:
-      return False
-    # g0 — signal entry
-    if last_candle["enter_long"] == True:
-      self._grind_entry_tag = "g0"
-      return True
     # g1 — AROONU dip + EMA_16 drop
     if (
       (last_rsi_3 > 10.0)
@@ -49092,30 +49063,35 @@ class NostalgiaForInfinityX7(IStrategy):
     #   if grind_profit_rate < (max_profit_rate - 0.055):
     #     is_trailing_exit = True
     # is_trailing_exit = grind_profit_rate > 0.04
-    stake_fmt = ".8f" if self.config["stake_currency"] in ("BTC", "ETH", "BNB", "SOL") else ".3f"
     if is_normal_exit or is_trailing_exit:
-      exit_amount = grind_total_amount * exit_rate / trade.leverage
-      if ((current_stake_amount / trade.leverage) - exit_amount) < (min_stake * 1.55):
-        exit_amount = (trade.amount * exit_rate / trade.leverage) - (min_stake * 1.55)
-      ft_exit_amount = exit_amount * trade.leverage * (trade.stake_amount / trade.amount) / exit_rate
+      stake_currency = self.config["stake_currency"]
+      stake_fmt = ".8f" if stake_currency in ("BTC", "ETH", "BNB", "SOL") else ".3f"
+      trade_pair = trade.pair
+      trade_leverage = trade.leverage
+      trade_amount = trade.amount
+      trade_stake_amount = trade.stake_amount
+      exit_amount = grind_total_amount * exit_rate / trade_leverage
+      if ((current_stake_amount / trade_leverage) - exit_amount) < (min_stake * 1.55):
+        exit_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
+      ft_exit_amount = exit_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
       if exit_amount > min_stake and ft_exit_amount > min_stake:
         self.dp.send_msg(
           self.notification_msg(
             "grinding-exit",
             tag=name,
-            pair=trade.pair,
+            pair=trade_pair,
             rate=exit_rate,
             stake_amount=exit_amount,
             profit_stake=profit_stake,
             profit_ratio=profit_ratio,
-            stake_currency=self.config["stake_currency"],
+            stake_currency=stake_currency,
             grind_profit_stake=grind_profit_stake,
             grind_profit_pct=grind_profit_rate,
             coin_amount=grind_total_amount,
           )
         )
         log.info(
-          f"Grinding exit ({name}) [{current_time}] [{trade.pair}] | Rate: {exit_rate} | Stake amount: {exit_amount:{stake_fmt}} | Coin amount: {grind_total_amount} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit_rate * 100.0):.2f}% ({grind_profit_stake:{stake_fmt}} {self.config['stake_currency']})"
+          f"Grinding exit ({name}) [{current_time}] [{trade_pair}] | Rate: {exit_rate} | Stake amount: {exit_amount:{stake_fmt}} | Coin amount: {grind_total_amount} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit_rate * 100.0):.2f}% ({grind_profit_stake:{stake_fmt}} {stake_currency})"
         )
         order_tag = tag
         for grind_entry in grind_open_orders:
@@ -53213,10 +53189,6 @@ class NostalgiaForInfinityX7(IStrategy):
     filled_exits,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     enter_tags,
@@ -53239,10 +53211,6 @@ class NostalgiaForInfinityX7(IStrategy):
         max_loss,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -53257,10 +53225,6 @@ class NostalgiaForInfinityX7(IStrategy):
           max_loss,
           last_candle,
           previous_candle_1,
-          previous_candle_2,
-          previous_candle_3,
-          previous_candle_4,
-          previous_candle_5,
           trade,
           current_time,
           enter_tags,
@@ -53275,10 +53239,6 @@ class NostalgiaForInfinityX7(IStrategy):
           max_loss,
           last_candle,
           previous_candle_1,
-          previous_candle_2,
-          previous_candle_3,
-          previous_candle_4,
-          previous_candle_5,
           trade,
           current_time,
           enter_tags,
@@ -53293,10 +53253,6 @@ class NostalgiaForInfinityX7(IStrategy):
           max_loss,
           last_candle,
           previous_candle_1,
-          previous_candle_2,
-          previous_candle_3,
-          previous_candle_4,
-          previous_candle_5,
           trade,
           current_time,
           enter_tags,
@@ -53318,10 +53274,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -53487,10 +53439,6 @@ class NostalgiaForInfinityX7(IStrategy):
     filled_exits,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     enter_tags,
@@ -53513,10 +53461,6 @@ class NostalgiaForInfinityX7(IStrategy):
         max_loss,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -53531,10 +53475,6 @@ class NostalgiaForInfinityX7(IStrategy):
           max_loss,
           last_candle,
           previous_candle_1,
-          previous_candle_2,
-          previous_candle_3,
-          previous_candle_4,
-          previous_candle_5,
           trade,
           current_time,
           enter_tags,
@@ -53549,10 +53489,6 @@ class NostalgiaForInfinityX7(IStrategy):
           max_loss,
           last_candle,
           previous_candle_1,
-          previous_candle_2,
-          previous_candle_3,
-          previous_candle_4,
-          previous_candle_5,
           trade,
           current_time,
           enter_tags,
@@ -53567,10 +53503,6 @@ class NostalgiaForInfinityX7(IStrategy):
           max_loss,
           last_candle,
           previous_candle_1,
-          previous_candle_2,
-          previous_candle_3,
-          previous_candle_4,
-          previous_candle_5,
           trade,
           current_time,
           enter_tags,
@@ -53592,10 +53524,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -53753,10 +53681,6 @@ class NostalgiaForInfinityX7(IStrategy):
     filled_exits,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     enter_tags,
@@ -53779,10 +53703,6 @@ class NostalgiaForInfinityX7(IStrategy):
         max_loss,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -53797,10 +53717,6 @@ class NostalgiaForInfinityX7(IStrategy):
           max_loss,
           last_candle,
           previous_candle_1,
-          previous_candle_2,
-          previous_candle_3,
-          previous_candle_4,
-          previous_candle_5,
           trade,
           current_time,
           enter_tags,
@@ -53815,10 +53731,6 @@ class NostalgiaForInfinityX7(IStrategy):
           max_loss,
           last_candle,
           previous_candle_1,
-          previous_candle_2,
-          previous_candle_3,
-          previous_candle_4,
-          previous_candle_5,
           trade,
           current_time,
           enter_tags,
@@ -53833,10 +53745,6 @@ class NostalgiaForInfinityX7(IStrategy):
           max_loss,
           last_candle,
           previous_candle_1,
-          previous_candle_2,
-          previous_candle_3,
-          previous_candle_4,
-          previous_candle_5,
           trade,
           current_time,
           enter_tags,
@@ -53858,10 +53766,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -54061,10 +53965,6 @@ class NostalgiaForInfinityX7(IStrategy):
     filled_exits,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     enter_tags,
@@ -54090,10 +53990,6 @@ class NostalgiaForInfinityX7(IStrategy):
       max_loss,
       last_candle,
       previous_candle_1,
-      previous_candle_2,
-      previous_candle_3,
-      previous_candle_4,
-      previous_candle_5,
       trade,
       current_time,
       enter_tags,
@@ -54108,10 +54004,6 @@ class NostalgiaForInfinityX7(IStrategy):
         max_loss,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -54126,10 +54018,6 @@ class NostalgiaForInfinityX7(IStrategy):
         max_loss,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -54144,10 +54032,6 @@ class NostalgiaForInfinityX7(IStrategy):
         max_loss,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -54354,10 +54238,6 @@ class NostalgiaForInfinityX7(IStrategy):
     filled_exits,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     enter_tags,
@@ -54378,10 +54258,6 @@ class NostalgiaForInfinityX7(IStrategy):
       max_loss,
       last_candle,
       previous_candle_1,
-      previous_candle_2,
-      previous_candle_3,
-      previous_candle_4,
-      previous_candle_5,
       trade,
       current_time,
       enter_tags,
@@ -54396,10 +54272,6 @@ class NostalgiaForInfinityX7(IStrategy):
         max_loss,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -54414,10 +54286,6 @@ class NostalgiaForInfinityX7(IStrategy):
         max_loss,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -54439,10 +54307,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -54598,10 +54462,6 @@ class NostalgiaForInfinityX7(IStrategy):
     filled_exits,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     enter_tags,
@@ -54631,10 +54491,6 @@ class NostalgiaForInfinityX7(IStrategy):
         max_loss,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -54649,10 +54505,6 @@ class NostalgiaForInfinityX7(IStrategy):
           max_loss,
           last_candle,
           previous_candle_1,
-          previous_candle_2,
-          previous_candle_3,
-          previous_candle_4,
-          previous_candle_5,
           trade,
           current_time,
           enter_tags,
@@ -54667,10 +54519,6 @@ class NostalgiaForInfinityX7(IStrategy):
           max_loss,
           last_candle,
           previous_candle_1,
-          previous_candle_2,
-          previous_candle_3,
-          previous_candle_4,
-          previous_candle_5,
           trade,
           current_time,
           enter_tags,
@@ -54685,10 +54533,6 @@ class NostalgiaForInfinityX7(IStrategy):
           max_loss,
           last_candle,
           previous_candle_1,
-          previous_candle_2,
-          previous_candle_3,
-          previous_candle_4,
-          previous_candle_5,
           trade,
           current_time,
           enter_tags,
@@ -54948,10 +54792,6 @@ class NostalgiaForInfinityX7(IStrategy):
     filled_exits,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     enter_tags,
@@ -54980,10 +54820,6 @@ class NostalgiaForInfinityX7(IStrategy):
     filled_exits,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     enter_tags,
@@ -55004,10 +54840,6 @@ class NostalgiaForInfinityX7(IStrategy):
       max_loss,
       last_candle,
       previous_candle_1,
-      previous_candle_2,
-      previous_candle_3,
-      previous_candle_4,
-      previous_candle_5,
       trade,
       current_time,
       enter_tags,
@@ -55022,10 +54854,6 @@ class NostalgiaForInfinityX7(IStrategy):
         max_loss,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -55040,10 +54868,6 @@ class NostalgiaForInfinityX7(IStrategy):
         max_loss,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -55058,10 +54882,6 @@ class NostalgiaForInfinityX7(IStrategy):
         max_loss,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -55083,10 +54903,6 @@ class NostalgiaForInfinityX7(IStrategy):
         filled_exits,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -55251,10 +55067,6 @@ class NostalgiaForInfinityX7(IStrategy):
     filled_exits,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     enter_tags,
@@ -55279,10 +55091,6 @@ class NostalgiaForInfinityX7(IStrategy):
       max_loss,
       last_candle,
       previous_candle_1,
-      previous_candle_2,
-      previous_candle_3,
-      previous_candle_4,
-      previous_candle_5,
       trade,
       current_time,
       enter_tags,
@@ -55297,10 +55105,6 @@ class NostalgiaForInfinityX7(IStrategy):
         max_loss,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -55315,10 +55119,6 @@ class NostalgiaForInfinityX7(IStrategy):
         max_loss,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -55333,10 +55133,6 @@ class NostalgiaForInfinityX7(IStrategy):
         max_loss,
         last_candle,
         previous_candle_1,
-        previous_candle_2,
-        previous_candle_3,
-        previous_candle_4,
-        previous_candle_5,
         trade,
         current_time,
         enter_tags,
@@ -55537,10 +55333,6 @@ class NostalgiaForInfinityX7(IStrategy):
     max_loss: float,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     buy_tag,
@@ -55552,25 +55344,11 @@ class NostalgiaForInfinityX7(IStrategy):
     last_rsi_14_1h = last_candle["RSI_14_1h"]
     last_bbl_20 = last_candle["BBL_20_2.0"]
     last_bbl_20_1h = last_candle["BBL_20_2.0_1h"]
-    previous_1_close = previous_candle_1["close"]
-    previous_1_bbl_20 = previous_candle_1["BBL_20_2.0"]
-    previous_2_close = previous_candle_2["close"]
-    previous_2_bbl_20 = previous_candle_2["BBL_20_2.0"]
-    previous_3_close = previous_candle_3["close"]
-    previous_3_bbl_20 = previous_candle_3["BBL_20_2.0"]
-    previous_4_close = previous_candle_4["close"]
-    previous_4_bbl_20 = previous_candle_4["BBL_20_2.0"]
+    bb_below_count = last_candle["BB_BELOW_COUNT"]
     current_profit_gt_0_01 = current_profit > 0.01
 
     # Sell signal 1
-    if (
-      (last_rsi_14 < 16.0)
-      and (last_close < last_bbl_20)
-      and (previous_1_close < previous_1_bbl_20)
-      and (previous_2_close < previous_2_bbl_20)
-      and (previous_3_close < previous_3_bbl_20)
-      and (previous_4_close < previous_4_bbl_20)
-    ):
+    if (last_rsi_14 < 16.0) and (last_close < last_bbl_20) and bb_below_count >= 5:
       if last_close < last_ema_200:
         if current_profit_gt_0_01:
           return True, f"exit_{mode_name}_1_1_1"
@@ -55579,12 +55357,7 @@ class NostalgiaForInfinityX7(IStrategy):
           return True, f"exit_{mode_name}_1_2_1"
 
     # Sell signal 2
-    elif (
-      (last_rsi_14 < 14.0)
-      and (last_close < last_bbl_20)
-      and (previous_1_close < previous_1_bbl_20)
-      and (previous_2_close < previous_2_bbl_20)
-    ):
+    elif (last_rsi_14 < 14.0) and (last_close < last_bbl_20) and bb_below_count >= 3:
       if last_close < last_ema_200:
         if current_profit_gt_0_01:
           return True, f"exit_{mode_name}_2_1_1"
@@ -55647,10 +55420,6 @@ class NostalgiaForInfinityX7(IStrategy):
     max_loss: float,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     buy_tag,
@@ -55754,10 +55523,6 @@ class NostalgiaForInfinityX7(IStrategy):
     max_loss: float,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     buy_tag,
@@ -57125,10 +56890,6 @@ class NostalgiaForInfinityX7(IStrategy):
     max_loss: float,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     buy_tag,
@@ -68090,10 +67851,6 @@ class NostalgiaForInfinityX7(IStrategy):
     filled_exits,
     last_candle,
     previous_candle_1,
-    previous_candle_2,
-    previous_candle_3,
-    previous_candle_4,
-    previous_candle_5,
     trade: "Trade",
     current_time: "datetime",
     buy_tag,
