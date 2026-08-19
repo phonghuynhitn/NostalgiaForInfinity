@@ -2066,6 +2066,18 @@ class NostalgiaForInfinityX7(IStrategy):
       trade, current_time, current_rate, filled_orders, filled_entries, filled_exits, profit_values
     )
 
+    # Signal 192 (Quad pullback long) tight doom stop: every 192 loss bottoms at a
+    # 11.8-14% price drop (the shared 0.35 doom threshold) while winners' max adverse
+    # excursion sits below 9.63% price. Scoping 192's doom to -0.30 margin (~10% price
+    # at 3x, ~30% at 1x) flips the tag net-positive. NOTE: this fires on ANY trade
+    # carrying 192 as one of several tags, and it returns before long_exit_normal, so
+    # for 192 it pre-empts the de-risk ladder (measured on a gms0 replica with derisk
+    # off; production runs derisk on, where the ladder exists for exactly this zone).
+    # On spot the -0.30 is looser than the existing doom thresholds (0.12 spot / 0.35
+    # futures) and effectively never binds.
+    if "192" in enter_tags and current_profit <= -0.30:
+      return f"exit_long_normal_stoploss_doom ( {enter_tag})"
+
     max_profit = 0.0
     max_loss = 0.0
 
@@ -2570,7 +2582,7 @@ class NostalgiaForInfinityX7(IStrategy):
 
     def scaled_stake(stake_multiplier: float) -> float:
       stake = proposed_stake * stake_multiplier
-      return stake if stake > min_stake else min_stake
+      return stake if (min_stake is None) or (stake > min_stake) else min_stake
 
     if side == "long":
       # Rebuy mode
@@ -2591,7 +2603,7 @@ class NostalgiaForInfinityX7(IStrategy):
       elif all(c in long_grind_mode_tags for c in enter_tags):
         for item in grind_mode_stake_multipliers:
           stake = proposed_stake * item
-          if stake > min_stake:
+          if (min_stake is None) or (stake > min_stake):
             return stake
       # Btc mode
       elif all(c in long_btc_mode_tags for c in enter_tags):
@@ -2614,7 +2626,7 @@ class NostalgiaForInfinityX7(IStrategy):
       elif all(c in short_grind_mode_tags for c in enter_tags):
         for item in grind_mode_stake_multipliers:
           stake = proposed_stake * item
-          if stake > min_stake:
+          if (min_stake is None) or (stake > min_stake):
             return stake
       # Rapid mode
       if system_name_is_v3 and (
@@ -26465,22 +26477,46 @@ class NostalgiaForInfinityX7(IStrategy):
 
         # Condition #192 - Quad-rotation stochastic pullback (Long, experimental).
         if long_entry_condition_index == 192:
-          # --- Protections ---
+          # Protections
           long_entry_logic.append(num_empty_288 <= allowed_empty_candles_288)
           long_entry_logic.append(protections_long_global == True)
-          # Round 1 (API3 loss): block long-divergence with no reversal signs (knife)
-          long_entry_logic.append((rsi_3_15m > 30.0) | (roc_9_1h > 1.0) | (aroond_14 < 90.0) | (cmf_20 > 0.12))
-          # Round 2 (SOL x2 loss): block mid-1h-RSI (55-65) downtrend dip (not oversold enough to bounce)
-          long_entry_logic.append((rsi_14_1h < 55.0) | (rsi_14_1h > 65.0) | (roc_9_1d > 0.0))
-          # Round 3 (RUNE loss): 1d capitulation + money outflow = knife; need 1d alive OR inflow
-          long_entry_logic.append((rsi_3_1d > 15.0) | (cmf_20 > -0.10))
-          # --- Logic: embedded up-regime + quad-oversold pullback + 5-candle shift kink ---
-          long_entry_logic.append(stoch_60_10 > 80.0)
-          long_entry_logic.append(stoch_9_3 < 20.0)
-          long_entry_logic.append(stoch_14_3 < 20.0)
-          long_entry_logic.append(stoch_4_4 < 20.0)
-          long_entry_logic.append(close < np_shift(close, 5))
-          long_entry_logic.append(stoch_9_3 > np_shift(stoch_9_3, 5))
+
+          long_entry_logic.append(
+            # a long-divergence entry with nothing turning: 5m trend still down, no money coming in,
+            # the 15m dead and the hour not rising (API3)
+            ((aroond_14 < 90.0) | (cmf_20 > 0.12) | (rsi_3_15m > 30.0) | (roc_9_1h > 1.0))
+            # a 1d capitulation with money leaving at the same time — a knife, not a dip (RUNE)
+            & ((cmf_20 > -0.10) | (rsi_3_1d > 15.0))
+            # the 15m money flow collapsing under a 4h that is still stretched (ETH 22-04)
+            & ((obv_change_pct_15m > -60.0) | (willr_14_4h < -20.0))
+            # the 15m momentum snapping higher right before the top (LINK 24-03)
+            & ((uo_7_14_28_change_pct_15m < 15.0) | (mfi_14_15m < 85.0))
+            # the hour is rising, the 4h has not stopped making lows, and the day shows no inflow —
+            # a dead-cat fade rather than a reversal (DOT 21, ETH 24, LINK 24, DOGE 25, GALA 26)
+            & ((cci_20_change_pct_1h_lt_0) | (aroond_14_4h_lt_80) | (mfi_14_1d > 45.0))
+            # a pullback into a weak day with no hourly money behind it — a falling-knife day
+            # (SAND 21, AXS 24, AVAX 24, GALA 25)
+            & ((cmf_20_1h >= 0.0) | (rsi_14_1d >= 40.0))
+            # a mid-range 1h RSI dip inside a 1d downtrend: not oversold enough to bounce (SOL x2)
+            & ((rsi_14_1h < 55.0) | (rsi_14_1h > 65.0) | (roc_9_1d > 0.0))
+            # a fade at a 4h top that is already stretched, with the hour hot — chasing the top
+            # (CRV 21-09, CRV 25-03, AXS 25-08)
+            & ((rsi_14_1h < 70.0) | (roc_9_4h < 13.0))
+            # the 1h RSI collapsing at the entry candle — a knife, not a dip (LINK 24-06)
+            & ((rsi_3_change_pct_1h > -30.0) | (rsi_3_1h < 50.0))
+            # the 4h actively collapsing — a knife, not a dip (XRP 21-04)
+            & ((roc_9_4h > -15.0) | (rsi_14_4h > 40.0))
+          )
+
+          # Logic: embedded up-regime + quad-oversold pullback + 5-candle shift kink
+          long_entry_logic.append(
+            (stoch_60_10 > 80.0)
+            & (stoch_9_3 < 20.0)
+            & (stoch_14_3 < 20.0)
+            & (stoch_4_4 < 20.0)
+            & (close < np_shift(close, 5))
+            & (stoch_9_3 > np_shift(stoch_9_3, 5))
+          )
 
         # Condition #193 - Quad-rotation TRUE pivot divergence (Long, experimental).
         if long_entry_condition_index == 193:
@@ -27381,12 +27417,42 @@ class NostalgiaForInfinityX7(IStrategy):
           short_entry_logic.append(protections_short_global == True)
 
           short_entry_logic.append(
-            # the day is still up while the last 24h flushed hard
-            ((roc_9_1d < 0.0) | (roc_288 > -15.0))
+            # 1h money draining and the 5m washed out, but the 15m is not making fresh lows
+            ((mfi_14 > 30) | (willr_14_15m < -95) | (cmf_20_1h > -0.3))
+            # a 7-day low broken on drained 5m money while the two days above it rose and the daily sits mid-range
+            & ((mfi_14 > 20) | (roc_2_1d < 2) | (willr_14_1d < -60))
             # a vertical ten-minute drop while the 4h high is over a day old
             & ((roc_2 > -5.0) | (aroonu_14_4h > 40.0))
+            # the nine-day trend is still up while the last 24h flushed hard
+            & ((roc_288 > -15.0) | (roc_9_1d < 0.0))
+            # the 15m has stopped making new lows and money is still flowing into it, and the 5m breaks a 7-day low anyway
+            & ((aroond_14_15m > 50) | (mfi_14_15m < 40))
+            # nothing is making new lows — not the hour, not the day — and the 15m just printed a fresh high, yet the 5m breaks a 7-day low
+            & (aroonu_14_15m_lt_50 | (aroond_14_1h > 25) | (aroond_14_1d > 15))
+            # the daily is being bought and has not made a low in two weeks, and the 15m just printed a fresh high
+            & ((aroonu_14_15m < 45) | (aroond_14_1d > 25) | (mfi_14_1d < 65))
+            # 15m money out and the 4h downtrend set, but the 15m has already lifted off the floor
+            & ((cmf_20_15m > -0.3) | (mfi_14_15m < 15) | (minus_di_14_4h < 30))
+            # money is leaving on the 15m while the 4h is mid-range and has made no new low — a liquidity flush, not a breakdown
+            & ((cmf_20_15m > -0.3) | (aroond_14_4h > 35) | (willr_14_4h < -60))
+            # 15m money still flowing while the 4h is drained and its downtrend set
+            & ((mfi_14_15m < 25) | (cmf_20_4h > -0.2) | (minus_di_14_4h < 30))
             # 1h money exhausted after a two-day drop
             & ((mfi_14_1h > 25.0) | (roc_2_1d > -7.0))
+            # the hour has turned up hard — momentum, its rate of change and the oscillator all lifted — and the 5m sells the 7-day low into it
+            & ((rsi_3_1h < 25) | (rsi_3_change_pct_1h < 65) | (stochrsi_k_1h < 45))
+            # momentum has exploded upward on the hour and the day at once, and the 5m sells the 7-day low into the bounce
+            & ((rsi_3_change_pct_1h < 200) | (rsi_3_change_pct_1d < 300))
+            # the 7-day low breaks while neither the hourly nor the 4h is anywhere near oversold
+            & (stochrsi_k_1h_lt_40 | (stochrsi_k_4h < 35))
+            # the 4h has already rallied hard — oscillator topped, no new 4h low for days — and the 5m breaks a 7-day low against it
+            & ((adx_14_4h < 40) | (aroond_14_4h > 30) | (stochrsi_k_4h < 75))
+            # the 4h is drained but has printed no new low for days — the decline has stalled, and the 5m sells the 7-day low into the stall
+            & ((aroond_14_4h > 20) | (mfi_14_4h > 25))
+            # the 4h has already snapped up while the day is still washed out
+            & ((rsi_3_change_pct_4h < 65) | rsi_3_1d_gt_30)
+            # the 4h stochastic is pinned at the floor and the day is washed out, but the daily stochastic has not followed
+            & ((stochk_14_3_3_4h > 15) | rsi_3_1d_gt_30 | (stochk_14_3_3_1d < 35))
           )
 
           # Logic
