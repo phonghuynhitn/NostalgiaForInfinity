@@ -71,7 +71,7 @@ class NostalgiaForInfinityX7(IStrategy):
   INTERFACE_VERSION = 3
 
   def version(self) -> str:
-    return "v17.4.563"
+    return "v17.4.566"
 
   stoploss = -0.99
 
@@ -3215,7 +3215,6 @@ class NostalgiaForInfinityX7(IStrategy):
     fast_pct_change = self.fast_pct_change
     stochrsi_k_func = self.stochrsi_k
     chaikin_money_flow = self.chaikin_money_flow
-    validate_indicators = self.validate_indicators
     ta_rsi = ta.RSI
     ta_aroon = ta.AROON
     ta_roc = ta.ROC
@@ -3363,7 +3362,7 @@ class NostalgiaForInfinityX7(IStrategy):
         "low_min_30",
       ]
 
-      validate_indicators(df=informative_1d, columns=debug_cols, pair=metadata_pair, timeframe=info_timeframe)
+      self.validate_indicators(df=informative_1d, columns=debug_cols, pair=metadata_pair, timeframe=info_timeframe)
 
     # =========================================================================
     # LOGGING
@@ -3384,7 +3383,6 @@ class NostalgiaForInfinityX7(IStrategy):
     fast_pct_change = self.fast_pct_change
     stochrsi_k_func = self.stochrsi_k
     chaikin_money_flow = self.chaikin_money_flow
-    validate_indicators = self.validate_indicators
     calc_kst = self.calc_kst
     ta_rsi = ta.RSI
     ta_aroon = ta.AROON
@@ -3569,7 +3567,7 @@ class NostalgiaForInfinityX7(IStrategy):
         "low_min_24",
       ]
 
-      validate_indicators(df=informative_4h, columns=debug_cols, pair=metadata_pair, timeframe=info_timeframe)
+      self.validate_indicators(df=informative_4h, columns=debug_cols, pair=metadata_pair, timeframe=info_timeframe)
     # =========================================================================
     # LOGGING
     # =========================================================================
@@ -3589,7 +3587,6 @@ class NostalgiaForInfinityX7(IStrategy):
     fast_pct_change = self.fast_pct_change
     stochrsi_k_func = self.stochrsi_k
     chaikin_money_flow = self.chaikin_money_flow
-    validate_indicators = self.validate_indicators
     calc_kst = self.calc_kst
     ta_rsi = ta.RSI
     ta_bbands = ta.BBANDS
@@ -3763,7 +3760,7 @@ class NostalgiaForInfinityX7(IStrategy):
         "low_min_24",
       ]
 
-      validate_indicators(df=informative_1h, columns=debug_cols, pair=metadata_pair, timeframe=info_timeframe)
+      self.validate_indicators(df=informative_1h, columns=debug_cols, pair=metadata_pair, timeframe=info_timeframe)
 
     # =========================================================================
     # LOGGING
@@ -3784,7 +3781,6 @@ class NostalgiaForInfinityX7(IStrategy):
     fast_pct_change = self.fast_pct_change
     stochrsi_k_func = self.stochrsi_k
     chaikin_money_flow = self.chaikin_money_flow
-    validate_indicators = self.validate_indicators
     ta_rsi = ta.RSI
     ta_aroon = ta.AROON
     ta_ema = ta.EMA
@@ -3922,7 +3918,7 @@ class NostalgiaForInfinityX7(IStrategy):
         "change_pct",
       ]
 
-      validate_indicators(df=informative_15m, columns=debug_cols, pair=metadata_pair, timeframe=info_timeframe)
+      self.validate_indicators(df=informative_15m, columns=debug_cols, pair=metadata_pair, timeframe=info_timeframe)
 
     # =========================================================================
     # LOGGING
@@ -3943,8 +3939,8 @@ class NostalgiaForInfinityX7(IStrategy):
     fast_pct_change = self.fast_pct_change
     stochrsi_k_func = self.stochrsi_k
     chaikin_money_flow = self.chaikin_money_flow
-    validate_indicators = self.validate_indicators
     calc_kst = self.calc_kst
+    np_shift = self.np_shift
     ta_rsi = ta.RSI
     ta_bbands = ta.BBANDS
     ta_aroon = ta.AROON
@@ -3954,6 +3950,11 @@ class NostalgiaForInfinityX7(IStrategy):
     ta_ema = ta.EMA
     ta_max = ta.MAX
     ta_min = ta.MIN
+    ta_stochf = ta.STOCHF
+    ta_obv = ta.OBV
+    ta_mfi = ta.MFI
+    ta_sum = ta.SUM
+    ta_stddev = ta.STDDEV
 
     # =========================================================================
     # BASE DATA
@@ -3996,7 +3997,7 @@ class NostalgiaForInfinityX7(IStrategy):
     # =========================================================================
     # MONEY FLOW
     # =========================================================================
-    mfi_14 = ta.MFI(high_np, low_np, close_np, volume_np, timeperiod=14)
+    mfi_14 = ta_mfi(high_np, low_np, close_np, volume_np, timeperiod=14)
     cmf_20 = chaikin_money_flow(high_np, low_np, close_np, volume_np, timeperiod=20)
 
     # =========================================================================
@@ -4019,7 +4020,7 @@ class NostalgiaForInfinityX7(IStrategy):
     willr_480 = ta_willr(high_np, low_np, close_np, timeperiod=480)
     roc_2 = ta_roc(close_np, timeperiod=2)
     roc_9 = ta_roc(close_np, timeperiod=9)
-    obv = ta.OBV(close_np, volume_np)
+    obv = ta_obv(close_np, volume_np)
 
     # =========================================================================
     # CHANGE %
@@ -4049,7 +4050,7 @@ class NostalgiaForInfinityX7(IStrategy):
     close_min_6 = ta_min(close_np, timeperiod=6)
     close_min_12 = ta_min(close_np, timeperiod=12)
     close_min_48 = ta_min(close_np, timeperiod=48)
-    num_empty_288 = ta.SUM((volume_np <= 0).astype(np.float64), timeperiod=288)
+    num_empty_288 = ta_sum((volume_np <= 0).astype(np.float64), timeperiod=288)
 
     # =========================================================================
     # Leviathan volume/CVD-imitation columns
@@ -4057,40 +4058,62 @@ class NostalgiaForInfinityX7(IStrategy):
     vol_ema_20 = ta_ema(volume_np, timeperiod=20)
     # _vol_std_20 = pd.Series(volume_np).rolling(20).std().to_numpy()
     # TA-Lib uses population std; adjust to match Pandas rolling std (ddof=1)
-    vol_std_20 = ta.STDDEV(volume_np, timeperiod=20, nbdev=1.0) * np.sqrt(20.0 / 19.0)
+    vol_std_20 = ta_stddev(volume_np, timeperiod=20, nbdev=1.0) * np.sqrt(20.0 / 19.0)
     large_bubble_thr = vol_ema_20 + 3.0 * vol_std_20
     hl_range = high_np - low_np
     hl_range_safe = np.where(hl_range == 0.0, np.nan, hl_range)
     cvd_buy_vol = volume_np * (close_np - low_np) / hl_range_safe
     cvd_sell_vol = volume_np * (high_np - close_np) / hl_range_safe
 
-    # Quad-rotation raw stochastics + pivot windows (signals 192/193 long, 592/593 short — experimental)
-    quad_s93 = ta.STOCHF(high_np, low_np, close_np, fastk_period=9, fastd_period=3, fastd_matype=0)[0]
-    quad_s143 = ta.STOCHF(high_np, low_np, close_np, fastk_period=14, fastd_period=3, fastd_matype=0)[0]
-    quad_s44 = ta.STOCHF(high_np, low_np, close_np, fastk_period=4, fastd_period=4, fastd_matype=0)[0]
-    quad_s6010 = ta.STOCHF(high_np, low_np, close_np, fastk_period=60, fastd_period=10, fastd_matype=0)[0]
-    quad_low_min_12 = pd.Series(low_np).rolling(12).min().to_numpy()
-    quad_high_max_12 = pd.Series(high_np).rolling(12).max().to_numpy()
-    quad_s93_min_12 = pd.Series(quad_s93).rolling(12).min().to_numpy()
-    quad_s93_max_12 = pd.Series(quad_s93).rolling(12).max().to_numpy()
-    # 4h opening-range (UTC day) — signals 164/662 (experimental, Data Trader port)
+    # =========================================================================
+    # QUAD ROTATION STOCHASTICS + pivot windows (signals 192/193 long, 592/593 short — experimental)
+    # =========================================================================
+    quad_s93 = ta_stochf(high_np, low_np, close_np, fastk_period=9, fastd_period=3, fastd_matype=0)[0]
+    quad_s143 = ta_stochf(high_np, low_np, close_np, fastk_period=14, fastd_period=3, fastd_matype=0)[0]
+    quad_s44 = ta_stochf(high_np, low_np, close_np, fastk_period=4, fastd_period=4, fastd_matype=0)[0]
+    quad_s6010 = ta_stochf(high_np, low_np, close_np, fastk_period=60, fastd_period=10, fastd_matype=0)[0]
+    quad_low_min_12 = ta_min(low_np, timeperiod=12)
+    quad_high_max_12 = ta_max(high_np, timeperiod=12)
+    quad_s93_min_12 = ta_min(quad_s93, timeperiod=12)
+    quad_s93_max_12 = ta_max(quad_s93, timeperiod=12)
+    # quad_low_min_12 = pd.Series(low_np).rolling(12).min().to_numpy()
+    # quad_high_max_12 = pd.Series(high_np).rolling(12).max().to_numpy()
+    # quad_s93_min_12 = pd.Series(quad_s93).rolling(12).min().to_numpy()
+    # quad_s93_max_12 = pd.Series(quad_s93).rolling(12).max().to_numpy()
+
+    # =========================================================================
+    # 4H OPENING RANGE (UTC day) — signals 164/662 (experimental, Data Trader port)
+    # =========================================================================
     _or_day = df["date"].dt.floor("1D")
     _or_first4h = df["date"].dt.hour < 4
     _or_valid = df["date"].dt.hour >= 4
     orange_h_col = df["high"].where(_or_first4h).groupby(_or_day).transform("max").where(_or_valid).to_numpy()
     orange_l_col = df["low"].where(_or_first4h).groupby(_or_day).transform("min").where(_or_valid).to_numpy()
 
-    # Squeeze Momentum (LazyBear) — signals 166/664 (experimental): BB inside Keltner = coil
-    _sq_ma = pd.Series(close_np).rolling(20).mean()
-    _sq_rng = pd.Series(high_np - low_np).rolling(20).mean()
-    _sq_kc_u = (_sq_ma + 1.5 * _sq_rng).to_numpy()
-    _sq_kc_l = (_sq_ma - 1.5 * _sq_rng).to_numpy()
-    sqz_on_col = ((bb_lower_20 > _sq_kc_l) & (bb_upper_20 < _sq_kc_u)).astype(float)
-    sqz_cnt24_col = pd.Series(sqz_on_col).rolling(24).sum().to_numpy()
+    # =========================================================================
+    # SQUEEZE MOMENTUM (LazyBear) — signals 166/664 (experimental): BB inside Keltner = coil
+    # =========================================================================
+    _sq_ma = ta_sma(close_np, timeperiod=20)
+    _sq_rng = ta_sma(high_np - low_np, timeperiod=20)
+    _sq_kc_u = _sq_ma + 1.5 * _sq_rng
+    _sq_kc_l = _sq_ma - 1.5 * _sq_rng
+    sqz_on_col = ((bb_lower_20 > _sq_kc_l) & (bb_upper_20 < _sq_kc_u)).astype(np.float64)
+    sqz_cnt24_col = ta_sum(sqz_on_col, timeperiod=24)
+    # _sq_ma = pd.Series(close_np).rolling(20).mean()
+    # _sq_rng = pd.Series(high_np - low_np).rolling(20).mean()
+    # _sq_kc_u = (_sq_ma + 1.5 * _sq_rng).to_numpy()
+    # _sq_kc_l = (_sq_ma - 1.5 * _sq_rng).to_numpy()
+    # sqz_on_col = ((bb_lower_20 > _sq_kc_l) & (bb_upper_20 < _sq_kc_u)).astype(float)
+    # sqz_cnt24_col = pd.Series(sqz_on_col).rolling(24).sum().to_numpy()
 
+    # =========================================================================
     # Engulfing candle pattern — signals 167/665 (experimental): opposite-color body engulf
-    _eng_po = pd.Series(open_np).shift(1).to_numpy()
-    _eng_pc = pd.Series(close_np).shift(1).to_numpy()
+    # =========================================================================
+    _eng_po = np.empty_like(open_np)
+    _eng_pc = np.empty_like(close_np)
+    _eng_po[0] = _eng_pc[0] = np.nan
+    _eng_po[1:] = open_np[:-1]
+    _eng_pc[1:] = close_np[:-1]
     engulf_bull_col = (
       (_eng_pc < _eng_po) & (close_np > open_np) & (close_np >= _eng_po) & (open_np <= _eng_pc)
     ).astype(float)
@@ -4098,12 +4121,30 @@ class NostalgiaForInfinityX7(IStrategy):
       (_eng_pc > _eng_po) & (close_np < open_np) & (close_np <= _eng_po) & (open_np >= _eng_pc)
     ).astype(float)
 
+    # _eng_po = pd.Series(open_np).shift(1).to_numpy()
+    # _eng_pc = pd.Series(close_np).shift(1).to_numpy()
+    # engulf_bull_col = (
+    # (_eng_pc < _eng_po) & (close_np > open_np) & (close_np >= _eng_po) & (open_np <= _eng_pc)
+    # ).astype(float)
+    # engulf_bear_col = (
+    # (_eng_pc > _eng_po) & (close_np < open_np) & (close_np <= _eng_po) & (open_np >= _eng_pc)
+    # ).astype(float)
+
+    # =========================================================================
     # Swing-failure pattern (SFP) — signals 168/666 (experimental): sweep & reclaim of the prior 48-candle extreme
-    _sfp_prev_low = pd.Series(low_np).rolling(48).min().shift(1).to_numpy()
-    _sfp_prev_high = pd.Series(high_np).rolling(48).max().shift(1).to_numpy()
+    # =========================================================================
+    _sfp_prev_low = np_shift(ta_min(low_np, timeperiod=48), 1)
+    _sfp_prev_high = np_shift(ta_max(high_np, timeperiod=48), 1)
     sfp_bull_col = ((low_np < _sfp_prev_low) & (close_np > _sfp_prev_low)).astype(float)
     sfp_bear_col = ((high_np > _sfp_prev_high) & (close_np < _sfp_prev_high)).astype(float)
+    # _sfp_prev_low = pd.Series(low_np).rolling(48).min().shift(1).to_numpy()
+    # _sfp_prev_high = pd.Series(high_np).rolling(48).max().shift(1).to_numpy()
+    # sfp_bull_col = ((low_np < _sfp_prev_low) & (close_np > _sfp_prev_low)).astype(float)
+    # sfp_bear_col = ((high_np > _sfp_prev_high) & (close_np < _sfp_prev_high)).astype(float)
+
+    # =========================================================================
     # 1h inside-bar breakout — signals 169/667 (experimental): source insists on 1h+ candles
+    # =========================================================================
     _ib_hr = df["date"].dt.floor("1h")
     _ib_agg = df.groupby(_ib_hr).agg(_ib_hh=("high", "max"), _ib_ll=("low", "min"))
     _ib_agg["_ib_flag"] = (_ib_agg["_ib_hh"] < _ib_agg["_ib_hh"].shift(1)) & (
@@ -4115,52 +4156,103 @@ class NostalgiaForInfinityX7(IStrategy):
     ib_ready_col = _ib_prev_hr.map(_ib_agg["_ib_flag"]).eq(True).astype(float).to_numpy()
     ib_mother_h_col = _ib_prev_hr.map(_ib_agg["_ib_mh"]).to_numpy()
     ib_mother_l_col = _ib_prev_hr.map(_ib_agg["_ib_ml"]).to_numpy()
+
+    # =========================================================================
     # Crash-bounce hunter — signal 170 (experimental): rolling 24h return for capitulation context
+    # =========================================================================
     roc_288_col = ta_roc(close_np, timeperiod=288)
     # relative volume: current candle volume vs its 24h average (confirmation qualifier, not a trigger)
-    _vol_ma = pd.Series(volume_np).rolling(288).mean().to_numpy()
+    _vol_ma = ta_sma(volume_np, timeperiod=288)
+    # _vol_ma = pd.Series(volume_np).rolling(288).mean().to_numpy()
     vol_rel_col = np.divide(volume_np, _vol_ma, out=np.full_like(_vol_ma, np.nan), where=_vol_ma > 0)
+
+    # =========================================================================
     # Pump hunter — signal 171 (experimental): rolling 24h return + relative volume + first-fire dedup
-    _ph_prev_max = pd.Series(close_np).rolling(48).max().shift(1).to_numpy()
-    _ph_cross = ((close_np > _ph_prev_max) & (np.roll(close_np, 1) <= _ph_prev_max)).astype(float)
+    # =========================================================================
+    _ph_prev_max = np_shift(ta_max(close_np, timeperiod=48), 1)
+    _ph_cross = ((close_np > _ph_prev_max) & (np_shift(close_np, 1) <= _ph_prev_max)).astype(float)
     _ph_cross[0] = 0.0
-    ph_cross_cnt12_col = pd.Series(_ph_cross).rolling(12).sum().to_numpy()
-    # pump character: height above the 24h low + prior-hour activity (both PRE-ignition)
-    _ph_low288 = pd.Series(low_np).rolling(288).min().to_numpy()
+    ph_cross_cnt12_col = ta_sum(_ph_cross, timeperiod=12)
+    # Pump character: height above the 24h low
+    _ph_low288 = ta_min(low_np, timeperiod=288)
     ph_base_pos_col = (
       np.divide(close_np - _ph_low288, close_np, out=np.full_like(close_np, np.nan), where=close_np > 0) * 100.0
     )
-    _ph_h12 = pd.Series(high_np).rolling(12).max().shift(1).to_numpy()
-    _ph_l12 = pd.Series(low_np).rolling(12).min().shift(1).to_numpy()
+    # Prior 12-candle range, excluding current candle
+    _ph_h12 = np_shift(ta_max(high_np, timeperiod=12), 1)
+    _ph_l12 = np_shift(ta_min(low_np, timeperiod=12), 1)
     ph_pre_tight_col = (
       np.divide(_ph_h12 - _ph_l12, close_np, out=np.full_like(close_np, np.nan), where=close_np > 0) * 100.0
     )
+
+    # _ph_prev_max = pd.Series(close_np).rolling(48).max().shift(1).to_numpy()
+    # _ph_cross = ((close_np > _ph_prev_max) & (np.roll(close_np, 1) <= _ph_prev_max)).astype(float)
+    # _ph_cross[0] = 0.0
+    # ph_cross_cnt12_col = pd.Series(_ph_cross).rolling(12).sum().to_numpy()
+    # pump character: height above the 24h low + prior-hour activity (both PRE-ignition)
+    # _ph_low288 = pd.Series(low_np).rolling(288).min().to_numpy()
+    # ph_base_pos_col = (
+    # np.divide(close_np - _ph_low288, close_np, out=np.full_like(close_np, np.nan), where=close_np > 0) * 100.0
+    # )
+    # _ph_h12 = pd.Series(high_np).rolling(12).max().shift(1).to_numpy()
+    # _ph_l12 = pd.Series(low_np).rolling(12).min().shift(1).to_numpy()
+    # ph_pre_tight_col = (
+    # np.divide(_ph_h12 - _ph_l12, close_np, out=np.full_like(close_np, np.nan), where=close_np > 0) * 100.0
+    # )
+
+    # =========================================================================
     # Marubozu — signals 172/670 (experimental): full-body candle = pure momentum ignition
+    # =========================================================================
     _mrb_rng = high_np - low_np
     _mrb_body_ratio = np.divide(np.abs(close_np - open_np), _mrb_rng, out=np.zeros_like(_mrb_rng), where=_mrb_rng > 0)
     _mrb_body_pct = np.divide(np.abs(close_np - open_np), close_np, out=np.zeros_like(close_np), where=close_np > 0)
     mrb_bull_col = ((close_np > open_np) & (_mrb_body_ratio > 0.9) & (_mrb_body_pct > 0.005)).astype(float)
     mrb_bear_col = ((close_np < open_np) & (_mrb_body_ratio > 0.9) & (_mrb_body_pct > 0.005)).astype(float)
+
+    # =========================================================================
     # Dump hunter — signal 669 (experimental): mirror of the pump hunter (171)
-    dh_prev_min_col = pd.Series(close_np).rolling(48).min().shift(1).to_numpy()
-    # Pin-bar / hammer — signals 173/671 (experimental): long rejection wick = a completed fact
+    # =========================================================================
+    dh_prev_min_col = np_shift(ta_min(close_np, timeperiod=48), 1)
+    # Pin-bar / hammer
     _pb_body = np.abs(close_np - open_np)
     _pb_lower = np.minimum(open_np, close_np) - low_np
     _pb_upper = high_np - np.maximum(open_np, close_np)
     _pb_body_safe = np.where(_pb_body > 0, _pb_body, np.nan)
-    hammer_col = np.nan_to_num(
-      ((_pb_lower > 2.0 * _pb_body_safe) & (_pb_upper < 0.5 * _pb_body_safe) & (_pb_lower > close_np * 0.004)).astype(
-        float
-      )
-    )
-    star_col = np.nan_to_num(
-      ((_pb_upper > 2.0 * _pb_body_safe) & (_pb_lower < 0.5 * _pb_body_safe) & (_pb_upper > close_np * 0.004)).astype(
-        float
-      )
-    )
+    hammer_col = (
+      (_pb_lower > 2.0 * _pb_body_safe) & (_pb_upper < 0.5 * _pb_body_safe) & (_pb_lower > close_np * 0.004)
+    ).astype(float)
+    star_col = (
+      (_pb_upper > 2.0 * _pb_body_safe) & (_pb_lower < 0.5 * _pb_body_safe) & (_pb_upper > close_np * 0.004)
+    ).astype(float)
+
+    # dh_prev_min_col = pd.Series(close_np).rolling(48).min().shift(1).to_numpy()
+    # Pin-bar / hammer — signals 173/671 (experimental): long rejection wick = a completed fact
+    # _pb_body = np.abs(close_np - open_np)
+    # _pb_lower = np.minimum(open_np, close_np) - low_np
+    # _pb_upper = high_np - np.maximum(open_np, close_np)
+    # _pb_body_safe = np.where(_pb_body > 0, _pb_body, np.nan)
+    # hammer_col = np.nan_to_num(
+    # ((_pb_lower > 2.0 * _pb_body_safe) & (_pb_upper < 0.5 * _pb_body_safe) & (_pb_lower > close_np * 0.004)).astype(
+    #    float
+    #  )
+    # )
+    # star_col = np.nan_to_num(
+    #  ((_pb_upper > 2.0 * _pb_body_safe) & (_pb_lower < 0.5 * _pb_body_safe) & (_pb_upper > close_np * 0.004)).astype(
+    #    float
+    #  )
+    # )
+
+    # =========================================================================
     # Donchian 7-day channel — signals 8/506 (experimental): turtle-style macro breakout
-    dc_high_7d_col = pd.Series(close_np).rolling(2016).max().shift(1).to_numpy()
-    dc_low_7d_col = pd.Series(close_np).rolling(2016).min().shift(1).to_numpy()
+    # =========================================================================
+    dc_high_7d_col = np_shift(ta_max(close_np, timeperiod=2016), 1)
+    dc_low_7d_col = np_shift(ta_min(close_np, timeperiod=2016), 1)
+    # dc_high_7d_col = pd.Series(close_np).rolling(2016).max().shift(1).to_numpy()
+    # dc_low_7d_col = pd.Series(close_np).rolling(2016).min().shift(1).to_numpy()
+
+    # =========================================================================
+    # Assign dataframes
+    # =========================================================================
     new_cols = pd.DataFrame(
       {
         "RSI_3": rsi_3,
@@ -4303,7 +4395,7 @@ class NostalgiaForInfinityX7(IStrategy):
         "CVD_SELL_VOL",
       ]
 
-      validate_indicators(df=df, columns=debug_cols, pair=metadata_pair, timeframe=self.timeframe)
+      self.validate_indicators(df=df, columns=debug_cols, pair=metadata_pair, timeframe=self.timeframe)
 
     # =========================================================================
     # GLOBAL PROTECTIONS
@@ -4330,7 +4422,6 @@ class NostalgiaForInfinityX7(IStrategy):
     if debug_time:
       tik = time.perf_counter()
     dp = self.dp
-    validate_indicators = self.validate_indicators
 
     assert dp, "DataProvider is required for multiple timeframes."
 
@@ -4372,7 +4463,7 @@ class NostalgiaForInfinityX7(IStrategy):
         "BTC_EMA_200",
       ]
 
-      validate_indicators(df=btc_informative_1d, columns=debug_cols, pair=btc_pair, timeframe=btc_info_timeframe)
+      self.validate_indicators(df=btc_informative_1d, columns=debug_cols, pair=btc_pair, timeframe=btc_info_timeframe)
 
     # =========================================================================
     # LOGGING
@@ -4390,7 +4481,6 @@ class NostalgiaForInfinityX7(IStrategy):
     if debug_time:
       tik = time.perf_counter()
     dp = self.dp
-    validate_indicators = self.validate_indicators
 
     assert dp, "DataProvider is required for multiple timeframes."
 
@@ -4433,7 +4523,7 @@ class NostalgiaForInfinityX7(IStrategy):
         "BTC_RSI_14",
       ]
 
-      validate_indicators(df=btc_informative_4h, columns=debug_cols, pair=btc_pair, timeframe=btc_info_timeframe)
+      self.validate_indicators(df=btc_informative_4h, columns=debug_cols, pair=btc_pair, timeframe=btc_info_timeframe)
 
     # =========================================================================
     # LOGGING
@@ -4451,7 +4541,6 @@ class NostalgiaForInfinityX7(IStrategy):
     if debug_time:
       tik = time.perf_counter()
     dp = self.dp
-    validate_indicators = self.validate_indicators
 
     assert dp, "DataProvider is required for multiple timeframes."
 
@@ -4504,7 +4593,7 @@ class NostalgiaForInfinityX7(IStrategy):
         "BTC_ROC_3",
       ]
 
-      validate_indicators(df=btc_informative_1h, columns=debug_cols, pair=btc_pair, timeframe=btc_info_timeframe)
+      self.validate_indicators(df=btc_informative_1h, columns=debug_cols, pair=btc_pair, timeframe=btc_info_timeframe)
 
     # =========================================================================
     # LOGGING
@@ -4522,7 +4611,6 @@ class NostalgiaForInfinityX7(IStrategy):
     if debug_time:
       tik = time.perf_counter()
     dp = self.dp
-    validate_indicators = self.validate_indicators
 
     assert dp, "DataProvider is required for multiple timeframes."
 
@@ -4575,7 +4663,7 @@ class NostalgiaForInfinityX7(IStrategy):
         "BTC_ROC_3",
       ]
 
-      validate_indicators(df=btc_informative_15m, columns=debug_cols, pair=btc_pair, timeframe=btc_info_timeframe)
+      self.validate_indicators(df=btc_informative_15m, columns=debug_cols, pair=btc_pair, timeframe=btc_info_timeframe)
 
     # =========================================================================
     # LOGGING
@@ -4593,7 +4681,6 @@ class NostalgiaForInfinityX7(IStrategy):
     if debug_time:
       tik = time.perf_counter()
     dp = self.dp
-    validate_indicators = self.validate_indicators
 
     assert dp, "DataProvider is required for multiple timeframes."
 
@@ -4646,7 +4733,7 @@ class NostalgiaForInfinityX7(IStrategy):
         "BTC_ROC_3",
       ]
 
-      validate_indicators(df=btc_informative_5m, columns=debug_cols, pair=btc_pair, timeframe=btc_info_timeframe)
+      self.validate_indicators(df=btc_informative_5m, columns=debug_cols, pair=btc_pair, timeframe=btc_info_timeframe)
 
     # =========================================================================
     # LOGGING
@@ -13662,6 +13749,8 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_15m_gt_3) | (rsi_3_1h_gt_10) | (stochrsi_k_1h_lt_40))
             # 15m & 1h & 4h & 1d down move
             & ((rsi_3_15m_gt_3) | (rsi_3_1h_gt_15) | (rsi_3_4h_gt_15) | (rsi_3_1d_gt_15))
+            # 15m & 1h & 1d down move, 1d still high
+            & ((rsi_3_15m_gt_3) | (rsi_3_1h_gt_15) | (rsi_3_1d_gt_20) | (aroonu_14_1d_lt_50))
             # 15m & 1h down move, 15m still high
             & ((rsi_3_15m_gt_3) | (rsi_3_1h_gt_20) | (aroonu_14_15m_lt_40))
             # 15m & 1h down move, 1h high
@@ -20313,6 +20402,8 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_1h_gt_15) | (rsi_3_4h_gt_35) | (stochrsi_k_15m_lt_70))
             # 1h & 1d down move, 1d overbought
             & ((rsi_3_1h_gt_30) | (rsi_3_1d_gt_40) | (roc_9_1d_lt_50))
+            # 1h down move, 1h & 1d high
+            & ((rsi_3_1h_gt_30) | (aroonu_14_1h_lt_80) | (aroonu_14_1d_lt_80))
             # 1h down move, 1h high, 1d high
             & ((rsi_3_1h_gt_40) | (aroonu_14_1h_lt_100) | (stochrsi_k_1d_lt_80))
             # 1h & 4h down move, 4h & 1d high
@@ -24988,6 +25079,12 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_1h_gt_30) | (aroonu_14_1h_lt_80) | (stochrsi_k_4h_lt_80))
             # 1h down move, 4h high, 1h overbought
             & ((rsi_3_1h_gt_40) | (aroonu_14_4h_lt_80) | (roc_9_1h_lt_10))
+            # 1h & 4h down move, 1h high, 4h overbought
+            & ((rsi_3_1h_gt_45) | (rsi_3_4h_gt_65) | (aroonu_14_1h_lt_70) | (roc_9_4h_lt_10))
+            # 1h & 4h down move, 4h high & overbought
+            & ((rsi_3_1h_gt_45) | (rsi_3_4h_gt_65) | (aroonu_14_4h_lt_100) | (roc_9_4h_lt_10))
+            # 1h & 4h down move, 4h & 1d high
+            & ((rsi_3_1h_gt_45) | (rsi_3_4h_gt_65) | (aroonu_14_4h_lt_100) | (aroonu_14_1d_lt_100))
             # 1h down move, 1h high, 15m high
             & ((rsi_3_1h_gt_50) | (aroonu_14_1h_lt_70) | (stochrsi_k_15m_lt_70))
             # 4h & 1d down move, 15m still not low enough
@@ -26282,17 +26379,103 @@ class NostalgiaForInfinityX7(IStrategy):
 
         # Condition #167 - Engulfing continuation (Long, experimental, RAW — TradingLab port).
         if long_entry_condition_index == 167:
+          # Protections
           long_entry_logic.append(num_empty_288 <= allowed_empty_candles_288)
           long_entry_logic.append(protections_long_global == True)
-          # daily not floored — no continuation in a dead daily
-          long_entry_logic.append(stochrsi_k_1d > 20.0)
-          # 1h momentum actually up, 4h not overheated (anti-chase)
-          long_entry_logic.append(rsi_3_1h > 55.0)
-          long_entry_logic.append(roc_9_4h < 8.0)
-          # uptrend regime + momentum side + bullish engulfing close
-          long_entry_logic.append(close > ema_200)
-          long_entry_logic.append(rsi_14 > 50.0)
-          long_entry_logic.append(engulf_bull > 0.5)
+
+          long_entry_logic.append(
+            # daily in its lower half, no recent 1h low, 5m cutting a fresh one
+            # 1h & 4h have both already run, 1h bands still wide from it
+            ((bbb_20_2_0 < 9) | (roc_9_1h < 14) | (change_pct_4h < 5))
+            # a strong 5m candle with the 4h oscillator not even positive
+            & ((change_pct < 1) | (cci_20_4h > 50))
+            # 4h & 5m money both saturated — no one left to buy the continuation
+            & ((cmf_20 < 0.2) | (mfi_14_4h < 85))
+            # 1d oscillator at its ceiling, no new 1d high in a fortnight, money already in
+            & ((cmf_20 < 0.3) | (aroonu_14_1d > 5) | (stochrsi_k_1d < 85))
+            # 1h money saturated and the last 24h went nowhere
+            & ((roc_288 > 2) | (mfi_14_1h < 70))
+            # 4h RSI jumping a fifth in one bar with the 5m RSI only just over the line
+            & ((rsi_14 > 55) | (rsi_14_change_pct_4h < 21))
+            # the hour has already run and the fast tape underneath is not confirming it
+            & ((rsi_4 > 50) | (roc_9_1h < 3))
+            # 5m stochastic in its lower half, neither 1h nor 1d strong enough to carry it
+            & ((stoch_4_4 > 45) | (rsi_14_1h > 60) | (rsi_14_1d > 55))
+            # a dead tape bought at the top of its own noise — flat 1h bands, thin candle, fast stochastic high
+            & ((stoch_4_4 < 65) | (vol_rel > 1) | (bbb_20_2_0_1h > 12))
+            # nothing rising — 5h stochastic under half, 15m middling, 4h up-side weak
+            & ((stoch_60_10 > 45) | (rsi_3_15m > 55) | (plus_di_14_4h > 30))
+            # a listless tape — no 4h money, no 4h trend, a thin entry candle
+            & ((vol_rel > 0.5) | (adx_14_4h > 30) | (cmf_20_4h > 0.05))
+            # a volume spike under a 1d bar that already printed a long lower wick
+            & ((vol_rel < 3.5) | (bot_wick_pct_1d < 5))
+            # 15m stretched, 1h still low in its range, 4h down-side still stronger
+            & ((cci_20_15m < 25) | (willr_14_1h > -60) | (minus_di_14_4h < 15))
+            # 15m oscillator collapsing under a 4h bar with a long upper wick
+            & ((cci_20_change_pct_15m > -165) | (top_wick_pct_4h < 6))
+            # 15m money in but its stochastic on the floor, under an already-high 1h
+            & ((cmf_20_15m < 0) | (stochk_14_3_3_15m > 30) | (stochk_14_3_3_1h < 65))
+            # a 15m momentum spike bought without the 15m money to back it, inside a daily that is not strong
+            & ((mfi_14_15m > 85) | (rsi_3_15m < 85) | (rsi_14_1d > 55))
+            # the 4h bar jumped without its stochastic confirming, no 15m money left
+            & ((mfi_14_15m > 45) | (change_pct_4h < 5) | (stochrsi_k_4h > 80))
+            # no 1d high in a fortnight, 1h falling, 15m momentum and RSI both flat
+            & ((rsi_14_15m > 65) | (rsi_3_15m < 80) | (aroond_14_1h < 40) | (aroonu_14_1d > 20))
+            # a bounce bought while the daily has rolled over, the 4h is weak and 15m momentum is already down
+            & ((rsi_3_15m > 45) | (rsi_14_4h > 55) | (aroonu_14_1d > 5))
+            # the momentum clocks disagree — 15m spent, 1h dead, 4h high
+            & ((rsi_3_15m < 75) | (rsi_3_1h > 35) | (rsi_3_4h < 65))
+            # no push in the quarter-hour and no money coming into the hour
+            & ((rsi_3_15m > 50) | (mfi_14_1h > 40))
+            # the quarter-hour is weak while the hour has already run
+            & ((stochrsi_k_15m > 40) | (roc_2_1h < 5))
+            # 1d stochastic pinned high while its StochRSI has already turned down
+            & ((uo_7_14_28_15m > 45) | (stochk_14_3_3_1d < 80) | (stochrsi_k_1d > 60))
+            # a quiet tape already bought — narrow 1h bands, money in on 1h and 1d
+            & ((bbb_20_2_0_1h > 14) | (mfi_14_1h < 55) | (mfi_14_1d < 45))
+            # 1h stochastic at its ceiling with the 1h CCI still accelerating into it
+            & ((cci_20_change_pct_1h < 70) | (stochrsi_k_1h < 90))
+            # no 1h money, 1h oscillator not high, 4h leg barely moved
+            & ((cmf_20_1h > 0.05) | (stochrsi_k_1h > 80) | (roc_9_4h > 10))
+            # 1d already overbought, no 1h money behind it, no upper wick to say it was tested
+            & ((mfi_14_1h > 55) | (rsi_14_1d < 80) | (top_wick_pct_1d > 5))
+            # an hourly already overbought inside a 4h trend that has run a long way
+            & ((rsi_14_1h < 75) | (adx_14_4h < 45))
+            # 1h strong but off its high, bought with 1d money flow already saturated
+            & ((rsi_14_1h > 70) | (willr_14_1h < -30) | (mfi_14_1d < 85))
+            # 1h short-term momentum more than doubled while the 4h RSI is also jumping
+            & ((rsi_3_change_pct_1h < 110) | (rsi_14_change_pct_4h < 2))
+            # the hour's momentum has just spiked while the 4h is already extended
+            & ((rsi_3_change_pct_1h < 75) | (roc_2_4h < 3))
+            # still well off the two-day high, 1d momentum tripled, 1d stochastic low
+            & ((willr_84_1h > -15) | (rsi_3_change_pct_1d < 145) | (stochk_14_3_3_1d > 45))
+            # a 4h trend that has already run hard and is still accelerating
+            & ((adx_14_4h < 45) | (rsi_3_change_pct_4h < 15))
+            # a 4h stretched far above its mean while daily money is leaving
+            & ((cci_20_4h < 225) | (cmf_20_1d > 0))
+            # a 5m bounce bought while the 4h leg is falling and the 4h down-trend is the strong side
+            & ((minus_di_14_4h < 20) | (roc_9_4h > -5))
+            # a day that has gone vertical while the 4h has no directional strength behind it
+            & ((plus_di_14_4h > 20) | (roc_9_1d < 30))
+            # a blow-off day bought at the top — 1d up hundreds of percent, 4h pinned
+            & ((rsi_14_4h < 90) | (roc_9_1d < 100))
+            # a 1d neither moving nor holding — momentum middling, the 1d low still fresh
+            & ((aroond_14_1d < 65) | (rsi_3_1d > 55))
+          )
+
+          # Logic
+          long_entry_logic.append(
+            # a bullish engulfing inside an uptrend, in the upper half of the range, with the daily
+            # leg rising and the 4h both making recent highs and swinging up in its own range
+            (close > ema_200)
+            & (rsi_14 > 50.0)
+            & (willr_14 > -50.0)
+            & (aroonu_14_4h > 45.0)
+            & (stochrsi_k_4h > 50.0)
+            & (change_pct_15m < 2.0)
+            & (roc_9_1d > 0.0)
+            & (engulf_bull > 0.5)
+          )
 
         # Condition #168 - Swing-failure pattern (Long, experimental, RAW — liquidity-sweep reclaim).
         if long_entry_condition_index == 168:
@@ -28766,6 +28949,8 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_1h_gt_10) | (rsi_3_1d_gt_30) | (aroonu_14_1d_gt_0) | (stochrsi_k_1h_gt_20))
             # 1h down move, 15m low, 4h oversold
             & ((rsi_3_1h_gt_10) | (aroonu_14_15m_gt_0) | (roc_9_4h_gt_neg_20))
+            # 1h down move, 4h low
+            & ((rsi_3_1h_gt_10) | (aroonu_14_4h_gt_0))
             # 1h down move, 1h low, 4h low
             & ((rsi_3_1h_gt_10) | (aroonu_14_4h_gt_10) | (stochrsi_k_1h_gt_10))
             # 1h & 4h down move, 1h & 4h low
@@ -28818,6 +29003,8 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_1h_gt_25) | (rsi_3_1d_gt_45) | (aroonu_14_1h_gt_0) | (aroonu_14_1d_gt_0))
             # 1h down move, 15m low, 1h low, 1d downtrend not confirmed
             & ((rsi_3_1h_gt_25) | (aroonu_14_15m_gt_10) | (aroonu_14_1h_gt_20) | (stochrsi_k_1h_lt_50))
+            # 1h down move, 1h low, 4h low, 15m low
+            & ((rsi_3_1h_gt_25) | (aroonu_14_1h_gt_10) | (aroonu_14_4h_gt_20) | (stochrsi_k_15m_gt_10))
             # 1h & 4h & 1d down move, 4h low, 1d oversold
             & ((rsi_3_1h_gt_30) | (rsi_3_4h_gt_30) | (rsi_3_1d_gt_30) | (aroonu_14_4h_gt_0) | (roc_9_1d_gt_neg_10))
             # 1h & 1d down move, 1h & 1d low, 1d oversold
