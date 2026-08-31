@@ -71,7 +71,7 @@ class NostalgiaForInfinityX7(IStrategy):
   INTERFACE_VERSION = 3
 
   def version(self) -> str:
-    return "v17.4.581"
+    return "v17.4.586"
 
   stoploss = -0.99
 
@@ -14636,6 +14636,8 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_15m_gt_20) | (rsi_3_1h_gt_30) | (aroonu_14_1h_lt_70))
             # 15m & 1h down move, 4h high
             & ((rsi_3_15m_gt_20) | (rsi_3_1h_gt_30) | (stochrsi_k_4h_lt_90))
+            # 15m & 1h & 4h down move, 1h high
+            & ((rsi_3_15m_gt_20) | (rsi_3_1h_gt_40) | (rsi_3_4h_gt_40) | (aroonu_14_1h_lt_90))
             # 15m & 1h down move, 4h & 1d high
             & ((rsi_3_15m_gt_20) | (rsi_3_1h_gt_40) | (aroonu_14_4h_lt_90) | (aroonu_14_1d_lt_100))
             # 15m & 1h down move, 1h high
@@ -15303,6 +15305,8 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_15m_gt_30) | (aroonu_14_15m_lt_60) | (roc_9_1d_gt_neg_40))
             # 15m down move, 15m high, 15m downtrend
             & ((rsi_3_15m_gt_30) | (aroonu_14_15m_lt_70) | (cmf_20_15m_gt_neg_0_30))
+            # 15m down move, 15m high, 4h & 1d downtrend
+            & ((rsi_3_15m_gt_30) | (aroonu_14_15m_lt_70) | (roc_9_4h_gt_neg_10) | (roc_9_1d_gt_neg_10))
             # 15m down move, 15m high, 1d overbought
             & ((rsi_3_15m_gt_30) | (aroonu_14_15m_lt_70) | (roc_9_1d_lt_70))
             # 15m down move, 1h high, 1d overbought
@@ -16401,6 +16405,8 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_4h_gt_10) | (rsi_3_1d_gt_15) | (roc_9_1d_gt_neg_15))
             # 4h & 1d down move, 1d still high
             & ((rsi_3_4h_gt_10) | (rsi_3_1d_gt_25) | (stochrsi_k_1d_lt_50))
+            # 4h & 1d down move, 4h still high
+            & ((rsi_3_4h_gt_10) | (rsi_3_1d_gt_40) | (stochrsi_k_4h_lt_40))
             # 4h down move, 15m downtrend, 1d high
             & ((rsi_3_4h_gt_10) | (cmf_20_15m_gt_neg_0_30) | (aroonu_14_1d_lt_80))
             # 4h down move, 1d high & overbought
@@ -16896,6 +16902,8 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_15m_gt_25) | (rsi_3_1h_gt_25) | (rsi_3_4h_gt_35) | (stochrsi_k_1h_lt_30) | (stochrsi_k_4h_lt_40))
             # 15m & 1h down move, 15m high
             & ((rsi_3_15m_gt_25) | (rsi_3_1h_gt_25) | (stochrsi_k_15m_lt_70))
+            # 15m & 1h & 4h & 1d down move, 4h still high
+            & ((rsi_3_15m_gt_25) | (rsi_3_1h_gt_30) | (rsi_3_4h_gt_30) | (rsi_3_1d_gt_30) | (stochrsi_k_4h_lt_40))
             # 15m & 1h & 4h down move, 4h still high
             & ((rsi_3_15m_gt_25) | (rsi_3_1h_gt_30) | (rsi_3_4h_gt_45) | (stochrsi_k_4h_lt_50))
             # 15m & 1h & 4h down move, 4h high
@@ -16958,6 +16966,8 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_15m_gt_35) | (aroonu_14_15m_lt_40) | (aroonu_14_4h_lt_85))
             # 15m down move, 4h high & overbought
             & ((rsi_3_15m_gt_30) | (aroonu_14_4h_lt_100) | (roc_9_4h_lt_40))
+            # 15m down move, 15m still high, 4h high & overbought
+            & ((rsi_3_15m_gt_30) | (stochrsi_k_15m_lt_40) | (stochrsi_k_4h_lt_80) | (roc_9_4h_lt_10))
             # 15m down move, 4h high & overbought
             & ((rsi_3_15m_gt_30) | (stochrsi_k_4h_lt_90) | (roc_9_4h_lt_40))
             # 15m & 1h down move, 1h high
@@ -18804,6 +18814,8 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_4h_gt_5) | (roc_9_4h_gt_neg_20) | (roc_9_1d_gt_neg_20))
             # 4h & 1d down move, 15m still not low enough
             & ((rsi_3_4h_gt_10) | (rsi_3_1d_gt_10) | (aroonu_14_15m_lt_30))
+            # 4h & 1d down move, 15m still high
+            & ((rsi_3_4h_gt_10) | (rsi_3_1d_gt_10) | (stochrsi_k_15m_lt_40))
             # 4h & 1d down move, 1d downtrend
             & ((rsi_3_4h_gt_10) | (rsi_3_1d_gt_10) | (roc_9_1d_gt_neg_20))
             # 15m & 1d down move, 15m still high
@@ -20290,6 +20302,8 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_15m_gt_25) | (rsi_3_1h_gt_25) | (rsi_3_4h_gt_25) | (rsi_3_1d_gt_40) | (aroonu_14_4h_lt_40))
             # 15m & 1h & 4h down move, 1d high
             & ((rsi_3_15m_gt_25) | (rsi_3_1h_gt_25) | (rsi_3_4h_gt_25) | (roc_9_1d_lt_70))
+            # 15m & 1h & 4h down move, 1h still high, 1d high
+            & ((rsi_3_15m_gt_25) | (rsi_3_1h_gt_25) | (rsi_3_4h_gt_40) | (aroonu_14_1h_lt_50) | (aroonu_14_1d_lt_80))
             # 15m & 1h & 4h down move, 4h & 1d overbought
             & ((rsi_3_15m_gt_25) | (rsi_3_1h_gt_25) | (rsi_3_4h_gt_50) | (roc_9_4h_lt_10) | (roc_9_1d_lt_20))
             # 15m & 4h down move, 4h high
@@ -21830,6 +21844,8 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_1h_gt_30) | (stochrsi_k_1h_lt_60) | (roc_9_1d_lt_30))
             # 1h down move, 4h overbought
             & ((rsi_3_1h_gt_30) | (roc_9_4h_lt_50))
+            # 4h & 1d down move, 4h still high
+            & ((rsi_3_4h_gt_10) | (rsi_3_1d_gt_40) | (stochrsi_k_4h_lt_40))
             # 4h down move, 1d downtrend
             & ((rsi_3_4h_gt_30) | (roc_9_1d_gt_neg_50))
             # 1h & 4h & 1d down move, 1h & 4h still high
@@ -22114,6 +22130,8 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_15m_gt_35) | (rsi_3_1h_gt_40) | (stochrsi_k_1h_lt_40) | (stochrsi_k_4h_lt_70))
             # 15m & 1h down move, 1h high, 1d high & overbought
             & ((rsi_3_15m_gt_35) | (rsi_3_1h_gt_45) | (aroonu_14_1h_lt_70) | (aroonu_14_1d_lt_100) | (roc_9_1d_lt_20))
+            # 15m & 1h down move, 1d high & overbought
+            & ((rsi_3_15m_gt_35) | (rsi_3_1h_gt_45) | (aroonu_14_1d_lt_80) | (roc_9_1d_lt_80))
             # 15m & 1h down move, 1d downtrend, 1d overbought
             & ((rsi_3_15m_gt_35) | (rsi_3_1h_gt_50) | (cmf_20_1d_gt_neg_0_10) | (roc_9_1d_lt_50))
             # 15m & 1h & 1d down move, 15m still high, 1d high
@@ -24263,8 +24281,10 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_4h_gt_30) | (rsi_3_1d_gt_30) | (stochrsi_k_4h_lt_50))
             # 4h & 1d down move, 1d high
             & ((rsi_3_4h_gt_30) | (rsi_3_1d_gt_60) | (aroonu_14_1d_lt_90))
+            # 4h down move, 15m high, 1h high
+            & ((rsi_3_4h_gt_30) | (aroonu_14_15m_lt_60) | (stochrsi_k_1h_lt_80))
             # 4h down move, 15m & 4h high
-            & ((rsi_3_4h_gt_30) | (aroonu_14_15m_lt_70) | aroonu_14_4h_lt_70)
+            & ((rsi_3_4h_gt_30) | (aroonu_14_15m_lt_70) | (aroonu_14_4h_lt_70))
             # 4h down move, 1h high, 1d downtrend
             & ((rsi_3_4h_gt_30) | (stochrsi_k_1h_lt_80) | (roc_9_1d_gt_neg_40))
             # 4h down move, 4h & 1d downtrend
@@ -24338,10 +24358,10 @@ class NostalgiaForInfinityX7(IStrategy):
             ((rsi_3_gt_10) | (rsi_3_4h_gt_10) | (aroonu_14_15m_lt_40))
             # 5m & 1d down move, 15m high
             & ((rsi_3_gt_10) | (rsi_3_1d_gt_30) | (aroonu_14_15m_lt_80))
-            # 5m down move, 1h & 1d high
-            & ((rsi_3_gt_10) | aroonu_14_1h_lt_80 | aroonu_14_1d_lt_100)
             # 5m down move, 15m & 1h high
             & ((rsi_3_gt_10) | (aroonu_14_15m_lt_85) | (aroonu_14_1h_lt_100))
+            # 5m down move, 1h & 1d high
+            & ((rsi_3_gt_10) | (aroonu_14_1h_lt_80) | (aroonu_14_1d_lt_100))
             # 15m & 1h & 4h down move
             & (rsi_3_15m_gt_3 | (rsi_3_1h_gt_3) | (rsi_3_4h_gt_15))
             # 15m & 1h & 4h down move, 4h still not low enough
@@ -24718,6 +24738,8 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_4h_gt_30) | (rsi_3_1d_gt_30) | (stochrsi_k_4h_lt_50))
             # 4h & 1d down move, 1d high
             & ((rsi_3_4h_gt_30) | (rsi_3_1d_gt_60) | (aroonu_14_1d_lt_90))
+            # 4h down move, 15m high, 1h high
+            & ((rsi_3_4h_gt_30) | (aroonu_14_15m_lt_60) | (stochrsi_k_1h_lt_80))
             # 4h down move, 4h high, 1d high
             & ((rsi_3_4h_gt_30) | (aroonu_14_4h_lt_70) | (stochrsi_k_1d_lt_80))
             # 4h down move, 1d stil high, 1d downtrend
@@ -24885,6 +24907,8 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_15m_gt_10) | (rsi_3_1h_gt_10) | (aroonu_14_1h_lt_60))
             # 15m & 1h down move, 4h high
             & ((rsi_3_15m_gt_10) | (rsi_3_1h_gt_10) | (aroonu_14_4h_lt_60))
+            # 15m & 1h down move, 4h high
+            & ((rsi_3_15m_gt_10) | (rsi_3_1h_gt_10) | (stochrsi_k_4h_lt_90))
             # 15m & 1h & 4h down move, 1d high & overbought
             & ((rsi_3_15m_gt_10) | (rsi_3_1h_gt_15) | (rsi_3_4h_gt_35) | (aroonu_14_1d_lt_80) | (roc_9_1d_lt_80))
             # 15m & 1h & 4h & 1d down move, 1d downtrend
@@ -25426,6 +25450,8 @@ class NostalgiaForInfinityX7(IStrategy):
             & ((rsi_3_15m_gt_10) | (rsi_3_1h_gt_35) | (aroonu_14_1h_lt_70))
             # 15m & 4h down move, 4h still not low enough
             & ((rsi_3_15m_gt_10) | (rsi_3_4h_gt_10) | (aroonu_14_4h_lt_30))
+            # 15m & 4h down move, 15m & 4h still high
+            & ((rsi_3_15m_gt_10) | (rsi_3_4h_gt_15) | (aroonu_14_15m_lt_40) | (aroonu_14_4h_lt_40))
             # 15m & 1h down move, 1h high
             & ((rsi_3_15m_gt_15) | (rsi_3_1h_gt_15) | (aroonu_14_1h_lt_70))
             # 15m & 1h & 4h down move, 4h high
@@ -29850,23 +29876,46 @@ class NostalgiaForInfinityX7(IStrategy):
           short_entry_logic.append(close < orange_h)
           short_entry_logic.append(close > orange_l)
 
-        # Condition #663 - Fib golden-pocket continuation (Short, experimental, RAW — mirror).
+        # Condition #663 - Fib golden-pocket continuation (Short, experimental, protected).
         if short_entry_condition_index == 663:
+          # Protections
           short_entry_logic.append(num_empty_288 <= allowed_empty_candles_288)
           short_entry_logic.append(protections_short_global == True)
+
+          short_entry_logic.append(
+            # Mar/May fast break in 4h trend: +DI4h >= 15, ROC2_4h >= -4, RSI change <= -12; need relief
+            ((rsi_14_change_pct > -12) | (plus_di_14_4h < 15) | (roc_2_4h < -4))
+            # Aug/Dec no-flow bounce: Aroon-up1h >= 30, CMF15m <= -0.05, WILLR15m <= -35; need one escape
+            & ((cmf_20_15m > -0.05) | (willr_14_15m > -35) | aroonu_14_1h_lt_30)
+            # Sep/Dec outflow bounce: 1h Aroon-up >= 20, CMF <= -0.15, RSI surge >= 20; need one escape
+            & (aroonu_14_1h_lt_20 | (cmf_20_1h > -0.15) | (rsi_14_change_pct_1h < 20))
+            # Dec-20 crash rebound: 4h ROC <= -14, 1h RSI acceleration >= 50; need either side softer
+            & ((rsi_14_change_pct_1h < 50) | (roc_2_4h > -14))
+          )
+
+          # Logic
           short_entry_logic.append(ema_12_4h < ema_200_4h)
           # R1 (eyeball): only a clean active downtrend
           short_entry_logic.append(rsi_14_4h < 45.0)
           short_entry_logic.append(aroond_14_4h > 70.0)
           # R1: anti-capitulation mirror
           short_entry_logic.append(roc_9_1d > -30.0)
-          short_entry_logic.append((close_max_48 - close_min_48) > (close_min_48 * 0.04))
-          # FIRST entry into the 0.5-0.618 retrace band of the down-impulse (from below)
-          _fib_rng_663 = close_max_48 - close_min_48
-          _fib_retr_663 = (close - close_min_48) / _fib_rng_663
-          short_entry_logic.append(np_shift(_fib_retr_663, 1) < 0.5)
+          _fib_high_wick_663 = ta.MAX(high_px, timeperiod=48)
+          _fib_low_wick_663 = ta.MIN(low_px, timeperiod=48)
+          _fib_high_index_663 = ta.MAXINDEX(high_px, timeperiod=48)
+          _fib_low_index_663 = ta.MININDEX(low_px, timeperiod=48)
+          _fib_ordered_663 = np.where(_fib_high_index_663 < _fib_low_index_663, 1.0, 0.0)
+          _fib_rng_663 = _fib_high_wick_663 - _fib_low_wick_663
+          _fib_retr_663 = (close - _fib_low_wick_663) / _fib_rng_663
+          _fib_retr_prev_663 = np_shift(_fib_retr_663, 1)
+          short_entry_logic.append(_fib_rng_663 > (_fib_low_wick_663 * 0.04))
+          # The engulfing candle closes back through the wick-anchored pocket's 0.618 edge.
+          short_entry_logic.append(_fib_ordered_663 > 0.5)
+          short_entry_logic.append(_fib_retr_prev_663 >= 0.618)
+          short_entry_logic.append(_fib_retr_prev_663 <= 0.786)
           short_entry_logic.append(_fib_retr_663 >= 0.5)
-          short_entry_logic.append(_fib_retr_663 <= 0.618)
+          short_entry_logic.append(_fib_retr_663 < 0.618)
+          short_entry_logic.append(engulf_bear > 0.5)
 
         # Condition #664 - Squeeze Momentum release (Short, experimental, RAW — mirror).
         if short_entry_condition_index == 664:
@@ -48176,7 +48225,7 @@ class NostalgiaForInfinityX7(IStrategy):
     trade_leverage = trade.leverage
     trade_fee_open = trade.fee_open
     trade_fee_close = trade.fee_close
-
+    trade_is_short = trade.is_short
     is_backtest = self.is_backtest_mode()
     # we already waiting for an order to get filled
     if trade.has_open_orders:
@@ -48187,6 +48236,19 @@ class NostalgiaForInfinityX7(IStrategy):
     if len(df) < 2:
       return None
     last_candle = df.iloc[-1]
+    last_rsi_3 = last_candle["RSI_3"]
+    last_rsi_3_15m = last_candle["RSI_3_15m"]
+    last_rsi_14 = last_candle["RSI_14"]
+    last_close = last_candle["close"]
+    last_ema_20 = last_candle["EMA_20"]
+    last_aroonu_14 = last_candle["AROONU_14"]
+    last_willr_14 = last_candle["WILLR_14"]
+    last_stochrsi_k = last_candle["STOCHRSIk_14_14_3_3"]
+    last_bbu_20 = last_candle["BBU_20_2.0"]
+    last_rsi_3_1h = last_candle["RSI_3_1h"]
+    last_rsi_3_4h = last_candle["RSI_3_4h"]
+    last_roc_9_1d = last_candle["ROC_9_1d"]
+    last_btc_rsi_14_4h = last_candle["BTC_RSI_14_4h"]
     previous_candle = df.iloc[-2]
 
     exit_rate = current_rate
@@ -48704,29 +48766,6 @@ class NostalgiaForInfinityX7(IStrategy):
       # )
     )
     # is_long_extra_checks_entry = True
-    is_long_grind_entry = (
-      self.long_grind_entry_v3(
-        last_candle,
-        previous_candle,
-        num_open_grinds_and_buybacks,
-        slice_profit,
-        slice_profit_entry,
-        slice_profit_exit,
-        True,
-      )
-      if is_long_extra_checks_entry
-      else False
-    )
-
-    is_long_buyback_entry = (
-      self.long_buyback_entry_v3(last_candle, previous_candle, slice_profit, True)
-      if (self.system_v3_buyback_1_enable and is_system_v3_2 and is_derisk_4_found)
-      else False
-    )
-
-    is_long_rebuy_entry = (
-      self.long_rebuy_entry_v3(last_candle, previous_candle, slice_profit, True) if is_system_v3_1 else False
-    )
     stake_fmt = ".8f" if stake_currency in ("BTC", "ETH", "BNB", "SOL") else ".3f"
     send_notifications = not is_backtest
     # =========================================================================
@@ -48914,10 +48953,38 @@ class NostalgiaForInfinityX7(IStrategy):
         )
         return -ft_sell_amount, "derisk_level_4"
 
+    # =========================================================================
+    # GRINDING CONFIGURATION
+    # =========================================================================
+    system_v3_grind_1_enable = self.system_v3_grind_1_enable
+    system_v3_grind_1_use_derisk = self.system_v3_grind_1_use_derisk
+    system_v3_grind_2_enable = self.system_v3_grind_2_enable
+    system_v3_grind_2_use_derisk = self.system_v3_grind_2_use_derisk
+    system_v3_grind_3_enable = self.system_v3_grind_3_enable
+    system_v3_grind_3_use_derisk = self.system_v3_grind_3_use_derisk
+    system_v3_grind_4_enable = self.system_v3_grind_4_enable
+    system_v3_grind_4_use_derisk = self.system_v3_grind_4_use_derisk
+    system_v3_grind_5_enable = self.system_v3_grind_5_enable
+    system_v3_grind_5_use_derisk = self.system_v3_grind_5_use_derisk
+    long_grind_exit_v3 = self.long_grind_exit_v3
+    long_grind_entry_v3 = self.long_grind_entry_v3
+    is_long_grind_entry = (
+      long_grind_entry_v3(
+        last_candle,
+        previous_candle,
+        num_open_grinds_and_buybacks,
+        slice_profit,
+        slice_profit_entry,
+        slice_profit_exit,
+        True,
+      )
+      if is_long_extra_checks_entry
+      else False
+    )
     # Grinding 1
 
     if (
-      (self.system_v3_grind_1_enable)
+      (system_v3_grind_1_enable)
       # and is_derisk_1_found
       and is_long_extra_checks_entry
       and (grind_1_sub_grind_count < grind_1_max_sub_grinds)
@@ -48952,10 +49019,20 @@ class NostalgiaForInfinityX7(IStrategy):
       else:
         return buy_amount
 
-    if grind_1_sub_grind_count > 0:
-      ft_exit_amount, tag = self.long_grind_exit_v3(
-        last_candle,
-        previous_candle,
+    if grind_1_sub_grind_count > 0 and (
+      grind_1_current_grind_profit_rate >= (grind_1_profit_threshold + fee_open_rate + fee_close_rate)
+    ):
+      ft_exit_amount, tag = long_grind_exit_v3(
+        last_rsi_3,
+        last_rsi_14,
+        last_willr_14,
+        last_stochrsi_k,
+        last_close,
+        last_bbu_20,
+        last_rsi_3_1h,
+        last_rsi_3_4h,
+        last_roc_9_1d,
+        last_btc_rsi_14_4h,
         slice_profit,
         current_time,
         min_stake,
@@ -48965,8 +49042,6 @@ class NostalgiaForInfinityX7(IStrategy):
         profit_ratio,
         "grind_1_exit",
         "grind_1_exit",
-        fee_open_rate,
-        fee_close_rate,
         # grind_1_cluster_max_profit_stake,
         # grind_1_cluster_max_profit_rate,
         grind_1_current_grind_profit_stake,
@@ -48980,12 +49055,12 @@ class NostalgiaForInfinityX7(IStrategy):
         return ft_exit_amount, tag
 
     if (
-      self.system_v3_grind_1_use_derisk
+      system_v3_grind_1_use_derisk
       and (grind_1_sub_grind_count > 0)
       and (((exit_rate - grind_1_current_open_rate) / grind_1_current_open_rate) < grind_1_derisk_grinds)
     ):
       # if (
-      #   self.system_v3_grind_1_use_derisk
+      #   system_v3_grind_1_use_derisk
       #   and (grind_1_sub_grind_count > 0)
       #   and (grind_1_current_grind_profit_stake < (slice_amount * grind_1_derisk_grinds))
       #   and (grind_1_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
@@ -49032,7 +49107,7 @@ class NostalgiaForInfinityX7(IStrategy):
     # Grinding 2
 
     if (
-      (self.system_v3_grind_2_enable)
+      (system_v3_grind_2_enable)
       # and is_derisk_1_found
       and is_long_extra_checks_entry
       and (grind_2_sub_grind_count < grind_2_max_sub_grinds)
@@ -49067,10 +49142,20 @@ class NostalgiaForInfinityX7(IStrategy):
       else:
         return buy_amount
 
-    if grind_2_sub_grind_count > 0:
-      ft_exit_amount, tag = self.long_grind_exit_v3(
-        last_candle,
-        previous_candle,
+    if grind_2_sub_grind_count > 0 and (
+      grind_2_current_grind_profit_rate >= (grind_2_profit_threshold + fee_open_rate + fee_close_rate)
+    ):
+      ft_exit_amount, tag = long_grind_exit_v3(
+        last_rsi_3,
+        last_rsi_14,
+        last_willr_14,
+        last_stochrsi_k,
+        last_close,
+        last_bbu_20,
+        last_rsi_3_1h,
+        last_rsi_3_4h,
+        last_roc_9_1d,
+        last_btc_rsi_14_4h,
         slice_profit,
         current_time,
         min_stake,
@@ -49080,8 +49165,6 @@ class NostalgiaForInfinityX7(IStrategy):
         profit_ratio,
         "grind_2_exit",
         "grind_2_exit",
-        fee_open_rate,
-        fee_close_rate,
         # grind_2_cluster_max_profit_stake,
         # grind_2_cluster_max_profit_rate,
         grind_2_current_grind_profit_stake,
@@ -49095,12 +49178,12 @@ class NostalgiaForInfinityX7(IStrategy):
         return ft_exit_amount, tag
 
     if (
-      self.system_v3_grind_2_use_derisk
+      system_v3_grind_2_use_derisk
       and (grind_2_sub_grind_count > 0)
       and (((exit_rate - grind_2_current_open_rate) / grind_2_current_open_rate) < grind_2_derisk_grinds)
     ):
       # if (
-      #   self.system_v3_grind_2_use_derisk
+      #   system_v3_grind_2_use_derisk
       #   and (grind_2_sub_grind_count > 0)
       #   and (grind_2_current_grind_profit_stake < (slice_amount * grind_2_derisk_grinds))
       #   and (grind_2_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
@@ -49147,7 +49230,7 @@ class NostalgiaForInfinityX7(IStrategy):
     # Grinding 3
 
     if (
-      (self.system_v3_grind_3_enable)
+      (system_v3_grind_3_enable)
       # and is_derisk_1_found
       and is_long_extra_checks_entry
       and (grind_3_sub_grind_count < grind_3_max_sub_grinds)
@@ -49182,10 +49265,20 @@ class NostalgiaForInfinityX7(IStrategy):
       else:
         return buy_amount
 
-    if grind_3_sub_grind_count > 0:
-      ft_exit_amount, tag = self.long_grind_exit_v3(
-        last_candle,
-        previous_candle,
+    if grind_3_sub_grind_count > 0 and (
+      grind_3_current_grind_profit_rate >= (grind_3_profit_threshold + fee_open_rate + fee_close_rate)
+    ):
+      ft_exit_amount, tag = long_grind_exit_v3(
+        last_rsi_3,
+        last_rsi_14,
+        last_willr_14,
+        last_stochrsi_k,
+        last_close,
+        last_bbu_20,
+        last_rsi_3_1h,
+        last_rsi_3_4h,
+        last_roc_9_1d,
+        last_btc_rsi_14_4h,
         slice_profit,
         current_time,
         min_stake,
@@ -49195,8 +49288,6 @@ class NostalgiaForInfinityX7(IStrategy):
         profit_ratio,
         "grind_3_exit",
         "grind_3_exit",
-        fee_open_rate,
-        fee_close_rate,
         # grind_3_cluster_max_profit_stake,
         # grind_3_cluster_max_profit_rate,
         grind_3_current_grind_profit_stake,
@@ -49210,12 +49301,12 @@ class NostalgiaForInfinityX7(IStrategy):
         return ft_exit_amount, tag
 
     if (
-      self.system_v3_grind_3_use_derisk
+      system_v3_grind_3_use_derisk
       and (grind_3_sub_grind_count > 0)
       and (((exit_rate - grind_3_current_open_rate) / grind_3_current_open_rate) < grind_3_derisk_grinds)
     ):
       # if (
-      #   self.system_v3_grind_3_use_derisk
+      #   system_v3_grind_3_use_derisk
       #   and (grind_3_sub_grind_count > 0)
       #   and (grind_3_current_grind_profit_stake < (slice_amount * grind_3_derisk_grinds))
       #   and (grind_3_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
@@ -49262,7 +49353,7 @@ class NostalgiaForInfinityX7(IStrategy):
     # Grinding 4
 
     if (
-      (self.system_v3_grind_4_enable)
+      (system_v3_grind_4_enable)
       # and is_derisk_1_found
       # and is_long_grind_entry
       and is_long_extra_checks_entry
@@ -49273,16 +49364,16 @@ class NostalgiaForInfinityX7(IStrategy):
         is_long_grind_entry
         or (
           (slice_profit_entry < -0.06)
-          and (last_candle["RSI_3"] > 5.0)
-          and (last_candle["RSI_3_15m"] > 10.0)
-          and (last_candle["RSI_14"] < 35.0)
-          and (last_candle["close"] < (last_candle["EMA_20"] * 0.985))
+          and (last_rsi_3 > 5.0)
+          and (last_rsi_3_15m > 10.0)
+          and (last_rsi_14 < 35.0)
+          and (last_close < (last_ema_20 * 0.985))
         )
         or (
           (slice_profit_entry < -0.06)
           and (num_open_grinds_and_buybacks == 0)
-          and (last_candle["RSI_14"] < 30.0)
-          and (last_candle["close"] < (last_candle["EMA_20"] * 0.980))
+          and (last_rsi_14 < 30.0)
+          and (last_close < (last_ema_20 * 0.980))
         )
       )
     ):
@@ -49313,10 +49404,20 @@ class NostalgiaForInfinityX7(IStrategy):
       else:
         return buy_amount
 
-    if grind_4_sub_grind_count > 0:
-      ft_exit_amount, tag = self.long_grind_exit_v3(
-        last_candle,
-        previous_candle,
+    if grind_4_sub_grind_count > 0 and (
+      grind_4_current_grind_profit_rate >= (grind_4_profit_threshold + fee_open_rate + fee_close_rate)
+    ):
+      ft_exit_amount, tag = long_grind_exit_v3(
+        last_rsi_3,
+        last_rsi_14,
+        last_willr_14,
+        last_stochrsi_k,
+        last_close,
+        last_bbu_20,
+        last_rsi_3_1h,
+        last_rsi_3_4h,
+        last_roc_9_1d,
+        last_btc_rsi_14_4h,
         slice_profit,
         current_time,
         min_stake,
@@ -49326,8 +49427,6 @@ class NostalgiaForInfinityX7(IStrategy):
         profit_ratio,
         "grind_4_exit",
         "grind_4_exit",
-        fee_open_rate,
-        fee_close_rate,
         # grind_4_cluster_max_profit_stake,
         # grind_4_cluster_max_profit_rate,
         grind_4_current_grind_profit_stake,
@@ -49341,12 +49440,12 @@ class NostalgiaForInfinityX7(IStrategy):
         return ft_exit_amount, tag
 
     if (
-      self.system_v3_grind_4_use_derisk
+      system_v3_grind_4_use_derisk
       and (grind_4_sub_grind_count > 0)
       and (((exit_rate - grind_4_current_open_rate) / grind_4_current_open_rate) < grind_4_derisk_grinds)
     ):
       # if (
-      #   self.system_v3_grind_4_use_derisk
+      #   system_v3_grind_4_use_derisk
       #   and (grind_4_sub_grind_count > 0)
       #   and (grind_4_current_grind_profit_stake < (slice_amount * grind_4_derisk_grinds))
       #   and (grind_4_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
@@ -49391,9 +49490,9 @@ class NostalgiaForInfinityX7(IStrategy):
           return -ft_sell_amount
 
     # Grinding 5
-
+    trade_liquidation_price = trade.liquidation_price
     if (
-      (self.system_v3_grind_5_enable)
+      (system_v3_grind_5_enable)
       # and is_derisk_1_found
       # and is_long_grind_entry
       and is_long_extra_checks_entry
@@ -49405,17 +49504,17 @@ class NostalgiaForInfinityX7(IStrategy):
         or (
           (is_derisk_1_found or is_derisk_2_found or is_derisk_3_found)
           and (slice_profit_entry < -0.06)
-          and (last_candle["RSI_3"] > 10.0)
-          and (last_candle["RSI_3_15m"] > 20.0)
-          and (last_candle["AROONU_14"] < 50.0)
+          and (last_rsi_3 > 10.0)
+          and (last_rsi_3_15m > 20.0)
+          and (last_aroonu_14 < 50.0)
         )
         or (
-          (self.is_futures_mode)
+          (is_futures_mode)
           and (slice_profit_entry < -0.15)
-          and (trade.liquidation_price is not None)
+          and (trade_liquidation_price is not None)
           and (
-            (trade.is_short and current_rate > trade.liquidation_price * 0.80)
-            or (not trade.is_short and current_rate < trade.liquidation_price * 1.20)
+            (trade_is_short and current_rate > trade_liquidation_price * 0.80)
+            or (not trade_is_short and current_rate < trade_liquidation_price * 1.20)
           )
         )
       )
@@ -49447,10 +49546,20 @@ class NostalgiaForInfinityX7(IStrategy):
       else:
         return buy_amount
 
-    if grind_5_sub_grind_count > 0:
-      ft_exit_amount, tag = self.long_grind_exit_v3(
-        last_candle,
-        previous_candle,
+    if grind_5_sub_grind_count > 0 and (
+      grind_5_current_grind_profit_rate >= (grind_5_profit_threshold + fee_open_rate + fee_close_rate)
+    ):
+      ft_exit_amount, tag = long_grind_exit_v3(
+        last_rsi_3,
+        last_rsi_14,
+        last_willr_14,
+        last_stochrsi_k,
+        last_close,
+        last_bbu_20,
+        last_rsi_3_1h,
+        last_rsi_3_4h,
+        last_roc_9_1d,
+        last_btc_rsi_14_4h,
         slice_profit,
         current_time,
         min_stake,
@@ -49460,8 +49569,6 @@ class NostalgiaForInfinityX7(IStrategy):
         profit_ratio,
         "grind_5_exit",
         "grind_5_exit",
-        fee_open_rate,
-        fee_close_rate,
         # grind_5_cluster_max_profit_stake,
         # grind_5_cluster_max_profit_rate,
         grind_5_current_grind_profit_stake,
@@ -49475,12 +49582,12 @@ class NostalgiaForInfinityX7(IStrategy):
         return ft_exit_amount, tag
 
     if (
-      self.system_v3_grind_5_use_derisk
+      system_v3_grind_5_use_derisk
       and (grind_5_sub_grind_count > 0)
       and (((exit_rate - grind_5_current_open_rate) / grind_5_current_open_rate) < grind_5_derisk_grinds)
     ):
       # if (
-      #   self.system_v3_grind_5_use_derisk
+      #   system_v3_grind_5_use_derisk
       #   and (grind_5_sub_grind_count > 0)
       #   and (grind_5_current_grind_profit_stake < (slice_amount * grind_5_derisk_grinds))
       #   and (grind_5_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
@@ -49524,40 +49631,39 @@ class NostalgiaForInfinityX7(IStrategy):
         else:
           return -ft_sell_amount
 
-    # Buyback 1
+    # =========================================================================
+    # BUYBACK CONFIGURATION
+    # =========================================================================
+    system_v3_buyback_1_enable = self.system_v3_buyback_1_enable
+    system_v3_buyback_1_use_derisk = self.system_v3_buyback_1_use_derisk
+    if is_futures_mode:
+      buyback_1_threshold = self.system_v3_buyback_1_distance_ratio_negative_futures
+      buyback_1_distance = self.system_v3_buyback_1_distance_ratio_positive_futures
+      buyback_1_stake = self.system_v3_buyback_1_stake_futures
+      buyback_1_derisk = self.system_v3_buyback_1_derisk_futures
+    else:
+      buyback_1_threshold = self.system_v3_buyback_1_distance_ratio_negative_spot
+      buyback_1_distance = self.system_v3_buyback_1_distance_ratio_positive_spot
+      buyback_1_stake = self.system_v3_buyback_1_stake_spot
+      buyback_1_derisk = self.system_v3_buyback_1_derisk_spot
+    is_long_buyback_entry = (
+      self.long_buyback_entry_v3(last_candle, previous_candle, slice_profit, True)
+      if (self.system_v3_buyback_1_enable and is_system_v3_2 and is_derisk_4_found)
+      else False
+    )
 
+    # Buyback 1
     if (
-      self.system_v3_buyback_1_enable
+      system_v3_buyback_1_enable
       and is_system_v3_2
       and is_derisk_4_found
       # and is_long_extra_checks_entry
       and (buyback_1_current_open_rate == 0)
-      and (
-        (
-          buyback_1_exit_distance_ratio
-          < (
-            self.system_v3_buyback_1_distance_ratio_negative_futures
-            if is_futures_mode
-            else self.system_v3_buyback_1_distance_ratio_negative_spot
-          )
-        )
-        or (
-          buyback_1_exit_distance_ratio
-          > (
-            self.system_v3_buyback_1_distance_ratio_positive_futures
-            if is_futures_mode
-            else self.system_v3_buyback_1_distance_ratio_positive_spot
-          )
-        )
-      )
+      and (buyback_1_exit_distance_ratio < buyback_1_threshold or buyback_1_exit_distance_ratio > buyback_1_distance)
       and is_not_trade_max_stake_v3
       and is_long_buyback_entry
     ):
-      buy_amount = (
-        slice_amount
-        * (self.system_v3_buyback_1_stake_futures if is_futures_mode else self.system_v3_buyback_1_stake_spot)
-        / trade_leverage
-      )
+      buy_amount = slice_amount * buyback_1_stake / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
       if buy_amount > max_stake:
@@ -49641,15 +49747,9 @@ class NostalgiaForInfinityX7(IStrategy):
     #   and (buyback_1_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
     # ):
     if (
-      self.system_v3_buyback_1_use_derisk
+      system_v3_buyback_1_use_derisk
       and (buyback_1_sub_grind_count > 0)
-      and (
-        buyback_1_current_grind_stake_profit
-        < (
-          slice_amount
-          * (self.system_v3_buyback_1_derisk_futures if is_futures_mode else self.system_v3_buyback_1_derisk_spot)
-        )
-      )
+      and (buyback_1_current_grind_stake_profit < (slice_amount * buyback_1_derisk))
     ):
       sell_amount = buyback_1_total_amount * exit_rate / trade_leverage
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
@@ -49691,7 +49791,9 @@ class NostalgiaForInfinityX7(IStrategy):
           return -ft_sell_amount
 
     # Rebuy
-
+    is_long_rebuy_entry = (
+      self.long_rebuy_entry_v3(last_candle, previous_candle, slice_profit, True) if is_system_v3_1 else False
+    )
     if (
       is_system_v3_1
       and (
@@ -49996,6 +50098,7 @@ class NostalgiaForInfinityX7(IStrategy):
       and (prev_sma_9 < prev_sma_21)
       and (last_sma_9 > last_sma_21)
       and (last_close < (last_ema_100 * 0.975))
+      and ((last_rsi_3_4h > 30.0) or (last_aroonu_14_4h < 100.0))
       and ((last_rsi_3_4h > 40.0) or (last_roc_9_4h < 30.0))
     ):
       self._grind_entry_tag = "g13"
@@ -50148,16 +50251,21 @@ class NostalgiaForInfinityX7(IStrategy):
       and ((last_rsi_3_4h > 50.0) or (last_aroonu_14_1h < 100.0))
       and ((last_rsi_3_1d > 10.0) or (last_aroonu_14_1d < 70.0))
       and ((last_rsi_3_1d > 10.0) or (last_stochrsi_k_4h < 70.0))
+      and ((last_rsi_3_1d > 15.0) or (last_aroonu_14_1h < 70.0))
       and ((last_rsi_3_1d > 40.0) or (last_stochrsi_k_1h < 80.0))
       and ((last_rsi_3_1d > 40.0) or (last_stochrsi_k_4h < 80.0))
       and ((last_rsi_3_1d > 45.0) or (last_aroonu_14_1h < 100.0))
       and ((last_rsi_3_1d > 45.0) or (last_aroonu_14_4h < 100.0))
       and ((last_rsi_3_1d > 45.0) or (last_stochrsi_k_1h < 90.0))
       and ((last_rsi_3_1d > 45.0) or (last_stochrsi_k_4h < 90.0))
+      and ((last_rsi_3_1d > 50.0) or (last_aroonu_14_15m < 100.0) or (last_stochrsi_k_4h < 70.0))
       and ((last_rsi_3_1d > 65.0) or (last_aroonu_14_1h < 70.0) or (last_aroonu_14_1d < 90.0))
+      and ((last_aroonu_14_15m < 70.0) or (last_aroonu_14_1h < 100.0))
       and ((last_aroonu_14_15m < 80.0) or (last_stochrsi_k_15m < 80.0))
-      and ((last_aroonu_14_15m < 80.0) or (last_aroonu_14_1h < 100.0))
       and ((last_aroonu_14_15m < 100.0) or (last_stochrsi_k_4h < 90.0))
+      and ((last_aroonu_14_1h < 80.0) or (last_stochrsi_k_1h < 80.0) or (last_stochrsi_k_1d < 90.0))
+      and ((last_aroonu_14_1h < 100.0) or (last_stochrsi_k_1d < 80.0))
+      and ((last_stochrsi_k_1h < 50.0) or (last_roc_9_1d > -40.0))
       and ((last_roc_9_1d > -20.0) or (last_aroonu_14_4h < 100.0))
       and ((last_roc_9_1d > -20.0) or (last_stochrsi_k_4h < 90.0))
       and ((last_roc_9_1d > -30.0) or (last_stochrsi_k_1h < 90.0))
@@ -50183,6 +50291,8 @@ class NostalgiaForInfinityX7(IStrategy):
       and (last_close >= (last_ema_20 * 1.02))
       and (last_close < (last_ema_20 * 1.12))
       and ((last_rsi_3_1h > 45.0) or (last_aroonu_14_4h < 80.0))
+      and ((last_rsi_3_1h > 65.0) or (last_aroonu_14_15m < 60.0) or (last_stochrsi_k_4h < 80.0))
+      and ((last_rsi_3_1h > 65.0) or (last_stochrsi_k_15m < 60.0) or (last_stochrsi_k_4h < 80.0))
       and ((last_rsi_3_4h > 40.0) or (last_stochrsi_k_15m < 90.0))
       and ((last_rsi_3_4h > 50.0) or (last_aroonu_14_4h < 70.0))
       and ((last_rsi_3_1d > 15.0) or (last_stochrsi_k_1h < 80.0))
@@ -50190,13 +50300,17 @@ class NostalgiaForInfinityX7(IStrategy):
       and ((last_rsi_3_1d > 30.0) or (last_aroonu_14_4h < 100.0))
       and ((last_rsi_3_1d > 50.0) or (last_stochrsi_k_1h < 80.0) or (last_stochrsi_k_4h < 90.0))
       and ((last_rsi_3_1d > 55.0) or (last_aroonu_14_15m < 100.0) or (last_stochrsi_k_15m < 90.0))
+      and ((last_aroonu_14_15m < 90.0) or (last_stochrsi_k_4h < 90.0))
       and ((last_aroonu_14_15m < 100.0) or (last_aroonu_14_1h < 100.0))
       and ((last_aroonu_14_15m < 100.0) or (last_aroonu_14_4h < 100.0))
+      and ((last_aroonu_14_15m < 100.0) or (last_aroonu_14_1d < 90.0) or (last_roc_9_1d < 20.0))
       and ((last_aroonu_14_15m < 100.0) or (last_aroonu_14_1d < 100.0))
-      and ((last_aroonu_14_15m < 100.0) or (last_stochrsi_k_15m < 90.0) or (last_stochrsi_k_1d < 80.0))
+      and ((last_aroonu_14_15m < 100.0) or (last_stochrsi_k_15m < 90.0) or (last_stochrsi_k_1d < 70.0))
       and ((last_aroonu_14_15m < 100.0) or (last_stochrsi_k_1h < 80.0))
-      and ((last_aroonu_14_15m < 100.0) or (last_stochrsi_k_4h < 90.0))
+      and ((last_aroonu_14_15m < 100.0) or (last_stochrsi_k_4h < 70.0))
+      and ((last_aroonu_14_1h < 80.0) or (last_aroonu_14_4h < 100.0) or (last_stochrsi_k_4h < 80.0))
       and ((last_aroonu_14_1h < 100.0) or (last_aroonu_14_4h < 100.0))
+      and ((last_aroonu_14_4h < 70.0) or (last_aroonu_14_1d < 100.0) or (last_roc_9_4h < 10.0))
       and ((last_aroonu_14_4h < 70.0) or (last_roc_9_1d < 50.0))
       and ((last_aroonu_14_4h < 100.0) or (last_stochrsi_k_1h < 90.0))
       and ((last_aroonu_14_4h < 100.0) or (last_stochrsi_k_4h < 90.0))
@@ -50226,33 +50340,79 @@ class NostalgiaForInfinityX7(IStrategy):
       and (last_close < (last_ema_20 * 1.01))
       and (last_close > (last_ema_20 * 0.94))
       and ((last_rsi_3_15m > 40.0) or (last_stochrsi_k_15m < 70.0))
+      and ((last_rsi_3_1h > 10.0) or (last_rsi_3_4h > 30.0) or (last_stochrsi_k_4h < 70.0))
       and ((last_rsi_3_1h > 15.0) or (last_aroonu_14_4h < 70.0))
+      and ((last_rsi_3_1h > 25.0) or (last_aroonu_14_1h < 70.0))
       and ((last_rsi_3_1h > 25.0) or (last_rsi_3_1d > 45.0) or (last_aroonu_14_1d < 70.0))
       and ((last_rsi_3_1h > 25.0) or (last_aroonu_14_1h < 80.0))
-      and ((last_rsi_3_1h > 30.0) or (last_stochrsi_k_1d < 90.0) or (last_roc_9_1d < 10.0))
+      and ((last_rsi_3_1h > 30.0) or (last_rsi_3_4h > 60.0) or (last_aroonu_14_1d < 70.0))
+      and ((last_rsi_3_1h > 30.0) or (last_rsi_3_4h > 60.0) or (last_stochrsi_k_4h < 90.0))
+      and ((last_rsi_3_1h > 30.0) or (last_stochrsi_k_1d < 80.0) or (last_roc_9_1d < 10.0))
+      and ((last_rsi_3_1h > 35.0) or (last_rsi_3_4h > 45.0) or (last_stochrsi_k_4h < 70.0))
+      and ((last_rsi_3_1h > 35.0) or (last_aroonu_14_1h < 60.0) or (last_aroonu_14_1d < 100.0))
       and ((last_rsi_3_1h > 35.0) or (last_stochrsi_k_1d < 90.0) or (last_roc_9_1d < 20.0))
+      and ((last_rsi_3_1h > 40.0) or (last_rsi_3_4h > 40.0) or (last_aroonu_14_1d < 90.0))
+      and ((last_rsi_3_1h > 40.0) or (last_rsi_3_4h > 65.0) or (last_stochrsi_k_4h < 80.0))
+      and ((last_rsi_3_1h > 40.0) or (last_rsi_3_1d > 60.0) or (last_aroonu_14_1d < 100.0))
+      and ((last_rsi_3_1h > 40.0) or (last_aroonu_14_1h < 100.0))
       and ((last_rsi_3_1h > 40.0) or (last_aroonu_14_4h < 100.0))
+      and ((last_rsi_3_1h > 40.0) or (last_aroonu_14_1d < 100.0) or (last_roc_9_1d < 20.0))
       and ((last_rsi_3_1h > 40.0) or (last_stochrsi_k_1d < 80.0) or (last_roc_9_1d < 50.0))
       and ((last_rsi_3_1h > 35.0) or (last_rsi_3_4h > 50.0) or (last_stochrsi_k_4h < 80.0))
       and ((last_rsi_3_1h > 40.0) or (last_rsi_3_4h > 55.0) or (last_aroonu_14_4h < 90.0))
+      and ((last_rsi_3_1h > 45.0) or (last_aroonu_14_4h < 80.0) or (last_roc_9_1d < 10.0))
+      and ((last_rsi_3_1h > 50.0) or (last_aroonu_14_1h < 80.0) or (last_stochrsi_k_4h < 70.0))
+      and ((last_rsi_3_1h > 50.0) or (last_rsi_3_4h > 55.0) or (last_stochrsi_k_4h < 70.0))
+      and ((last_rsi_3_1h > 50.0) or (last_aroonu_14_4h < 80.0) or (last_aroonu_14_1d < 100.0))
+      and ((last_rsi_3_1h > 50.0) or (last_aroonu_14_4h < 90.0) or (last_stochrsi_k_4h < 90.0))
+      and ((last_rsi_3_1h > 55.0) or (last_rsi_3_4h > 55.0) or (last_stochrsi_k_15m < 70.0))
+      and ((last_rsi_3_1h > 55.0) or (last_aroonu_14_1h < 80.0) or (last_aroonu_14_4h < 80.0))
+      and ((last_rsi_3_1h > 55.0) or (last_stochrsi_k_4h < 90.0) or (last_roc_9_1d < 10.0))
+      and ((last_rsi_3_1h > 60.0) or (last_aroonu_14_15m < 70.0) or (last_aroonu_14_4h < 80.0))
       and ((last_rsi_3_1h > 60.0) or (last_stochrsi_k_1h < 60.0) or (last_stochrsi_k_1d < 90.0))
+      and ((last_rsi_3_1h > 65.0) or (last_aroonu_14_15m < 70.0) or (last_aroonu_14_1h < 100.0))
       and ((last_rsi_3_1h > 65.0) or (last_aroonu_14_1h < 70.0) or (last_aroonu_14_1d < 90.0))
+      and ((last_rsi_3_1h > 65.0) or (last_aroonu_14_1h < 100.0) or (last_stochrsi_k_4h < 70.0))
       and ((last_rsi_3_4h > 25.0) or (last_roc_9_1d < 30.0))
+      and ((last_rsi_3_4h > 40.0) or (last_rsi_3_1d > 60.0) or (last_aroonu_14_1d < 100.0))
+      and ((last_rsi_3_4h > 40.0) or (last_aroonu_14_15m < 70.0) or (last_aroonu_14_1d < 90.0))
+      and ((last_rsi_3_4h > 40.0) or (last_aroonu_14_1d < 90.0) or (last_roc_9_1d < 10.0))
+      and ((last_rsi_3_4h > 40.0) or (last_stochrsi_k_15m < 60.0) or (last_aroonu_14_1d < 90.0))
       and ((last_rsi_3_4h > 45.0) or (last_aroonu_14_4h < 70.0))
+      and ((last_rsi_3_4h > 50.0) or (last_aroonu_14_4h < 70.0) or (last_aroonu_14_1d < 100.0))
       and ((last_rsi_3_4h > 50.0) or (last_stochrsi_k_4h < 80.0))
+      and ((last_rsi_3_4h > 55.0) or (last_aroonu_14_15m < 70.0) or (last_stochrsi_k_4h < 70.0))
+      and ((last_rsi_3_4h > 60.0) or (last_rsi_3_1d > 65.0) or (last_aroonu_14_15m < 70.0))
+      and ((last_rsi_3_4h > 60.0) or (last_aroonu_14_15m < 90.0) or (last_stochrsi_k_15m < 90.0))
+      and ((last_rsi_3_4h > 60.0) or (last_aroonu_14_15m < 100.0) or (last_stochrsi_k_15m < 80.0))
+      and ((last_rsi_3_4h > 60.0) or (last_stochrsi_k_15m < 70.0) or (last_stochrsi_k_1h < 70.0))
+      and ((last_rsi_3_1d > 30.0) or (last_stochrsi_k_4h < 90.0))
       and ((last_rsi_3_1d > 35.0) or (last_stochrsi_k_15m < 90.0))
       and ((last_rsi_3_1d > 35.0) or (last_stochrsi_k_1h < 90.0))
       and ((last_rsi_3_1d > 35.0) or (last_stochrsi_k_4h < 80.0))
+      and ((last_rsi_3_1d > 45.0) or (last_stochrsi_k_1h < 70.0) or (last_stochrsi_k_4h < 80.0))
+      and ((last_rsi_3_1d > 60.0) or (last_aroonu_14_1h < 80.0) or (last_aroonu_14_1d < 100.0))
       and ((last_rsi_14_1h < 70.0) or (last_stochrsi_k_4h < 90.0))
+      and ((last_aroonu_14_15m < 80.0) or (last_aroonu_14_1h < 80.0) or (last_aroonu_14_4h < 80.0))
+      and ((last_aroonu_14_15m < 80.0) or (last_stochrsi_k_15m < 70.0) or (last_stochrsi_k_4h < 70.0))
+      and ((last_aroonu_14_15m < 80.0) or (last_aroonu_14_1d < 100.0))
+      and ((last_aroonu_14_15m < 80.0) or (last_stochrsi_k_15m < 80.0) or (last_stochrsi_k_1h < 80.0))
+      and ((last_aroonu_14_15m < 90.0) or (last_aroonu_14_1h < 80.0) or (last_stochrsi_k_1h < 90.0))
       and ((last_aroonu_14_15m < 90.0) or (last_aroonu_14_1h < 100.0) or (last_stochrsi_k_1h < 80.0))
       and ((last_aroonu_14_15m < 100.0) or (last_aroonu_14_1h < 100.0))
       and ((last_aroonu_14_15m < 100.0) or (last_aroonu_14_4h < 100.0))
       and ((last_aroonu_14_15m < 100.0) or (last_stochrsi_k_1h < 90.0))
       and ((last_aroonu_14_15m < 100.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_aroonu_14_15m < 100.0) or (last_stochrsi_k_1d < 80.0))
+      and ((last_aroonu_14_15m < 100.0) or (last_stochrsi_k_1d < 80.0) or (last_roc_9_1d < 10.0))
+      and ((last_aroonu_14_1h < 70.0) or (last_aroonu_14_4h < 100.0))
+      and ((last_aroonu_14_1h < 70.0) or (last_aroonu_14_1d < 90.0) or (last_roc_9_1d < 10.0))
+      and ((last_aroonu_14_1h < 80.0) or (last_aroonu_14_4h < 100.0))
+      and ((last_aroonu_14_1h < 90.0) or (last_stochrsi_k_1h < 90.0) or (last_stochrsi_k_4h < 90.0))
+      and ((last_aroonu_14_1h < 90.0) or (last_stochrsi_k_1h < 90.0) or (last_roc_9_1d < 10.0))
       and ((last_aroonu_14_1h < 100.0) or (last_stochrsi_k_4h < 90.0))
       and ((last_aroonu_14_1h < 100.0) or (last_stochrsi_k_1d < 90.0))
-      and ((last_aroonu_14_4h < 80.0) or (last_aroonu_14_1d < 100.0) or (last_roc_9_1d < 20.0))
+      and ((last_aroonu_14_4h < 70.0) or (last_aroonu_14_1d < 100.0) or (last_roc_9_1d < 20.0))
+      and ((last_aroonu_14_4h < 90.0) or (last_stochrsi_k_4h < 90.0) or (last_roc_9_1d < 10.0))
       and ((last_aroonu_14_4h < 90.0) or (last_roc_9_1d < 30.0))
       and ((last_aroonu_14_4h < 100.0) or (last_aroonu_14_1d < 100.0))
       and ((last_aroonu_14_4h < 100.0) or (last_stochrsi_k_1h < 90.0))
@@ -50263,6 +50423,8 @@ class NostalgiaForInfinityX7(IStrategy):
       and ((last_aroonu_14_1d < 100.0) or (last_roc_9_4h < 15.0) or (last_roc_9_1d < 50.0))
       # do not buy an overbought top on the bounce
       and ((last_stochrsi_k < 90.0) or (last_rsi_14 < 70.0))
+      and ((last_stochrsi_k_15m < 80.0) or (last_stochrsi_k_1h < 80.0) or (last_roc_9_1d < 10.0))
+      and ((last_stochrsi_k_15m < 80.0) or (last_aroonu_14_1d < 100.0))
       and ((last_stochrsi_k_15m < 90.0) or (last_stochrsi_k_1h < 90.0))
       and ((last_stochrsi_k_15m < 90.0) or (last_stochrsi_k_1d < 90.0))
       and ((last_stochrsi_k_1h < 80.0) or (last_stochrsi_k_1d < 90.0))
@@ -50292,30 +50454,66 @@ class NostalgiaForInfinityX7(IStrategy):
       and ((last_rsi_3_15m > 20.0) or (last_stochrsi_k_4h < 90.0))
       and ((last_rsi_3_1h > 15.0) or (last_aroonu_14_4h < 70.0))
       and ((last_rsi_3_1h > 20.0) or (last_stochrsi_k_1h < 80.0))
-      and ((last_rsi_3_1h > 20.0) or (last_stochrsi_k_4h < 80.0))
-      and ((last_rsi_3_1h > 25.0) or (last_stochrsi_k_4h < 90.0))
       and ((last_rsi_3_1h > 35.0) or (last_aroonu_14_1h < 70.0))
+      and ((last_rsi_3_1h > 35.0) or (last_aroonu_14_4h < 70.0))
+      and ((last_rsi_3_1h > 40.0) or (last_aroonu_14_4h < 80.0))
+      and ((last_rsi_3_1h > 45.0) or (last_aroonu_14_1h < 90.0) or (last_stochrsi_k_1h < 70.0))
+      and ((last_rsi_3_1h > 40.0) or (last_stochrsi_k_4h < 80.0))
+      and ((last_rsi_3_1h > 45.0) or (last_aroonu_14_1h < 90.0) or (last_stochrsi_k_4h < 80.0))
       and ((last_rsi_3_1h > 45.0) or (last_stochrsi_k_4h < 90.0))
+      and ((last_rsi_3_1h > 50.0) or (last_aroonu_14_1h < 70.0) or (last_aroonu_14_4h < 70.0))
+      and ((last_rsi_3_1h > 55.0) or (last_rsi_3_4h > 60.0) or (last_aroonu_14_4h < 60.0))
+      and ((last_rsi_3_1h > 50.0) or (last_aroonu_14_4h < 80.0) or (last_stochrsi_k_4h < 80.0))
+      and ((last_rsi_3_1h > 50.0) or (last_stochrsi_k_1d < 90.0) or (last_roc_9_1d < 30.0))
+      and ((last_rsi_3_1h > 55.0) or (last_aroonu_14_4h < 80.0) or (last_aroonu_14_1d < 100.0))
+      and ((last_rsi_3_1h > 55.0) or (last_aroonu_14_4h < 90.0) or (last_stochrsi_k_4h < 80.0))
+      and ((last_rsi_3_1h > 60.0) or (last_rsi_3_1d > 60.0) or (last_aroonu_14_1h < 80.0))
+      and ((last_rsi_3_1h > 60.0) or (last_stochrsi_k_4h < 70.0) or (last_stochrsi_k_1d < 80.0))
+      and ((last_rsi_3_1h > 60.0) or (last_stochrsi_k_4h < 80.0) or (last_roc_9_4h < 10.0))
+      and ((last_rsi_3_4h > 25.0) or (last_stochrsi_k_4h < 50.0) or (last_roc_9_4h < 10.0))
       and ((last_rsi_3_4h > 35.0) or (last_stochrsi_k_4h < 70.0))
+      and ((last_rsi_3_4h > 40.0) or (last_rsi_3_1d > 40.0) or (last_aroonu_14_15m < 70.0))
+      and ((last_rsi_3_4h > 40.0) or (last_aroonu_14_15m < 100.0) or (last_stochrsi_k_15m < 90.0))
       and ((last_rsi_3_4h > 40.0) or (last_aroonu_14_4h < 70.0))
+      and ((last_rsi_3_4h > 50.0) or (last_aroonu_14_15m < 80.0) or (last_aroonu_14_4h < 80.0))
+      and ((last_rsi_3_4h > 50.0) or (last_stochrsi_k_15m < 70.0) or (last_stochrsi_k_4h < 70.0))
+      and ((last_rsi_3_4h > 55.0) or (last_aroonu_14_1h < 100.0) or (last_aroonu_14_1d < 80.0))
+      and ((last_rsi_3_4h > 60.0) or (last_rsi_3_1d > 60.0) or (last_stochrsi_k_1h < 80.0))
+      and ((last_rsi_3_4h > 60.0) or (last_aroonu_14_15m < 70.0) or (last_aroonu_14_1h < 70.0))
+      and ((last_rsi_3_4h > 60.0) or (last_aroonu_14_1h < 100.0) or (last_stochrsi_k_1d < 80.0))
+      and ((last_rsi_3_4h > 60.0) or (last_aroonu_14_4h < 70.0) or (last_roc_9_1d < 20.0))
       and ((last_rsi_3_4h > 65.0) or (last_aroonu_14_1h < 70.0) or (last_stochrsi_k_4h < 90.0))
       and ((last_rsi_3_4h > 65.0) or (last_aroonu_14_4h < 80.0) or (last_stochrsi_k_4h < 70.0))
-      and ((last_rsi_3_1d > 10.0) or (last_aroonu_14_1h < 90.0))
+      and ((last_rsi_3_4h > 65.0) or (last_stochrsi_k_4h < 90.0) or (last_roc_9_4h < 10.0))
       and ((last_rsi_3_1d > 10.0) or (last_aroonu_14_1h < 90.0))
       and ((last_rsi_3_1d > 10.0) or (last_stochrsi_k_1h < 80.0))
       and ((last_rsi_3_1d > 10.0) or (last_stochrsi_k_4h < 70.0))
       and ((last_rsi_3_1d > 20.0) or (last_aroonu_14_1d < 90.0))
+      and ((last_rsi_3_1d > 25.0) or (last_stochrsi_k_15m < 70.0))
       and ((last_rsi_3_1d > 30.0) or (last_aroonu_14_15m < 100.0))
       and ((last_rsi_3_1d > 30.0) or (last_stochrsi_k_4h < 90.0))
+      and ((last_aroonu_14_15m < 70.0) or (last_aroonu_14_1h < 100.0) or (last_stochrsi_k_1d < 80.0))
+      and ((last_aroonu_14_15m < 70.0) or (last_aroonu_14_4h < 70.0) or (last_roc_9_4h < 10.0))
       and ((last_aroonu_14_15m < 80.0) or (last_stochrsi_k_15m < 70.0))
       and ((last_aroonu_14_15m < 80.0) or (last_aroonu_14_1h < 100.0))
+      and ((last_aroonu_14_15m < 100.0) or (last_aroonu_14_4h < 90.0))
       and ((last_aroonu_14_15m < 100.0) or (last_stochrsi_k_4h < 90.0))
+      and ((last_aroonu_14_1h < 80.0) or (last_stochrsi_k_4h < 90.0) or (last_roc_9_4h < 10.0))
       and ((last_aroonu_14_1h < 100.0) or (last_aroonu_14_1d < 100.0))
+      and ((last_aroonu_14_1h < 100.0) or (last_stochrsi_k_15m < 80.0))
+      and ((last_aroonu_14_1h < 100.0) or (last_stochrsi_k_4h < 80.0) or (last_roc_9_4h < 10.0))
+      and ((last_aroonu_14_1h < 100.0) or (last_stochrsi_k_1d < 90.0) or (last_roc_9_1d < 20.0))
+      and ((last_aroonu_14_4h < 70.0) or (last_roc_9_1d > -25.0))
       and ((last_aroonu_14_4h < 70.0) or (last_roc_9_1d < 50.0))
+      and ((last_aroonu_14_4h < 80.0) or (last_stochrsi_k_4h < 80.0) or (last_roc_9_4h < 10.0))
+      and ((last_aroonu_14_4h < 80.0) or (last_stochrsi_k_1d < 80.0) or (last_roc_9_1d < 10.0))
       and ((last_aroonu_14_4h < 90.0) or (last_stochrsi_k_4h < 90.0))
       and ((last_aroonu_14_4h < 90.0) or (last_roc_9_4h < 10.0))
+      and ((last_stochrsi_k_15m < 60.0) or (last_stochrsi_k_4h < 80.0))
       and ((last_stochrsi_k_1h < 70.0) or (last_stochrsi_k_4h < 80.0))
       and ((last_stochrsi_k_1h < 90.0) or (last_roc_9_4h > -20.0))
+      and ((last_stochrsi_k_4h < 70.0) or (last_roc_9_1d > -25.0))
+      and ((last_stochrsi_k_4h < 80.0) or (last_stochrsi_k_1d < 90.0) or (last_roc_9_1d < 20.0))
       and ((last_roc_9_1d > -40.0) or (last_aroonu_14_1h < 90.0))
       and ((last_roc_9_1d > -40.0) or (last_stochrsi_k_1h < 80.0))
       and ((last_roc_9_1d > -25.0) or (last_stochrsi_k_15m < 90.0))
@@ -50361,8 +50559,16 @@ class NostalgiaForInfinityX7(IStrategy):
 
   def long_grind_exit_v3(
     self,
-    last_candle: Series,
-    previous_candle: Series,
+    last_rsi_3: float,
+    last_rsi_14: float,
+    last_willr_14: float,
+    last_stochrsi_k: float,
+    last_close: float,
+    last_bbu_20: float,
+    last_rsi_3_1h: float,
+    last_rsi_3_4h: float,
+    last_roc_9_1d: float,
+    last_btc_rsi_14_4h: float,
     slice_profit: float,
     current_time: datetime,
     min_stake: float,
@@ -50372,8 +50578,6 @@ class NostalgiaForInfinityX7(IStrategy):
     profit_ratio: float,
     name: str,
     tag: str,
-    fee_open_rate: float,
-    fee_close_rate: float,
     # max_profit: float,
     # max_profit_rate: float,
     grind_profit_stake: float,
@@ -50383,16 +50587,6 @@ class NostalgiaForInfinityX7(IStrategy):
     grind_open_orders,
     trade: Trade,
   ) -> tuple:
-    if grind_profit_rate < (grind_exit_profit_threshold + fee_open_rate + fee_close_rate):
-      return None, None
-
-    last_rsi_3 = last_candle["RSI_3"]
-    last_rsi_14 = last_candle["RSI_14"]
-    last_willr_14 = last_candle["WILLR_14"]
-    last_stochrsi_k = last_candle["STOCHRSIk_14_14_3_3"]
-    last_close = last_candle["close"]
-    last_bbu_20 = last_candle["BBU_20_2.0"]
-
     is_normal_exit = False
     if (
       (last_rsi_3 > 99.0)
@@ -50403,10 +50597,10 @@ class NostalgiaForInfinityX7(IStrategy):
       or ((last_rsi_3 > 90.0) and (last_rsi_14 < 50.0))
       or (
         (last_rsi_3 > 80.0)
-        and (last_candle["RSI_3_1h"] < 20.0)
-        and (last_candle["RSI_3_4h"] < 20.0)
-        and (last_candle["ROC_9_1d"] > -10.0)
-        and (last_candle["BTC_RSI_14_4h"] < 35.0)
+        and (last_rsi_3_1h < 20.0)
+        and (last_rsi_3_4h < 20.0)
+        and (last_roc_9_1d > -10.0)
+        and (last_btc_rsi_14_4h < 35.0)
       )
     ):
       is_normal_exit = True
@@ -73536,6 +73730,7 @@ class NostalgiaForInfinityX7(IStrategy):
       and (prev_sma_9 > prev_sma_21)
       and (last_sma_9 < last_sma_21)
       and (last_close > (last_ema_100 * 1.025))
+      and ((last_rsi_3_4h < 70.0) or (last_aroonu_14_4h > 0.0))
       and ((last_rsi_3_4h < 60.0) or (last_roc_9_4h > -30.0))
     ):
       self._grind_entry_tag = "g13"
@@ -73685,16 +73880,21 @@ class NostalgiaForInfinityX7(IStrategy):
       and ((last_rsi_3_4h < 50.0) or (last_aroonu_14_1h > 0.0))
       and ((last_rsi_3_1d < 90.0) or (last_aroonu_14_1d > 30.0))
       and ((last_rsi_3_1d < 90.0) or (last_stochrsi_k_4h > 30.0))
+      and ((last_rsi_3_1d < 85.0) or (last_aroonu_14_1h > 30.0))
       and ((last_rsi_3_1d < 60.0) or (last_stochrsi_k_1h > 20.0))
       and ((last_rsi_3_1d < 60.0) or (last_stochrsi_k_4h > 20.0))
       and ((last_rsi_3_1d < 55.0) or (last_aroonu_14_1h > 0.0))
       and ((last_rsi_3_1d < 55.0) or (last_aroonu_14_4h > 0.0))
       and ((last_rsi_3_1d < 55.0) or (last_stochrsi_k_1h > 10.0))
       and ((last_rsi_3_1d < 55.0) or (last_stochrsi_k_4h > 10.0))
+      and ((last_rsi_3_1d < 50.0) or (last_aroonu_14_15m > 0.0) or (last_stochrsi_k_4h > 30.0))
       and ((last_rsi_3_1d < 35.0) or (last_aroonu_14_1h > 30.0) or (last_aroonu_14_1d > 10.0))
+      and ((last_aroonu_14_15m > 30.0) or (last_aroonu_14_1h > 0.0))
       and ((last_aroonu_14_15m > 20.0) or (last_stochrsi_k_15m > 20.0))
-      and ((last_aroonu_14_15m > 20.0) or (last_aroonu_14_1h > 0.0))
       and ((last_aroonu_14_15m > 0.0) or (last_stochrsi_k_4h > 10.0))
+      and ((last_aroonu_14_1h > 20.0) or (last_stochrsi_k_1h > 20.0) or (last_stochrsi_k_1d > 10.0))
+      and ((last_aroonu_14_1h > 0.0) or (last_stochrsi_k_1d > 20.0))
+      and ((last_stochrsi_k_1h > 50.0) or (last_roc_9_1d < 40.0))
       and ((last_roc_9_1d < 20.0) or (last_aroonu_14_4h > 0.0))
       and ((last_roc_9_1d < 20.0) or (last_stochrsi_k_4h > 10.0))
       and ((last_roc_9_1d < 30.0) or (last_stochrsi_k_1h > 10.0))
@@ -73720,6 +73920,8 @@ class NostalgiaForInfinityX7(IStrategy):
       and (last_close <= (last_ema_20 * 0.98))
       and (last_close > (last_ema_20 * 0.88))
       and ((last_rsi_3_1h < 55.0) or (last_aroonu_14_4h > 20.0))
+      and ((last_rsi_3_1h < 35.0) or (last_aroonu_14_15m > 40.0) or (last_stochrsi_k_4h > 20.0))
+      and ((last_rsi_3_1h < 35.0) or (last_stochrsi_k_15m > 40.0) or (last_stochrsi_k_4h > 20.0))
       and ((last_rsi_3_4h < 60.0) or (last_stochrsi_k_15m > 10.0))
       and ((last_rsi_3_4h < 50.0) or (last_aroonu_14_4h > 30.0))
       and ((last_rsi_3_1d < 85.0) or (last_stochrsi_k_1h > 20.0))
@@ -73727,13 +73929,17 @@ class NostalgiaForInfinityX7(IStrategy):
       and ((last_rsi_3_1d < 70.0) or (last_aroonu_14_4h > 0.0))
       and ((last_rsi_3_1d < 50.0) or (last_stochrsi_k_1h > 20.0) or (last_stochrsi_k_4h > 10.0))
       and ((last_rsi_3_1d < 45.0) or (last_aroonu_14_15m > 0.0) or (last_stochrsi_k_15m > 10.0))
+      and ((last_aroonu_14_15m > 10.0) or (last_stochrsi_k_4h > 10.0))
       and ((last_aroonu_14_15m > 0.0) or (last_aroonu_14_1h > 0.0))
       and ((last_aroonu_14_15m > 0.0) or (last_aroonu_14_4h > 0.0))
+      and ((last_aroonu_14_15m > 0.0) or (last_aroonu_14_1d > 10.0) or (last_roc_9_1d > -20.0))
       and ((last_aroonu_14_15m > 0.0) or (last_aroonu_14_1d > 0.0))
-      and ((last_aroonu_14_15m > 0.0) or (last_stochrsi_k_15m > 10.0) or (last_stochrsi_k_1d > 20.0))
+      and ((last_aroonu_14_15m > 0.0) or (last_stochrsi_k_15m > 10.0) or (last_stochrsi_k_1d > 30.0))
       and ((last_aroonu_14_15m > 0.0) or (last_stochrsi_k_1h > 20.0))
-      and ((last_aroonu_14_15m > 0.0) or (last_stochrsi_k_4h > 10.0))
+      and ((last_aroonu_14_15m > 0.0) or (last_stochrsi_k_4h > 30.0))
+      and ((last_aroonu_14_1h > 20.0) or (last_aroonu_14_4h > 0.0) or (last_stochrsi_k_4h > 20.0))
       and ((last_aroonu_14_1h > 0.0) or (last_aroonu_14_4h > 0.0))
+      and ((last_aroonu_14_4h > 30.0) or (last_aroonu_14_1d > 0.0) or (last_roc_9_4h > -10.0))
       and ((last_aroonu_14_4h > 30.0) or (last_roc_9_1d > -50.0))
       and ((last_aroonu_14_4h > 0.0) or (last_stochrsi_k_1h > 10.0))
       and ((last_aroonu_14_4h > 0.0) or (last_stochrsi_k_4h > 10.0))
@@ -73757,7 +73963,7 @@ class NostalgiaForInfinityX7(IStrategy):
       # trend intact + this is a BOUNCE not a reversal: 4h still falling, 1h not in melt-up
       and (last_roc_9_1h < 10.0)
       and (last_roc_9_4h < 0.0)
-      and (last_roc_9_4h > -25.0)  # anti-capitulation blow-off bottom
+      and (last_roc_9_4h > -25.0)  # anti-parabolic blow-off top
       # bear scope-gate: confirmed 4h downtrend + price below the 200-EMA regime (complements g22's >200EMA)
       and (last_ema_12_4h < last_ema_200_4h)
       and (last_close < last_ema_200_4h)
@@ -73765,33 +73971,80 @@ class NostalgiaForInfinityX7(IStrategy):
       and (last_close > (last_ema_20 * 0.99))
       and (last_close < (last_ema_20 * 1.06))
       and ((last_rsi_3_15m < 60.0) or (last_stochrsi_k_15m > 30.0))
+      and ((last_rsi_3_1h < 90.0) or (last_rsi_3_4h < 70.0) or (last_stochrsi_k_4h > 30.0))
       and ((last_rsi_3_1h < 85.0) or (last_aroonu_14_4h > 30.0))
+      and ((last_rsi_3_1h < 75.0) or (last_aroonu_14_1h > 30.0))
       and ((last_rsi_3_1h < 75.0) or (last_rsi_3_1d < 55.0) or (last_aroonu_14_1d > 30.0))
       and ((last_rsi_3_1h < 75.0) or (last_aroonu_14_1h > 20.0))
-      and ((last_rsi_3_1h < 70.0) or (last_stochrsi_k_1d > 10.0) or (last_roc_9_1d > -10.0))
+      and ((last_rsi_3_1h < 70.0) or (last_rsi_3_4h < 40.0) or (last_aroonu_14_1d > 30.0))
+      and ((last_rsi_3_1h < 70.0) or (last_rsi_3_4h < 40.0) or (last_stochrsi_k_4h > 10.0))
+      and ((last_rsi_3_1h < 70.0) or (last_stochrsi_k_1d > 20.0) or (last_roc_9_1d > -10.0))
+      and ((last_rsi_3_1h < 65.0) or (last_rsi_3_4h < 55.0) or (last_stochrsi_k_4h > 30.0))
+      and ((last_rsi_3_1h < 65.0) or (last_aroonu_14_1h > 40.0) or (last_aroonu_14_1d > 0.0))
       and ((last_rsi_3_1h < 65.0) or (last_stochrsi_k_1d > 10.0) or (last_roc_9_1d > -20.0))
+      and ((last_rsi_3_1h < 60.0) or (last_rsi_3_4h < 60.0) or (last_aroonu_14_1d > 10.0))
+      and ((last_rsi_3_1h < 60.0) or (last_rsi_3_4h < 35.0) or (last_stochrsi_k_4h > 20.0))
+      and ((last_rsi_3_1h < 60.0) or (last_rsi_3_1d < 40.0) or (last_aroonu_14_1d > 0.0))
+      and ((last_rsi_3_1h < 60.0) or (last_aroonu_14_1h > 0.0))
       and ((last_rsi_3_1h < 60.0) or (last_aroonu_14_4h > 0.0))
+      and ((last_rsi_3_1h < 60.0) or (last_aroonu_14_1d > 0.0) or (last_roc_9_1d > -20.0))
       and ((last_rsi_3_1h < 60.0) or (last_stochrsi_k_1d > 20.0) or (last_roc_9_1d > -50.0))
       and ((last_rsi_3_1h < 65.0) or (last_rsi_3_4h < 50.0) or (last_stochrsi_k_4h > 20.0))
       and ((last_rsi_3_1h < 60.0) or (last_rsi_3_4h < 45.0) or (last_aroonu_14_4h > 10.0))
+      and ((last_rsi_3_1h < 55.0) or (last_aroonu_14_4h > 20.0) or (last_roc_9_1d > -10.0))
+      and ((last_rsi_3_1h < 50.0) or (last_aroonu_14_1h > 20.0) or (last_stochrsi_k_4h > 30.0))
+      and ((last_rsi_3_1h < 50.0) or (last_rsi_3_4h < 45.0) or (last_stochrsi_k_4h > 30.0))
+      and ((last_rsi_3_1h < 50.0) or (last_aroonu_14_4h > 20.0) or (last_aroonu_14_1d > 0.0))
+      and ((last_rsi_3_1h < 50.0) or (last_aroonu_14_4h > 10.0) or (last_stochrsi_k_4h > 10.0))
+      and ((last_rsi_3_1h < 45.0) or (last_rsi_3_4h < 45.0) or (last_stochrsi_k_15m > 30.0))
+      and ((last_rsi_3_1h < 45.0) or (last_aroonu_14_1h > 20.0) or (last_aroonu_14_4h > 20.0))
+      and ((last_rsi_3_1h < 45.0) or (last_stochrsi_k_4h > 10.0) or (last_roc_9_1d > -10.0))
+      and ((last_rsi_3_1h < 40.0) or (last_aroonu_14_15m > 30.0) or (last_aroonu_14_4h > 20.0))
       and ((last_rsi_3_1h < 40.0) or (last_stochrsi_k_1h > 40.0) or (last_stochrsi_k_1d > 10.0))
+      and ((last_rsi_3_1h < 35.0) or (last_aroonu_14_15m > 30.0) or (last_aroonu_14_1h > 0.0))
       and ((last_rsi_3_1h < 35.0) or (last_aroonu_14_1h > 30.0) or (last_aroonu_14_1d > 10.0))
+      and ((last_rsi_3_1h < 35.0) or (last_aroonu_14_1h > 0.0) or (last_stochrsi_k_4h > 30.0))
       and ((last_rsi_3_4h < 75.0) or (last_roc_9_1d > -30.0))
+      and ((last_rsi_3_4h < 60.0) or (last_rsi_3_1d < 40.0) or (last_aroonu_14_1d > 0.0))
+      # do not short an oversold bottom on the bounce
+      and ((last_rsi_3_4h < 60.0) or (last_aroonu_14_15m > 30.0) or (last_aroonu_14_1d > 10.0))
+      and ((last_rsi_3_4h < 60.0) or (last_aroonu_14_1d > 10.0) or (last_roc_9_1d > -10.0))
+      and ((last_rsi_3_4h < 60.0) or (last_stochrsi_k_15m > 40.0) or (last_aroonu_14_1d > 10.0))
       and ((last_rsi_3_4h < 55.0) or (last_aroonu_14_4h > 30.0))
+      and ((last_rsi_3_4h < 50.0) or (last_aroonu_14_4h > 30.0) or (last_aroonu_14_1d > 0.0))
       and ((last_rsi_3_4h < 50.0) or (last_stochrsi_k_4h > 20.0))
+      and ((last_rsi_3_4h < 45.0) or (last_aroonu_14_15m > 30.0) or (last_stochrsi_k_4h > 30.0))
+      and ((last_rsi_3_4h < 40.0) or (last_rsi_3_1d < 35.0) or (last_aroonu_14_15m > 30.0))
+      and ((last_rsi_3_4h < 40.0) or (last_aroonu_14_15m > 10.0) or (last_stochrsi_k_15m > 10.0))
+      and ((last_rsi_3_4h < 40.0) or (last_aroonu_14_15m > 0.0) or (last_stochrsi_k_15m > 20.0))
+      and ((last_rsi_3_4h < 40.0) or (last_stochrsi_k_15m > 30.0) or (last_stochrsi_k_1h > 30.0))
+      and ((last_rsi_3_1d < 70.0) or (last_stochrsi_k_4h > 10.0))
       and ((last_rsi_3_1d < 65.0) or (last_stochrsi_k_15m > 10.0))
       and ((last_rsi_3_1d < 65.0) or (last_stochrsi_k_1h > 10.0))
       and ((last_rsi_3_1d < 65.0) or (last_stochrsi_k_4h > 20.0))
+      and ((last_rsi_3_1d < 55.0) or (last_stochrsi_k_1h > 30.0) or (last_stochrsi_k_4h > 20.0))
+      and ((last_rsi_3_1d < 40.0) or (last_aroonu_14_1h > 20.0) or (last_aroonu_14_1d > 0.0))
       and ((last_rsi_14_1h > 30.0) or (last_stochrsi_k_4h > 10.0))
+      and ((last_aroonu_14_15m > 20.0) or (last_aroonu_14_1h > 20.0) or (last_aroonu_14_4h > 20.0))
+      and ((last_aroonu_14_15m > 20.0) or (last_stochrsi_k_15m > 30.0) or (last_stochrsi_k_4h > 30.0))
+      and ((last_aroonu_14_15m > 20.0) or (last_aroonu_14_1d > 0.0))
+      and ((last_aroonu_14_15m > 20.0) or (last_stochrsi_k_15m > 20.0) or (last_stochrsi_k_1h > 20.0))
+      and ((last_aroonu_14_15m > 10.0) or (last_aroonu_14_1h > 20.0) or (last_stochrsi_k_1h > 10.0))
       and ((last_aroonu_14_15m > 10.0) or (last_aroonu_14_1h > 0.0) or (last_stochrsi_k_1h > 20.0))
       and ((last_aroonu_14_15m > 0.0) or (last_aroonu_14_1h > 0.0))
       and ((last_aroonu_14_15m > 0.0) or (last_aroonu_14_4h > 0.0))
       and ((last_aroonu_14_15m > 0.0) or (last_stochrsi_k_1h > 10.0))
       and ((last_aroonu_14_15m > 0.0) or (last_stochrsi_k_4h > 10.0))
-      and ((last_aroonu_14_15m > 0.0) or (last_stochrsi_k_1d > 20.0))
+      and ((last_aroonu_14_15m > 0.0) or (last_stochrsi_k_1d > 20.0) or (last_roc_9_1d > -10.0))
+      and ((last_aroonu_14_1h > 30.0) or (last_aroonu_14_4h > 0.0))
+      and ((last_aroonu_14_1h > 30.0) or (last_aroonu_14_1d > 10.0) or (last_roc_9_1d > -10.0))
+      and ((last_aroonu_14_1h > 20.0) or (last_aroonu_14_4h > 0.0))
+      and ((last_aroonu_14_1h > 10.0) or (last_stochrsi_k_1h > 10.0) or (last_stochrsi_k_4h > 10.0))
+      and ((last_aroonu_14_1h > 10.0) or (last_stochrsi_k_1h > 10.0) or (last_roc_9_1d > -10.0))
       and ((last_aroonu_14_1h > 0.0) or (last_stochrsi_k_4h > 10.0))
       and ((last_aroonu_14_1h > 0.0) or (last_stochrsi_k_1d > 10.0))
-      and ((last_aroonu_14_4h > 20.0) or (last_aroonu_14_1d > 0.0) or (last_roc_9_1d > -20.0))
+      and ((last_aroonu_14_4h > 30.0) or (last_aroonu_14_1d > 0.0) or (last_roc_9_1d > -20.0))
+      and ((last_aroonu_14_4h > 10.0) or (last_stochrsi_k_4h > 10.0) or (last_roc_9_1d > -10.0))
       and ((last_aroonu_14_4h > 10.0) or (last_roc_9_1d > -30.0))
       and ((last_aroonu_14_4h > 0.0) or (last_aroonu_14_1d > 0.0))
       and ((last_aroonu_14_4h > 0.0) or (last_stochrsi_k_1h > 10.0))
@@ -73800,8 +74053,9 @@ class NostalgiaForInfinityX7(IStrategy):
       and ((last_aroonu_14_1d > 0.0) or (last_stochrsi_k_1h > 10.0))
       and ((last_aroonu_14_1d > 0.0) or (last_stochrsi_k_4h > 10.0))
       and ((last_aroonu_14_1d > 0.0) or (last_roc_9_4h > -15.0) or (last_roc_9_1d > -50.0))
-      # do not short an oversold bottom on the bounce
       and ((last_stochrsi_k > 10.0) or (last_rsi_14 > 30.0))
+      and ((last_stochrsi_k_15m > 20.0) or (last_stochrsi_k_1h > 20.0) or (last_roc_9_1d > -10.0))
+      and ((last_stochrsi_k_15m > 20.0) or (last_aroonu_14_1d > 0.0))
       and ((last_stochrsi_k_15m > 10.0) or (last_stochrsi_k_1h > 10.0))
       and ((last_stochrsi_k_15m > 10.0) or (last_stochrsi_k_1d > 10.0))
       and ((last_stochrsi_k_1h > 20.0) or (last_stochrsi_k_1d > 10.0))
@@ -73823,40 +74077,76 @@ class NostalgiaForInfinityX7(IStrategy):
       # the coil signature: 1h momentum negative-to-flat under a flat price
       and (last_roc_9_1h < 15.0)
       and (last_roc_9_1h > -2.0)
-      and (last_close < (last_ema_20 * 1.0200))
-      and (last_close > (last_ema_20 * 0.9800))
+      and (last_close < (last_ema_20 * 1.02))
+      and (last_close > (last_ema_20 * 0.98))
       # squeeze integrity: regime still broken, 4h reclaim HELD, not dripping to new lows
       and (last_close > last_ema_200_4h)
-      and (last_close < (last_high_max_12_4h * 0.9000))
-      and (last_close < (last_close_max_12 * 0.9950))
+      and (last_close < (last_high_max_12_4h * 0.90))
+      and (last_close < (last_close_max_12 * 0.995))
       # general protections first
       and ((last_rsi_3_15m < 80.0) or (last_stochrsi_k_4h > 10.0))
       and ((last_rsi_3_1h < 85.0) or (last_aroonu_14_4h > 30.0))
       and ((last_rsi_3_1h < 80.0) or (last_stochrsi_k_1h > 20.0))
-      and ((last_rsi_3_1h < 80.0) or (last_stochrsi_k_4h > 20.0))
-      and ((last_rsi_3_1h < 75.0) or (last_stochrsi_k_4h > 10.0))
       and ((last_rsi_3_1h < 65.0) or (last_aroonu_14_1h > 30.0))
+      and ((last_rsi_3_1h < 65.0) or (last_aroonu_14_4h > 30.0))
+      and ((last_rsi_3_1h < 60.0) or (last_aroonu_14_4h > 20.0))
+      and ((last_rsi_3_1h < 55.0) or (last_aroonu_14_1h > 10.0) or (last_stochrsi_k_1h > 30.0))
+      and ((last_rsi_3_1h < 60.0) or (last_stochrsi_k_4h > 20.0))
+      and ((last_rsi_3_1h < 55.0) or (last_aroonu_14_1h > 10.0) or (last_stochrsi_k_4h > 20.0))
       and ((last_rsi_3_1h < 55.0) or (last_stochrsi_k_4h > 10.0))
+      and ((last_rsi_3_1h < 50.0) or (last_aroonu_14_1h > 30.0) or (last_aroonu_14_4h > 30.0))
+      and ((last_rsi_3_1h < 45.0) or (last_rsi_3_4h < 40.0) or (last_aroonu_14_4h > 40.0))
+      and ((last_rsi_3_1h < 50.0) or (last_aroonu_14_4h > 20.0) or (last_stochrsi_k_4h > 20.0))
+      and ((last_rsi_3_1h < 50.0) or (last_stochrsi_k_1d > 10.0) or (last_roc_9_1d > -30.0))
+      and ((last_rsi_3_1h < 45.0) or (last_aroonu_14_4h > 20.0) or (last_aroonu_14_1d > 0.0))
+      and ((last_rsi_3_1h < 45.0) or (last_aroonu_14_4h > 10.0) or (last_stochrsi_k_4h > 20.0))
+      and ((last_rsi_3_1h < 40.0) or (last_rsi_3_1d < 40.0) or (last_aroonu_14_1h > 20.0))
+      and ((last_rsi_3_1h < 40.0) or (last_stochrsi_k_4h > 30.0) or (last_stochrsi_k_1d > 20.0))
+      and ((last_rsi_3_1h < 40.0) or (last_stochrsi_k_4h > 20.0) or (last_roc_9_4h > -10.0))
+      and ((last_rsi_3_4h < 75.0) or (last_stochrsi_k_4h > 50.0) or (last_roc_9_4h > -10.0))
       and ((last_rsi_3_4h < 65.0) or (last_stochrsi_k_4h > 30.0))
+      and ((last_rsi_3_4h < 60.0) or (last_rsi_3_1d < 60.0) or (last_aroonu_14_15m > 30.0))
+      and ((last_rsi_3_4h < 60.0) or (last_aroonu_14_15m > 0.0) or (last_stochrsi_k_15m > 10.0))
       and ((last_rsi_3_4h < 60.0) or (last_aroonu_14_4h > 30.0))
+      and ((last_rsi_3_4h < 50.0) or (last_aroonu_14_15m > 20.0) or (last_aroonu_14_4h > 20.0))
+      and ((last_rsi_3_4h < 50.0) or (last_stochrsi_k_15m > 30.0) or (last_stochrsi_k_4h > 30.0))
+      and ((last_rsi_3_4h < 45.0) or (last_aroonu_14_1h > 0.0) or (last_aroonu_14_1d > 20.0))
+      and ((last_rsi_3_4h < 40.0) or (last_rsi_3_1d < 40.0) or (last_stochrsi_k_1h > 20.0))
+      and ((last_rsi_3_4h < 40.0) or (last_aroonu_14_15m > 30.0) or (last_aroonu_14_1h > 30.0))
+      and ((last_rsi_3_4h < 40.0) or (last_aroonu_14_1h > 0.0) or (last_stochrsi_k_1d > 20.0))
+      and ((last_rsi_3_4h < 40.0) or (last_aroonu_14_4h > 30.0) or (last_roc_9_1d > -20.0))
       and ((last_rsi_3_4h < 35.0) or (last_aroonu_14_1h > 30.0) or (last_stochrsi_k_4h > 10.0))
       and ((last_rsi_3_4h < 35.0) or (last_aroonu_14_4h > 20.0) or (last_stochrsi_k_4h > 30.0))
-      and ((last_rsi_3_1d < 90.0) or (last_aroonu_14_1h > 10.0))
+      and ((last_rsi_3_4h < 35.0) or (last_stochrsi_k_4h > 10.0) or (last_roc_9_4h > -10.0))
       and ((last_rsi_3_1d < 90.0) or (last_aroonu_14_1h > 10.0))
       and ((last_rsi_3_1d < 90.0) or (last_stochrsi_k_1h > 20.0))
       and ((last_rsi_3_1d < 90.0) or (last_stochrsi_k_4h > 30.0))
       and ((last_rsi_3_1d < 80.0) or (last_aroonu_14_1d > 10.0))
+      and ((last_rsi_3_1d < 75.0) or (last_stochrsi_k_15m > 30.0))
       and ((last_rsi_3_1d < 70.0) or (last_aroonu_14_15m > 0.0))
       and ((last_rsi_3_1d < 70.0) or (last_stochrsi_k_4h > 10.0))
+      and ((last_aroonu_14_15m > 30.0) or (last_aroonu_14_1h > 0.0) or (last_stochrsi_k_1d > 20.0))
+      and ((last_aroonu_14_15m > 30.0) or (last_aroonu_14_4h > 30.0) or (last_roc_9_4h > -10.0))
       and ((last_aroonu_14_15m > 20.0) or (last_stochrsi_k_15m > 30.0))
       and ((last_aroonu_14_15m > 20.0) or (last_aroonu_14_1h > 0.0))
+      and ((last_aroonu_14_15m > 0.0) or (last_aroonu_14_4h > 10.0))
       and ((last_aroonu_14_15m > 0.0) or (last_stochrsi_k_4h > 10.0))
+      and ((last_aroonu_14_1h > 20.0) or (last_stochrsi_k_4h > 10.0) or (last_roc_9_4h > -10.0))
       and ((last_aroonu_14_1h > 0.0) or (last_aroonu_14_1d > 0.0))
+      and ((last_aroonu_14_1h > 0.0) or (last_stochrsi_k_15m > 20.0))
+      and ((last_aroonu_14_1h > 0.0) or (last_stochrsi_k_4h > 20.0) or (last_roc_9_4h > -10.0))
+      and ((last_aroonu_14_1h > 0.0) or (last_stochrsi_k_1d > 10.0) or (last_roc_9_1d > -20.0))
+      and ((last_aroonu_14_4h > 30.0) or (last_roc_9_1d < 25.0))
       and ((last_aroonu_14_4h > 30.0) or (last_roc_9_1d > -50.0))
+      and ((last_aroonu_14_4h > 20.0) or (last_stochrsi_k_4h > 20.0) or (last_roc_9_4h > -10.0))
+      and ((last_aroonu_14_4h > 20.0) or (last_stochrsi_k_1d > 20.0) or (last_roc_9_1d > -10.0))
       and ((last_aroonu_14_4h > 10.0) or (last_stochrsi_k_4h > 10.0))
       and ((last_aroonu_14_4h > 10.0) or (last_roc_9_4h > -10.0))
+      and ((last_stochrsi_k_15m > 40.0) or (last_stochrsi_k_4h > 20.0))
       and ((last_stochrsi_k_1h > 30.0) or (last_stochrsi_k_4h > 20.0))
       and ((last_stochrsi_k_1h > 10.0) or (last_roc_9_4h < 20.0))
+      and ((last_stochrsi_k_4h > 30.0) or (last_roc_9_1d < 25.0))
+      and ((last_stochrsi_k_4h > 20.0) or (last_stochrsi_k_1d > 10.0) or (last_roc_9_1d > -20.0))
       and ((last_roc_9_1d < 40.0) or (last_aroonu_14_1h > 10.0))
       and ((last_roc_9_1d < 40.0) or (last_stochrsi_k_1h > 20.0))
       and ((last_roc_9_1d < 25.0) or (last_stochrsi_k_15m > 10.0))
