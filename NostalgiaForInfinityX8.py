@@ -71,7 +71,7 @@ class NostalgiaForInfinityX8(IStrategy):
   INTERFACE_VERSION = 3
 
   def version(self) -> str:
-    return "v18.0.42"
+    return "v18.0.45"
 
   stoploss = -0.99
 
@@ -15377,6 +15377,8 @@ class NostalgiaForInfinityX8(IStrategy):
             & ((rsi_3_1h_gt_65) | (stochrsi_k_1h_lt_80) | (stochrsi_k_1d_lt_90) | (roc_9_1h_lt_10) | (roc_9_1d_lt_20))
             # 1h down move, 1h & 4h overbought
             & ((rsi_3_1h_gt_65) | (roc_9_1h_lt_80) | (roc_9_4h_lt_80))
+            # 4h down move, 1h & 4h & 1d down move
+            & ((rsi_3_4h_gt_55) | (aroonu_14_1h_lt_70) | (aroonu_14_4h_lt_70) | (aroonu_14_1d_lt_100))
             # 4h & 1d down move, 4h high, 1d overbought
             & ((rsi_3_4h_gt_60) | (rsi_3_1d_gt_60) | (aroonu_14_4h_lt_80) | (roc_9_1d_lt_30))
             # 1h down move, 15m still high, 1h & 4h & 1d overbought
@@ -15418,7 +15420,7 @@ class NostalgiaForInfinityX8(IStrategy):
             # 15m & 4h high, 1d overbought
             & ((aroonu_14_15m_lt_80) | (aroonu_14_4h_lt_90) | (roc_9_1d_lt_10))
             # 1h & 4h & 1d high, 4h overbought
-            & ((aroonu_14_1h_lt_70) | (aroonu_14_4h_lt_100) | (aroonu_14_1d_lt_100) | (roc_9_4h_lt_20))
+            & ((aroonu_14_1h_lt_70) | (aroonu_14_4h_lt_70) | (aroonu_14_1d_lt_100) | (roc_9_4h_lt_20))
             # 1h & 4h & 1d high, 4h overbought
             & ((aroonu_14_1h_lt_80) | (aroonu_14_4h_lt_80) | (aroonu_14_1d_lt_100) | (roc_9_4h_lt_20))
             # 1h & 4h & 1d high, 1d overbought
@@ -26394,10 +26396,11 @@ class NostalgiaForInfinityX8(IStrategy):
     last_rsi_14 = last_candle["RSI_14"]
     last_stochrsi_k = last_candle["STOCHRSIk_14_14_3_3"]
     last_aroonu_14 = last_candle["AROONU_14"]
-    last_willr_480 = last_candle["WILLR_480"]
-    last_aroonu_14_4h = last_candle["AROONU_14_4h"]
     last_sma_200_dec_1h = last_candle["SMA_200_dec_12_1h"]
     last_sma_200_dec_4h = last_candle["SMA_200_dec_6_4h"]
+    last_rsi_3 = last_candle["RSI_3"]
+    last_rsi_3_1h = last_candle["RSI_3_1h"]
+    last_rsi_3_4h = last_candle["RSI_3_4h"]
 
     if 0.01 > current_profit >= 0.001:
       if (
@@ -26409,6 +26412,15 @@ class NostalgiaForInfinityX8(IStrategy):
         and (last_aroonu_14 > 95.0)
       ):
         return True, f"exit_{mode_name}_d_0_1"
+      if (
+        (last_rsi_3 > 98.0)
+        and (last_stochrsi_k > 98.0)
+        and (last_rsi_3_4h < 30.0)
+        and (last_rsi_3_1h < 20.0)
+        and last_sma_200_dec
+        and last_sma_200_dec_1h
+      ):
+        return True, f"exit_{mode_name}_d_0_2"
     elif 0.02 > current_profit >= 0.01:
       if (
         last_sma_200_dec
@@ -26419,6 +26431,15 @@ class NostalgiaForInfinityX8(IStrategy):
         and (last_aroonu_14 > 95.0)
       ):
         return True, f"exit_{mode_name}_d_1_1"
+      if (
+        (last_rsi_3 > 98.0)
+        and (last_stochrsi_k > 98.0)
+        and (last_rsi_3_4h < 30.0)
+        and (last_rsi_3_1h < 20.0)
+        and last_sma_200_dec
+        and last_sma_200_dec_1h
+      ):
+        return True, f"exit_{mode_name}_d_1_2"
     elif 0.03 > current_profit >= 0.02:
       if (
         last_sma_200_dec
@@ -26429,36 +26450,125 @@ class NostalgiaForInfinityX8(IStrategy):
         and (last_aroonu_14 > 95.0)
       ):
         return True, f"exit_{mode_name}_d_2_1"
+      if (
+        (last_rsi_3 > 98.0)
+        and (last_stochrsi_k > 98.0)
+        and (last_rsi_3_4h < 30.0)
+        and (last_rsi_3_1h < 20.0)
+        and last_sma_200_dec
+        and last_sma_200_dec_1h
+      ):
+        return True, f"exit_{mode_name}_d_2_2"
     elif 0.04 > current_profit >= 0.03:
       if last_sma_200_dec and (last_rsi_14 > 76.0) and (last_stochrsi_k > 95.0) and (last_aroonu_14 > 90.0):
         return True, f"exit_{mode_name}_d_3_1"
+      if (
+        (last_rsi_3 > 95.0)
+        and (last_stochrsi_k > 90.0)
+        and (last_rsi_3_4h < 30.0)
+        and last_sma_200_dec
+        and last_sma_200_dec_1h
+      ):
+        return True, f"exit_{mode_name}_d_3_2"
     elif 0.05 > current_profit >= 0.04:
       if last_sma_200_dec and (last_rsi_14 > 74.0) and (last_stochrsi_k > 92.0) and (last_aroonu_14 > 90.0):
         return True, f"exit_{mode_name}_d_4_1"
+      if (
+        (last_rsi_3 > 95.0)
+        and (last_stochrsi_k > 90.0)
+        and (last_rsi_3_4h < 30.0)
+        and last_sma_200_dec
+        and last_sma_200_dec_1h
+      ):
+        return True, f"exit_{mode_name}_d_4_2"
     elif 0.06 > current_profit >= 0.05:
-      if last_sma_200_dec and (last_stochrsi_k > 90.0) and (last_aroonu_14 > 90.0):
+      if last_sma_200_dec and (last_stochrsi_k > 95.0) and (last_aroonu_14 > 90.0):
         return True, f"exit_{mode_name}_d_5_1"
+      if (
+        (last_rsi_3 > 95.0)
+        and (last_stochrsi_k > 90.0)
+        and (last_rsi_3_4h < 30.0)
+        and last_sma_200_dec
+        and last_sma_200_dec_1h
+      ):
+        return True, f"exit_{mode_name}_d_5_2"
     elif 0.07 > current_profit >= 0.06:
-      if last_sma_200_dec or ((last_stochrsi_k > 90.0) and (last_aroonu_14 > 90.0)):
+      if last_sma_200_dec or ((last_stochrsi_k > 95.0) and (last_aroonu_14 > 90.0)):
         return True, f"exit_{mode_name}_d_6_1"
+      if (
+        (last_rsi_3 > 95.0)
+        and (last_stochrsi_k > 90.0)
+        and (last_rsi_3_4h < 30.0)
+        and last_sma_200_dec
+        and last_sma_200_dec_1h
+      ):
+        return True, f"exit_{mode_name}_d_6_2"
     elif 0.08 > current_profit >= 0.07:
-      if last_sma_200_dec or ((last_stochrsi_k > 90.0) and (last_aroonu_14 > 90.0)):
+      if last_sma_200_dec or ((last_stochrsi_k > 95.0) and (last_aroonu_14 > 90.0)):
         return True, f"exit_{mode_name}_d_7_1"
+      if (
+        (last_rsi_3 > 95.0)
+        and (last_stochrsi_k > 90.0)
+        and (last_rsi_3_4h < 30.0)
+        and last_sma_200_dec
+        and last_sma_200_dec_1h
+      ):
+        return True, f"exit_{mode_name}_d_7_2"
     elif 0.09 > current_profit >= 0.08:
-      if last_sma_200_dec or ((last_stochrsi_k > 90.0) and (last_aroonu_14 > 90.0)):
+      if last_sma_200_dec or ((last_stochrsi_k > 95.0) and (last_aroonu_14 > 90.0)):
         return True, f"exit_{mode_name}_d_8_1"
+      if (
+        (last_rsi_3 > 95.0)
+        and (last_stochrsi_k > 90.0)
+        and (last_rsi_3_4h < 30.0)
+        and last_sma_200_dec
+        and last_sma_200_dec_1h
+      ):
+        return True, f"exit_{mode_name}_d_8_2"
     elif 0.1 > current_profit >= 0.09:
-      if last_sma_200_dec or ((last_stochrsi_k > 90.0) and (last_aroonu_14 > 90.0)):
+      if last_sma_200_dec or ((last_stochrsi_k > 95.0) and (last_aroonu_14 > 90.0)):
         return True, f"exit_{mode_name}_d_9_1"
+      if (
+        (last_rsi_3 > 95.0)
+        and (last_stochrsi_k > 90.0)
+        and (last_rsi_3_4h < 30.0)
+        and last_sma_200_dec
+        and last_sma_200_dec_1h
+      ):
+        return True, f"exit_{mode_name}_d_9_2"
     elif 0.12 > current_profit >= 0.1:
-      if last_sma_200_dec or ((last_stochrsi_k > 90.0) and (last_aroonu_14 > 90.0)):
+      if last_sma_200_dec or ((last_stochrsi_k > 95.0) and (last_aroonu_14 > 90.0)):
         return True, f"exit_{mode_name}_d_10_1"
+      if (
+        (last_rsi_3 > 95.0)
+        and (last_stochrsi_k > 90.0)
+        and (last_rsi_3_4h < 30.0)
+        and last_sma_200_dec
+        and last_sma_200_dec_1h
+      ):
+        return True, f"exit_{mode_name}_d_10_2"
     elif 0.2 > current_profit >= 0.12:
-      if last_sma_200_dec or ((last_stochrsi_k > 90.0) and (last_aroonu_14 > 90.0)):
+      if last_sma_200_dec or ((last_stochrsi_k > 95.0) and (last_aroonu_14 > 90.0)):
         return True, f"exit_{mode_name}_d_11_1"
+      if (
+        (last_rsi_3 > 95.0)
+        and (last_stochrsi_k > 90.0)
+        and (last_rsi_3_4h < 30.0)
+        and last_sma_200_dec
+        and last_sma_200_dec_1h
+      ):
+        return True, f"exit_{mode_name}_d_11_2"
     elif current_profit >= 0.2:
-      if last_sma_200_dec or ((last_stochrsi_k > 90.0) and (last_aroonu_14 > 90.0)):
+      if last_sma_200_dec or ((last_stochrsi_k > 95.0) and (last_aroonu_14 > 90.0)):
         return True, f"exit_{mode_name}_d_12_1"
+      if (
+        (last_rsi_3 > 95.0)
+        and (last_stochrsi_k > 90.0)
+        and (last_rsi_3_4h < 30.0)
+        and last_sma_200_dec
+        and last_sma_200_dec_1h
+      ):
+        return True, f"exit_{mode_name}_d_12_2"
 
     #  Here ends exit signal conditions for long_exit_dec
 
@@ -31153,6 +31263,7 @@ class NostalgiaForInfinityX8(IStrategy):
       and ((last_rsi_3_1d > 65.0) or (last_aroonu_14_1h < 70.0) or (last_aroonu_14_1d < 90.0))
       and ((last_aroonu_14_15m < 70.0) or (last_aroonu_14_1h < 100.0))
       and ((last_aroonu_14_15m < 80.0) or (last_stochrsi_k_15m < 80.0))
+      and ((last_aroonu_14_15m < 100.0) or (last_stochrsi_k_1h < 90.0))
       and ((last_aroonu_14_15m < 100.0) or (last_stochrsi_k_4h < 90.0))
       and ((last_aroonu_14_1h < 80.0) or (last_stochrsi_k_1h < 80.0) or (last_stochrsi_k_1d < 90.0))
       and ((last_aroonu_14_1h < 100.0) or (last_stochrsi_k_1d < 80.0))
@@ -31391,6 +31502,7 @@ class NostalgiaForInfinityX8(IStrategy):
       and ((last_rsi_3_1d > 25.0) or (last_stochrsi_k_1h < 90.0))
       and ((last_rsi_3_1d > 30.0) or (last_aroonu_14_15m < 100.0))
       and ((last_rsi_3_1d > 30.0) or (last_stochrsi_k_4h < 90.0))
+      and ((last_rsi_3_1d > 50.0) or (last_stochrsi_k_4h < 90.0) or (last_stochrsi_k_1d < 70.0))
       and ((last_aroonu_14_15m < 70.0) or (last_aroonu_14_1h < 100.0) or (last_stochrsi_k_1d < 80.0))
       and ((last_aroonu_14_15m < 70.0) or (last_aroonu_14_4h < 70.0) or (last_roc_9_4h < 10.0))
       and ((last_aroonu_14_15m < 80.0) or (last_stochrsi_k_15m < 70.0))
@@ -33545,6 +33657,7 @@ class NostalgiaForInfinityX8(IStrategy):
       and ((last_rsi_3_1d > 65.0) or (last_aroonu_14_1h < 70.0) or (last_aroonu_14_1d < 90.0))
       and ((last_aroonu_14_15m < 70.0) or (last_aroonu_14_1h < 100.0))
       and ((last_aroonu_14_15m < 80.0) or (last_stochrsi_k_15m < 80.0))
+      and ((last_aroonu_14_15m < 100.0) or (last_stochrsi_k_1h < 90.0))
       and ((last_aroonu_14_15m < 100.0) or (last_stochrsi_k_4h < 90.0))
       and ((last_aroonu_14_1h < 80.0) or (last_stochrsi_k_1h < 80.0) or (last_stochrsi_k_1d < 90.0))
       and ((last_aroonu_14_1h < 100.0) or (last_stochrsi_k_1d < 80.0))
@@ -33783,6 +33896,7 @@ class NostalgiaForInfinityX8(IStrategy):
       and ((last_rsi_3_1d > 25.0) or (last_stochrsi_k_1h < 90.0))
       and ((last_rsi_3_1d > 30.0) or (last_aroonu_14_15m < 100.0))
       and ((last_rsi_3_1d > 30.0) or (last_stochrsi_k_4h < 90.0))
+      and ((last_rsi_3_1d > 50.0) or (last_stochrsi_k_4h < 90.0) or (last_stochrsi_k_1d < 70.0))
       and ((last_aroonu_14_15m < 70.0) or (last_aroonu_14_1h < 100.0) or (last_stochrsi_k_1d < 80.0))
       and ((last_aroonu_14_15m < 70.0) or (last_aroonu_14_4h < 70.0) or (last_roc_9_4h < 10.0))
       and ((last_aroonu_14_15m < 80.0) or (last_stochrsi_k_15m < 70.0))
@@ -40702,6 +40816,9 @@ class NostalgiaForInfinityX8(IStrategy):
     last_aroonu_14 = last_candle["AROONU_14"]
     last_sma_200_inc_1h = last_candle["SMA_200_inc_12_1h"]
     last_sma_200_inc_4h = last_candle["SMA_200_inc_6_4h"]
+    last_rsi_3 = last_candle["RSI_3"]
+    last_rsi_3_1h = last_candle["RSI_3_1h"]
+    last_rsi_3_4h = last_candle["RSI_3_4h"]
 
     if 0.01 > current_profit >= 0.001:
       if (
@@ -40713,6 +40830,15 @@ class NostalgiaForInfinityX8(IStrategy):
         and (last_aroonu_14 < 5.0)
       ):
         return True, f"exit_{mode_name}_d_0_1"
+      if (
+        (last_rsi_3 < 2.0)
+        and (last_stochrsi_k < 2.0)
+        and (last_rsi_3_4h > 70.0)
+        and (last_rsi_3_1h > 80.0)
+        and last_sma_200_inc
+        and last_sma_200_inc_1h
+      ):
+        return True, f"exit_{mode_name}_d_0_2"
     elif 0.02 > current_profit >= 0.01:
       if (
         last_sma_200_inc
@@ -40723,6 +40849,15 @@ class NostalgiaForInfinityX8(IStrategy):
         and (last_aroonu_14 < 5.0)
       ):
         return True, f"exit_{mode_name}_d_1_1"
+      if (
+        (last_rsi_3 < 2.0)
+        and (last_stochrsi_k < 2.0)
+        and (last_rsi_3_4h > 70.0)
+        and (last_rsi_3_1h > 80.0)
+        and last_sma_200_inc
+        and last_sma_200_inc_1h
+      ):
+        return True, f"exit_{mode_name}_d_1_2"
     elif 0.03 > current_profit >= 0.02:
       if (
         last_sma_200_inc
@@ -40733,36 +40868,125 @@ class NostalgiaForInfinityX8(IStrategy):
         and (last_aroonu_14 < 5.0)
       ):
         return True, f"exit_{mode_name}_d_2_1"
+      if (
+        (last_rsi_3 < 2.0)
+        and (last_stochrsi_k < 2.0)
+        and (last_rsi_3_4h > 70.0)
+        and (last_rsi_3_1h > 80.0)
+        and last_sma_200_inc
+        and last_sma_200_inc_1h
+      ):
+        return True, f"exit_{mode_name}_d_2_2"
     elif 0.04 > current_profit >= 0.03:
       if last_sma_200_inc and (last_rsi_14 < 24.0) and (last_stochrsi_k < 5.0) and (last_aroonu_14 < 10.0):
         return True, f"exit_{mode_name}_d_3_1"
+      if (
+        (last_rsi_3 < 5.0)
+        and (last_stochrsi_k < 10.0)
+        and (last_rsi_3_4h > 70.0)
+        and last_sma_200_inc
+        and last_sma_200_inc_1h
+      ):
+        return True, f"exit_{mode_name}_d_3_2"
     elif 0.05 > current_profit >= 0.04:
       if last_sma_200_inc and (last_rsi_14 < 26.0) and (last_stochrsi_k < 8.0) and (last_aroonu_14 < 10.0):
         return True, f"exit_{mode_name}_d_4_1"
+      if (
+        (last_rsi_3 < 5.0)
+        and (last_stochrsi_k < 10.0)
+        and (last_rsi_3_4h > 70.0)
+        and last_sma_200_inc
+        and last_sma_200_inc_1h
+      ):
+        return True, f"exit_{mode_name}_d_4_2"
     elif 0.06 > current_profit >= 0.05:
-      if last_sma_200_inc and (last_stochrsi_k < 10.0) and (last_aroonu_14 < 10.0):
+      if last_sma_200_inc and (last_stochrsi_k < 5.0) and (last_aroonu_14 < 10.0):
         return True, f"exit_{mode_name}_d_5_1"
+      if (
+        (last_rsi_3 < 5.0)
+        and (last_stochrsi_k < 10.0)
+        and (last_rsi_3_4h > 70.0)
+        and last_sma_200_inc
+        and last_sma_200_inc_1h
+      ):
+        return True, f"exit_{mode_name}_d_5_2"
     elif 0.07 > current_profit >= 0.06:
-      if last_sma_200_inc or ((last_stochrsi_k < 10.0) and (last_aroonu_14 < 10.0)):
+      if last_sma_200_inc or ((last_stochrsi_k < 5.0) and (last_aroonu_14 < 10.0)):
         return True, f"exit_{mode_name}_d_6_1"
+      if (
+        (last_rsi_3 < 5.0)
+        and (last_stochrsi_k < 10.0)
+        and (last_rsi_3_4h > 70.0)
+        and last_sma_200_inc
+        and last_sma_200_inc_1h
+      ):
+        return True, f"exit_{mode_name}_d_6_2"
     elif 0.08 > current_profit >= 0.07:
-      if last_sma_200_inc or ((last_stochrsi_k < 10.0) and (last_aroonu_14 < 10.0)):
+      if last_sma_200_inc or ((last_stochrsi_k < 5.0) and (last_aroonu_14 < 10.0)):
         return True, f"exit_{mode_name}_d_7_1"
+      if (
+        (last_rsi_3 < 5.0)
+        and (last_stochrsi_k < 10.0)
+        and (last_rsi_3_4h > 70.0)
+        and last_sma_200_inc
+        and last_sma_200_inc_1h
+      ):
+        return True, f"exit_{mode_name}_d_7_2"
     elif 0.09 > current_profit >= 0.08:
-      if last_sma_200_inc or ((last_stochrsi_k < 10.0) and (last_aroonu_14 < 10.0)):
+      if last_sma_200_inc or ((last_stochrsi_k < 5.0) and (last_aroonu_14 < 10.0)):
         return True, f"exit_{mode_name}_d_8_1"
+      if (
+        (last_rsi_3 < 5.0)
+        and (last_stochrsi_k < 10.0)
+        and (last_rsi_3_4h > 70.0)
+        and last_sma_200_inc
+        and last_sma_200_inc_1h
+      ):
+        return True, f"exit_{mode_name}_d_8_2"
     elif 0.1 > current_profit >= 0.09:
-      if last_sma_200_inc or ((last_stochrsi_k < 10.0) and (last_aroonu_14 < 10.0)):
+      if last_sma_200_inc or ((last_stochrsi_k < 5.0) and (last_aroonu_14 < 10.0)):
         return True, f"exit_{mode_name}_d_9_1"
+      if (
+        (last_rsi_3 < 5.0)
+        and (last_stochrsi_k < 10.0)
+        and (last_rsi_3_4h > 70.0)
+        and last_sma_200_inc
+        and last_sma_200_inc_1h
+      ):
+        return True, f"exit_{mode_name}_d_9_2"
     elif 0.12 > current_profit >= 0.1:
-      if last_sma_200_inc or ((last_stochrsi_k < 10.0) and (last_aroonu_14 < 10.0)):
+      if last_sma_200_inc or ((last_stochrsi_k < 5.0) and (last_aroonu_14 < 10.0)):
         return True, f"exit_{mode_name}_d_10_1"
+      if (
+        (last_rsi_3 < 5.0)
+        and (last_stochrsi_k < 10.0)
+        and (last_rsi_3_4h > 70.0)
+        and last_sma_200_inc
+        and last_sma_200_inc_1h
+      ):
+        return True, f"exit_{mode_name}_d_10_2"
     elif 0.2 > current_profit >= 0.12:
-      if last_sma_200_inc or ((last_stochrsi_k < 10.0) and (last_aroonu_14 < 10.0)):
+      if last_sma_200_inc or ((last_stochrsi_k < 5.0) and (last_aroonu_14 < 10.0)):
         return True, f"exit_{mode_name}_d_11_1"
+      if (
+        (last_rsi_3 < 5.0)
+        and (last_stochrsi_k < 10.0)
+        and (last_rsi_3_4h > 70.0)
+        and last_sma_200_inc
+        and last_sma_200_inc_1h
+      ):
+        return True, f"exit_{mode_name}_d_11_2"
     elif current_profit >= 0.2:
-      if last_sma_200_inc or ((last_stochrsi_k < 10.0) and (last_aroonu_14 < 10.0)):
+      if last_sma_200_inc or ((last_stochrsi_k < 5.0) and (last_aroonu_14 < 10.0)):
         return True, f"exit_{mode_name}_d_12_1"
+      if (
+        (last_rsi_3 < 5.0)
+        and (last_stochrsi_k < 10.0)
+        and (last_rsi_3_4h > 70.0)
+        and last_sma_200_inc
+        and last_sma_200_inc_1h
+      ):
+        return True, f"exit_{mode_name}_d_12_2"
 
     #  Here ends exit signal conditions for short_exit_dec
 
@@ -45336,6 +45560,7 @@ class NostalgiaForInfinityX8(IStrategy):
       and ((last_rsi_3_1d < 35.0) or (last_aroonu_14_1h > 30.0) or (last_aroonu_14_1d > 10.0))
       and ((last_aroonu_14_15m > 30.0) or (last_aroonu_14_1h > 0.0))
       and ((last_aroonu_14_15m > 20.0) or (last_stochrsi_k_15m > 20.0))
+      and ((last_aroonu_14_15m > 0.0) or (last_stochrsi_k_1h > 10.0))
       and ((last_aroonu_14_15m > 0.0) or (last_stochrsi_k_4h > 10.0))
       and ((last_aroonu_14_1h > 20.0) or (last_stochrsi_k_1h > 20.0) or (last_stochrsi_k_1d > 10.0))
       and ((last_aroonu_14_1h > 0.0) or (last_stochrsi_k_1d > 20.0))
@@ -45576,6 +45801,7 @@ class NostalgiaForInfinityX8(IStrategy):
       and ((last_rsi_3_1d < 75.0) or (last_stochrsi_k_1h > 10.0))
       and ((last_rsi_3_1d < 70.0) or (last_aroonu_14_15m > 0.0))
       and ((last_rsi_3_1d < 70.0) or (last_stochrsi_k_4h > 10.0))
+      and ((last_rsi_3_1d < 50.0) or (last_stochrsi_k_4h > 10.0) or (last_stochrsi_k_1d > 30.0))
       and ((last_aroonu_14_15m > 30.0) or (last_aroonu_14_1h > 0.0) or (last_stochrsi_k_1d > 20.0))
       and ((last_aroonu_14_15m > 30.0) or (last_aroonu_14_4h > 30.0) or (last_roc_9_4h > -10.0))
       and ((last_aroonu_14_15m > 20.0) or (last_stochrsi_k_15m > 30.0))
@@ -47429,6 +47655,7 @@ class NostalgiaForInfinityX8(IStrategy):
       and ((last_rsi_3_1d < 35.0) or (last_aroonu_14_1h > 30.0) or (last_aroonu_14_1d > 10.0))
       and ((last_aroonu_14_15m > 30.0) or (last_aroonu_14_1h > 0.0))
       and ((last_aroonu_14_15m > 20.0) or (last_stochrsi_k_15m > 20.0))
+      and ((last_aroonu_14_15m > 0.0) or (last_stochrsi_k_1h > 10.0))
       and ((last_aroonu_14_15m > 0.0) or (last_stochrsi_k_4h > 10.0))
       and ((last_aroonu_14_1h > 20.0) or (last_stochrsi_k_1h > 20.0) or (last_stochrsi_k_1d > 10.0))
       and ((last_aroonu_14_1h > 0.0) or (last_stochrsi_k_1d > 20.0))
@@ -47669,6 +47896,7 @@ class NostalgiaForInfinityX8(IStrategy):
       and ((last_rsi_3_1d < 75.0) or (last_stochrsi_k_1h > 10.0))
       and ((last_rsi_3_1d < 70.0) or (last_aroonu_14_15m > 0.0))
       and ((last_rsi_3_1d < 70.0) or (last_stochrsi_k_4h > 10.0))
+      and ((last_rsi_3_1d < 50.0) or (last_stochrsi_k_4h > 10.0) or (last_stochrsi_k_1d > 30.0))
       and ((last_aroonu_14_15m > 30.0) or (last_aroonu_14_1h > 0.0) or (last_stochrsi_k_1d > 20.0))
       and ((last_aroonu_14_15m > 30.0) or (last_aroonu_14_4h > 30.0) or (last_roc_9_4h > -10.0))
       and ((last_aroonu_14_15m > 20.0) or (last_stochrsi_k_15m > 30.0))
