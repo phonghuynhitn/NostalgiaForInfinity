@@ -70,7 +70,7 @@ class NostalgiaForInfinityX8(IStrategy):
   INTERFACE_VERSION = 3
 
   def version(self) -> str:
-    return "v18.0.123"
+    return "v18.0.124"
 
   stoploss = -0.99
 
@@ -2589,6 +2589,14 @@ class NostalgiaForInfinityX8(IStrategy):
   # Order filled Callback
   # ---------------------------------------------------------------------------------------------
   def order_filled(self, pair: str, trade: Trade, order: Order, current_time: datetime, **kwargs) -> None:
+    # Backtesting calls this before closing the trade; live trading calls it after.
+    if not trade.is_open or (
+      self.is_backtest_mode()
+      and order.ft_order_side == trade.exit_side
+      and order.safe_amount_after_fee == trade.amount
+    ):
+      self._remove_profit_target(pair)
+
     # Check if it's the first entry
     system_name_use = self.system_name_use
     system_v3_2_name = self.system_v3_2_name
@@ -5436,7 +5444,6 @@ class NostalgiaForInfinityX8(IStrategy):
         if profit < self.exit_profit_offset:
           return False
 
-    self._remove_profit_target(pair)
     return True
 
   # Check Entry Timeout
@@ -27958,12 +27965,16 @@ class NostalgiaForInfinityX8(IStrategy):
             & ((rsi_3_15m_gt_15) | (rsi_3_1h_gt_30) | (rsi_3_4h_gt_40) | (aroonu_14_1h_gt_30) | (stochrsi_k_15m_gt_30))
             # 15m & 1h & 1d down move, 15m & 1h low
             & ((rsi_3_15m_gt_15) | (rsi_3_1h_gt_30) | (rsi_3_1d_gt_35) | (aroonu_14_15m_gt_20) | (aroonu_14_1h_gt_20))
+            # 15m & 1h down move, 1d low, 1d oversold
+            & ((rsi_3_15m_gt_15) | (rsi_3_1h_gt_30) | (stochrsi_k_1d_gt_20) | (roc_9_1d_gt_neg_10))
             # 15m & 1h & 4h down move, 1h low, 4h downtrend not confirmed
             & ((rsi_3_15m_gt_15) | (rsi_3_1h_gt_35) | (rsi_3_4h_gt_40) | (aroonu_14_1h_gt_10) | (aroonu_14_4h_lt_50))
             # 15m & 1h & 1d down move, 1h low, 4h downtrend not confirmed
             & ((rsi_3_15m_gt_15) | (rsi_3_1h_gt_35) | (rsi_3_1d_gt_40) | (aroonu_14_1h_gt_30) | (aroonu_14_4h_lt_40))
             # 15m  & 1h down move, 1h & 1d low
             & ((rsi_3_15m_gt_15) | (rsi_3_1h_gt_35) | (aroonu_14_1h_gt_10) | (aroonu_14_1d_gt_30))
+            # 15m & 1h down move, 1h low, 1d oversold
+            & ((rsi_3_15m_gt_15) | (rsi_3_1h_gt_40) | (aroonu_14_1h_gt_0) | (roc_9_1d_gt_neg_10))
             # 15m & 4h down move, 1h & 4h low
             & ((rsi_3_15m_gt_15) | (rsi_3_4h_gt_15) | (aroonu_14_1h_gt_20) | (aroonu_14_4h_gt_30))
             # 15m & 4h & 1d down move, 4h low, 1d low
