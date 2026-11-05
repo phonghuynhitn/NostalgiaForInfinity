@@ -70,7 +70,7 @@ class NostalgiaForInfinityX8(IStrategy):
   INTERFACE_VERSION = 3
 
   def version(self) -> str:
-    return "v18.0.199"
+    return "v18.0.204"
 
   stoploss = -0.99
 
@@ -731,6 +731,7 @@ class NostalgiaForInfinityX8(IStrategy):
 
   system_v4_max_stake = 1.0  # ratio of first entry
   system_v4_stake_multiplier = 1.0
+  system_v4_grind_only_after_derisk_enable = False  # Require a filled de-risk level 1, 2 or 3 before grind entries.
   system_v4_grind_entry_before_derisk_enable = True
   system_v4_grind_entry_before_derisk_distance = 0.02  # unleveraged price move from the grind average
 
@@ -1203,6 +1204,7 @@ class NostalgiaForInfinityX8(IStrategy):
       "grind_mode_max_slots",
       "grind_mode_coins",
       "max_slippage",
+      "system_v4_grind_only_after_derisk_enable",
       "system_v4_bad_trade_exit_enable",
       "legacy_system_bad_trade_exit_enable",
       "inclusive_bad_trade_exit_enable",
@@ -8401,6 +8403,8 @@ class NostalgiaForInfinityX8(IStrategy):
             & ((rsi_3_4h_gt_20) | (rsi_3_1d_gt_40) | (roc_9_4h_gt_neg_30) | (roc_9_1d_gt_neg_40))
             # 4h & 1d down move, 1d overbought
             & ((rsi_3_4h_gt_20) | (rsi_3_1d_gt_55) | (roc_9_1d_lt_50))
+            # 4h & 1d down move, 1d high
+            & ((rsi_3_4h_gt_20) | (rsi_3_1d_gt_60) | (aroonu_14_1d_lt_90))
             # 4h down move, 15m & 4h still high
             & ((rsi_3_4h_gt_20) | (aroonu_14_15m_lt_50) | (aroonu_14_4h_lt_50))
             # 4h down move, 15m high, 1d high
@@ -11417,6 +11421,8 @@ class NostalgiaForInfinityX8(IStrategy):
             & ((rsi_3_15m_gt_20) | (aroonu_14_4h_lt_70) | (roc_9_4h_lt_20))
             # 15m down move, 4h high, 1d overbought
             & ((rsi_3_15m_gt_20) | (aroonu_14_4h_lt_80) | (roc_9_1d_lt_60))
+            # 15m & 1h down move, 1h high
+            & ((rsi_3_15m_gt_25) | (rsi_3_1h_gt_25) | (aroonu_14_1h_lt_80))
             # 15m & 1h down move, 15m still high, 1h high, 1d overbought
             & ((rsi_3_15m_gt_25) | (rsi_3_1h_gt_35) | (aroonu_14_15m_lt_40) | (aroonu_14_1h_lt_70) | (roc_9_1d_lt_20))
             # 15m & 4h down move, 4h high
@@ -11933,11 +11939,14 @@ class NostalgiaForInfinityX8(IStrategy):
             & ((rsi_3_15m_gt_5) | (rsi_3_1h_gt_5) | (aroonu_14_1d_lt_70))
             # 15m & 1h & 4h down move
             & ((rsi_3_15m_gt_5) | (rsi_3_1h_gt_10) | (rsi_3_4h_gt_15))
+            # 15m & 1h & 4h down move 4h still high
+            & ((rsi_3_15m_gt_5) | (rsi_3_1h_gt_15) | (rsi_3_4h_gt_60) | (aroonu_14_4h_lt_50))
+            # 15m & 1h down move, 1h & 4h high
             & ((rsi_3_15m_gt_5) | (rsi_3_1h_gt_30) | (aroonu_14_1h_lt_70) | (aroonu_14_4h_lt_70))
             # 15m & 4h down move, 1h downtrend
             & ((rsi_3_15m_gt_5) | (rsi_3_4h_gt_10) | (roc_9_1h_gt_neg_20))
             # 15m & 4h down move, 1d downtrend
-            & ((rsi_3_15m_gt_5) | (rsi_3_4h_gt_10) | (roc_9_1d > -30.0))
+            & ((rsi_3_15m_gt_5) | (rsi_3_4h_gt_10) | (roc_9_1h_gt_neg_30))
             # 15m & 4h down move, 4h still high
             & ((rsi_3_15m_gt_5) | (rsi_3_4h_gt_30) | (aroonu_14_4h_lt_40))
             # 15m & 1h down move, 4h high
@@ -12357,7 +12366,9 @@ class NostalgiaForInfinityX8(IStrategy):
             # 4h & 1d down move, 15m high
             & ((rsi_3_4h_gt_20) | (rsi_3_1d_gt_30) | (stochrsi_k_15m_lt_80))
             # 4h & 1d down move, 1d high
-            & ((rsi_3_4h_gt_20) | (rsi_3_1d > 50.0) | (stochrsi_k_1d_lt_90))
+            & ((rsi_3_4h_gt_20) | (rsi_3_1d_gt_50) | (stochrsi_k_1d_lt_90))
+            # 4h & 1d down move, 1d high
+            & ((rsi_3_4h_gt_20) | (rsi_3_1d_gt_60) | (aroonu_14_1d_lt_90))
             # 4h down move, 15m high, 4h downtrend
             & ((rsi_3_4h_gt_20) | (aroonu_14_15m_lt_70) | (roc_9_4h_gt_neg_30))
             # 4h down move, 4h high
@@ -14809,6 +14820,8 @@ class NostalgiaForInfinityX8(IStrategy):
             & ((rsi_3_15m_gt_20) | (stochrsi_k_1h_lt_80))
             # 15m down move, 4h high
             & ((rsi_3_15m_gt_20) | (stochrsi_k_4h_lt_90))
+            # 15m & 1h down move, 1h high
+            & ((rsi_3_15m_gt_25) | (rsi_3_1h_gt_25) | (aroonu_14_1h_lt_80))
             # 15m & 1h & 4h down move, 15m still not low enough, 4h high
             & ((rsi_3_15m_gt_25) | (rsi_3_1h_gt_30) | (rsi_3_4h_gt_60) | (aroonu_14_15m_lt_30) | (aroonu_14_4h_lt_70))
             # 15m & 1h down move, 15m still high, 1h high, 1d overbought
@@ -22218,6 +22231,8 @@ class NostalgiaForInfinityX8(IStrategy):
             & ((rsi_3_15m_gt_20) | (rsi_3_4h_gt_25) | (aroonu_14_15m_lt_60))
             # 15m & 4h down move, 1h high
             & ((rsi_3_15m_gt_20) | (rsi_3_4h_gt_35) | (aroonu_14_1h_lt_100))
+            # 15m & 4h & 1d down move, 1h high
+            & ((rsi_3_15m_gt_20) | (rsi_3_4h_gt_45) | (rsi_3_1d_gt_45) | (stochrsi_k_1h_lt_90))
             # 15m & 1d down move, 4h high
             & ((rsi_3_15m_gt_20) | (rsi_3_1d_gt_20) | (stochrsi_k_4h_lt_70))
             # 15m down move, 15m still high, 4h high
@@ -30648,6 +30663,8 @@ class NostalgiaForInfinityX8(IStrategy):
             & ((rsi_3_15m_gt_20) | (rsi_3_4h_gt_25) | (rsi_3_1d_gt_60) | (aroonu_14_15m_gt_10) | (aroonu_14_4h_gt_30))
             # 15m & 4h down move, 4h downtrend not confirmed, 1d low
             & ((rsi_3_15m_gt_20) | (rsi_3_4h_gt_25) | (aroonu_14_4h_lt_50) | (stochrsi_k_1d_gt_20))
+            # 15m & 4h down move, 4h low
+            & ((rsi_3_15m_gt_20) | (rsi_3_4h_gt_25) | (stochrsi_k_4h_gt_10))
             # 15m & 4h & 1d down move, 4h downtrend not confirmed, 15m low
             & ((rsi_3_15m_gt_20) | (rsi_3_4h_gt_30) | (rsi_3_1d_gt_30) | (rsi_14_4h_lt_40) | (stochrsi_k_15m_gt_20))
             # 15m & 4h & 1d down move, 4h & 1d low
@@ -30940,6 +30957,8 @@ class NostalgiaForInfinityX8(IStrategy):
             & ((rsi_3_1h_gt_30) | (rsi_3_4h_gt_30) | (rsi_3_1d_gt_50) | (aroonu_14_1h_gt_0) | (stochrsi_k_4h_gt_30))
             # 1h & 4h & 1d down move, 4h & 1d low
             & ((rsi_3_1h_gt_30) | (rsi_3_4h_gt_30) | (rsi_3_1d_gt_60) | (aroonu_14_4h_gt_0) | (aroonu_14_1d_gt_0))
+            # 1h & 4h down move, 1h low
+            & ((rsi_3_1h_gt_30) | (rsi_3_4h_gt_30) | (aroonu_14_1h_gt_20))
             # 1h & 4h & 1d down move, 4h & 1d low
             & ((rsi_3_1h_gt_30) | (rsi_3_4h_gt_45) | (rsi_3_1d_gt_45) | (aroonu_14_4h_gt_0) | (aroonu_14_1d_gt_0))
             # 1h & 1d down move, 1h & 1d low, 1d oversold
@@ -39504,7 +39523,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         send_msg(
           notification_msg(
@@ -39591,7 +39610,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         send_msg(
           notification_msg(
@@ -39678,7 +39697,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         send_msg(
           notification_msg(
@@ -39712,7 +39731,7 @@ class NostalgiaForInfinityX8(IStrategy):
     ):
       sell_amount = trade_amount * exit_rate / trade_leverage - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         send_msg(
           notification_msg(
@@ -41994,7 +42013,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if send_notifications:
           send_msg(
@@ -42027,7 +42046,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if send_notifications:
           send_msg(
@@ -42060,7 +42079,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if send_notifications:
           send_msg(
@@ -42093,7 +42112,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if send_notifications:
           send_msg(
@@ -42861,7 +42880,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if buyback_1_current_open_rate > 0.0:
           grind_profit = (
@@ -44388,7 +44407,13 @@ class NostalgiaForInfinityX8(IStrategy):
       trade.set_custom_data(key="grind_5_cluster_max_profit_rate", value=grind_5_current_grind_profit_rate)
 
     is_long_extra_checks_entry = (
-      grind_entry_retry_time > filled_entries[-1].order_filled_utc
+      (
+        not self.system_v4_grind_only_after_derisk_enable
+        or is_derisk_1_found
+        or is_derisk_2_found
+        or is_derisk_3_found
+      )
+      and grind_entry_retry_time > filled_entries[-1].order_filled_utc
       # and ((current_time - timedelta(hours=6) > filled_orders[-1].order_filled_utc) or (slice_profit < -0.02))
       and (
         (current_time - timedelta(hours=6) > filled_orders[-1].order_filled_utc)
@@ -44564,7 +44589,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if send_notifications:
           send_msg(
@@ -44599,7 +44624,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if send_notifications:
           send_msg(
@@ -44632,7 +44657,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if send_notifications:
           send_msg(
@@ -44669,7 +44694,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if send_notifications:
           send_msg(
@@ -45470,7 +45495,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if buyback_1_current_open_rate > 0.0:
           grind_profit = (
@@ -47106,7 +47131,7 @@ class NostalgiaForInfinityX8(IStrategy):
         first_entry_distance_ratio = (exit_rate - first_entry.safe_price) / first_entry.safe_price
         # First entry exit
         if first_entry_distance_ratio > (
-          (self.grind_mode_first_entry_profit_threshold_spot + fee_open_rate + fee_close_rate)
+          (self.grind_mode_first_entry_profit_threshold_futures + fee_open_rate + fee_close_rate)
           if is_futures
           else (self.grind_mode_first_entry_profit_threshold_spot + fee_open_rate + fee_close_rate)
         ):
@@ -47114,7 +47139,7 @@ class NostalgiaForInfinityX8(IStrategy):
           if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
             sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
           ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-          if sell_amount > min_stake and ft_sell_amount > min_stake:
+          if sell_amount > min_stake:
             grind_profit = (exit_rate - first_entry.safe_price) / first_entry.safe_price
             coin_amount = sell_amount / exit_rate
             send_msg(
@@ -47146,7 +47171,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if derisk_use_grind_stops and (
           first_entry_distance_ratio
           < (
-            self.grind_mode_first_entry_stop_threshold_spot
+            self.grind_mode_first_entry_stop_threshold_futures
             if is_futures
             else self.grind_mode_first_entry_stop_threshold_spot
           )
@@ -47155,7 +47180,7 @@ class NostalgiaForInfinityX8(IStrategy):
           if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
             sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
           ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-          if sell_amount > min_stake and ft_sell_amount > min_stake:
+          if sell_amount > min_stake:
             grind_profit = (exit_rate - first_entry.safe_price) / first_entry.safe_price
             coin_amount = sell_amount / exit_rate
             send_msg(
@@ -47259,7 +47284,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -47303,7 +47328,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_1_derisk_1_current_open_rate > 0.0:
           grind_profit = (
@@ -47406,7 +47431,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -47450,7 +47475,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_2_derisk_1_current_open_rate > 0.0:
           grind_profit = (
@@ -47585,7 +47610,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -47628,7 +47653,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_1_current_open_rate > 0.0:
           grind_profit = (
@@ -47723,7 +47748,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -47766,7 +47791,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_2_current_open_rate > 0.0:
           grind_profit = (
@@ -47861,7 +47886,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -47904,7 +47929,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_3_current_open_rate > 0.0:
           grind_profit = (
@@ -47999,7 +48024,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -48042,7 +48067,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_4_current_open_rate > 0.0:
           grind_profit = (
@@ -48148,7 +48173,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -48191,7 +48216,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_5_current_open_rate > 0.0:
           grind_profit = (
@@ -48286,7 +48311,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -48329,7 +48354,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_6_current_open_rate > 0.0:
           grind_profit = (
@@ -48440,7 +48465,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         send_msg(
           notification_msg(
@@ -49298,7 +49323,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -49336,7 +49361,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_1_current_open_rate > 0.0:
           grind_profit = (
@@ -49423,7 +49448,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -49461,7 +49486,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_2_current_open_rate > 0.0:
           grind_profit = (
@@ -49548,7 +49573,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -49586,7 +49611,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_3_current_open_rate > 0.0:
           grind_profit = (
@@ -49673,7 +49698,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -49711,7 +49736,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_4_current_open_rate > 0.0:
           grind_profit = (
@@ -49798,7 +49823,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -49836,7 +49861,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_5_current_open_rate > 0.0:
           grind_profit = (
@@ -49923,7 +49948,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -49961,7 +49986,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_6_current_open_rate > 0.0:
           grind_profit = (
@@ -50011,7 +50036,7 @@ class NostalgiaForInfinityX8(IStrategy):
     ):
       sell_amount = trade_amount * exit_rate / trade_leverage - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         send_msg(
           notification_msg(
@@ -50053,7 +50078,7 @@ class NostalgiaForInfinityX8(IStrategy):
     ):
       sell_amount = trade_amount * exit_rate / trade_leverage - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         send_msg(
           notification_msg(
@@ -50254,7 +50279,7 @@ class NostalgiaForInfinityX8(IStrategy):
     ):
       sell_amount = trade_amount * exit_rate / trade_leverage - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade.stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         dp.send_msg(
           f"❌​​ ​**Rebuy De-risk:** `Level 3`\n"
@@ -50450,7 +50475,7 @@ class NostalgiaForInfinityX8(IStrategy):
     ):
       sell_amount = trade_amount * exit_rate / trade_leverage - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade.stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         stake_currency = config["stake_currency"]
         stake_fmt = ".8f" if stake_currency in ("BTC", "ETH", "BNB", "SOL") else ".3f"
         send_notifications = not self.is_backtest_mode()
@@ -50645,7 +50670,7 @@ class NostalgiaForInfinityX8(IStrategy):
     ):
       sell_amount = trade_amount * exit_rate / trade_leverage - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade.stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         stake_currency = config["stake_currency"]
         stake_fmt = ".8f" if stake_currency in ("BTC", "ETH", "BNB", "SOL") else ".3f"
         send_notifications = not self.is_backtest_mode()
@@ -54185,7 +54210,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         send_msg(
           notification_msg(
@@ -54272,7 +54297,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         send_msg(
           notification_msg(
@@ -54359,7 +54384,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         send_msg(
           notification_msg(
@@ -54393,7 +54418,7 @@ class NostalgiaForInfinityX8(IStrategy):
     ):
       sell_amount = trade_amount * exit_rate / trade_leverage - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         send_msg(
           notification_msg(
@@ -56696,7 +56721,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         send_msg(
           notification_msg(
@@ -56765,7 +56790,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         send_msg(
           notification_msg(
@@ -56834,7 +56859,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         send_msg(
           notification_msg(
@@ -58775,7 +58800,13 @@ class NostalgiaForInfinityX8(IStrategy):
       trade.set_custom_data(key="grind_5_cluster_max_profit_rate", value=grind_5_current_grind_profit_rate)
 
     is_short_extra_checks_entry = (
-      grind_entry_retry_time > filled_entries[-1].order_filled_utc
+      (
+        not self.system_v4_grind_only_after_derisk_enable
+        or is_derisk_1_found
+        or is_derisk_2_found
+        or is_derisk_3_found
+      )
+      and grind_entry_retry_time > filled_entries[-1].order_filled_utc
       # and ((current_time - timedelta(hours=6) > filled_orders[-1].order_filled_utc) or (slice_profit > 0.02))
       and (
         (current_time - timedelta(hours=6) > filled_orders[-1].order_filled_utc)
@@ -58953,7 +58984,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if send_notifications:
           send_msg(
@@ -58988,7 +59019,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if send_notifications:
           send_msg(
@@ -59021,7 +59052,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if send_notifications:
           send_msg(
@@ -61260,7 +61291,7 @@ class NostalgiaForInfinityX8(IStrategy):
         first_entry_distance_ratio = -(exit_rate - first_entry.safe_price) / first_entry.safe_price
         # First entry exit
         if first_entry_distance_ratio > (
-          (self.grind_mode_first_entry_profit_threshold_spot + fee_open_rate + fee_close_rate)
+          (self.grind_mode_first_entry_profit_threshold_futures + fee_open_rate + fee_close_rate)
           if is_futures
           else (self.grind_mode_first_entry_profit_threshold_spot + fee_open_rate + fee_close_rate)
         ):
@@ -61268,7 +61299,7 @@ class NostalgiaForInfinityX8(IStrategy):
           if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
             sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
           ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-          if sell_amount > min_stake and ft_sell_amount > min_stake:
+          if sell_amount > min_stake:
             grind_profit = -(exit_rate - first_entry.safe_price) / first_entry.safe_price
             coin_amount = sell_amount / exit_rate
             send_msg(
@@ -61300,7 +61331,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if derisk_use_grind_stops and (
           first_entry_distance_ratio
           < (
-            self.grind_mode_first_entry_stop_threshold_spot
+            self.grind_mode_first_entry_stop_threshold_futures
             if is_futures
             else self.grind_mode_first_entry_stop_threshold_spot
           )
@@ -61309,7 +61340,7 @@ class NostalgiaForInfinityX8(IStrategy):
           if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
             sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
           ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-          if sell_amount > min_stake and ft_sell_amount > min_stake:
+          if sell_amount > min_stake:
             grind_profit = -(exit_rate - first_entry.safe_price) / first_entry.safe_price
             coin_amount = sell_amount / exit_rate
             send_msg(
@@ -61409,7 +61440,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -61453,7 +61484,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_1_derisk_1_current_open_rate > 0.0:
           grind_profit = (
@@ -61554,7 +61585,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -61598,7 +61629,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_2_derisk_1_current_open_rate > 0.0:
           grind_profit = (
@@ -61731,7 +61762,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -61774,7 +61805,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_1_current_open_rate > 0.0:
           grind_profit = (
@@ -61867,7 +61898,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -61910,7 +61941,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_2_current_open_rate > 0.0:
           grind_profit = (
@@ -62003,7 +62034,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -62046,7 +62077,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_3_current_open_rate > 0.0:
           grind_profit = (
@@ -62139,7 +62170,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -62182,7 +62213,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_4_current_open_rate > 0.0:
           grind_profit = (
@@ -62286,7 +62317,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -62329,7 +62360,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_5_current_open_rate > 0.0:
           grind_profit = (
@@ -62422,7 +62453,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -62465,7 +62496,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_6_current_open_rate > 0.0:
           grind_profit = (
@@ -62574,7 +62605,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         send_msg(
           notification_msg(
@@ -63358,7 +63389,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -63396,7 +63427,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_1_current_open_rate > 0.0:
           grind_profit = (
@@ -63483,7 +63514,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -63521,7 +63552,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_2_current_open_rate > 0.0:
           grind_profit = (
@@ -63608,7 +63639,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -63646,7 +63677,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_3_current_open_rate > 0.0:
           grind_profit = (
@@ -63733,7 +63764,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -63771,7 +63802,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_4_current_open_rate > 0.0:
           grind_profit = (
@@ -63858,7 +63889,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -63896,7 +63927,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_5_current_open_rate > 0.0:
           grind_profit = (
@@ -63983,7 +64014,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
           sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
         ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-        if sell_amount > min_stake and ft_sell_amount > min_stake:
+        if sell_amount > min_stake:
           send_msg(
             notification_msg(
               "grinding-exit",
@@ -64021,7 +64052,7 @@ class NostalgiaForInfinityX8(IStrategy):
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         if grind_6_current_open_rate > 0.0:
           grind_profit = (
@@ -64071,7 +64102,7 @@ class NostalgiaForInfinityX8(IStrategy):
     ):
       sell_amount = trade_amount * exit_rate / trade_leverage - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         send_msg(
           notification_msg(
@@ -64113,7 +64144,7 @@ class NostalgiaForInfinityX8(IStrategy):
     ):
       sell_amount = trade_amount * exit_rate / trade_leverage - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade_stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         send_msg(
           notification_msg(
@@ -64304,7 +64335,7 @@ class NostalgiaForInfinityX8(IStrategy):
     ):
       sell_amount = trade_amount * exit_rate / trade_leverage - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade.stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         grind_profit = 0.0
         dp.send_msg(
           f"❌​​ ​**Rebuy De-risk:** `Level 3`\n"
@@ -64497,7 +64528,7 @@ class NostalgiaForInfinityX8(IStrategy):
     ):
       sell_amount = trade_amount * exit_rate / trade_leverage - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade.stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         stake_currency = config["stake_currency"]
         stake_fmt = ".8f" if stake_currency in ("BTC", "ETH", "BNB", "SOL") else ".3f"
         send_notifications = not self.is_backtest_mode()
@@ -64691,7 +64722,7 @@ class NostalgiaForInfinityX8(IStrategy):
     ):
       sell_amount = trade_amount * exit_rate / trade_leverage - (min_stake * 1.55)
       ft_sell_amount = sell_amount * trade_leverage * (trade.stake_amount / trade_amount) / exit_rate
-      if sell_amount > min_stake and ft_sell_amount > min_stake:
+      if sell_amount > min_stake:
         stake_currency = config["stake_currency"]
         stake_fmt = ".8f" if stake_currency in ("BTC", "ETH", "BNB", "SOL") else ".3f"
         send_notifications = not self.is_backtest_mode()
